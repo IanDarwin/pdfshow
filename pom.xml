@@ -39,9 +39,14 @@
 
 	<dependencies>
 		<dependency>
-		<groupId>org.apache.pdfbox</groupId>
-		<artifactId>pdfbox</artifactId>
-		<version>2.0.16</version>
+			<groupId>com.darwinsys</groupId>
+			<artifactId>darwinsys-api</artifactId>
+			<version>1.5.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>2.0.16</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
