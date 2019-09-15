@@ -8,15 +8,11 @@ I will add bells and whistles as time permits.
 
 == ToDo
 
-Obvious:
-	Menus, at least Open, Close
-	Key listener so down/up arrows work
-
-Tabs for multiple decks open at a time
-	Then: Ability to auto-back-and-forth between a chosen slide in each of two presos
-
 UI
 	Better layout of toolbox.
+	Key listener so down/up arrows work
+
+Ability to auto-back-and-forth between a chosen slide in each of two presos
 
 Longer:
 	Drawing tools: text, polyline
