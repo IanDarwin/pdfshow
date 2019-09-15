@@ -56,9 +56,29 @@
 		</dependency>
 	</dependencies>
 
+	<!-- Uber-jar: use 'mvn package assembly:single' to get the runnable jar created in 'target' -->
 	<build>
 		<plugins>
-			<!-- None yet -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<mainClass>net.rejmi.pdfshow.PdfShow</mainClass>
+							<!-- <manifestFile>manifest.stub</manifestFile> -->
+						</manifest>
+						<manifestEntries>
+							<Vendor-URL>http://darwinsys.com/freeware/</Vendor-URL>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
