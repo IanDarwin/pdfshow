@@ -9,6 +9,7 @@ I will add bells and whistles as time permits.
 == ToDo
 
 UI
+	Scaleable layout, full-screen.
 	Better layout of toolbox.
 	Key listener so down/up arrows work
 
