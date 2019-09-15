@@ -1,0 +1,7 @@
+= PdfShow
+
+PdfShow is a simple Swing-based PDF viewer for running slide shows.
+
+Pdf access (i.e., the heavy listing!) is via https://pdfbox.apache.org/[Apache PDFBox].
+
+I will add bells and whistles as time permits.
