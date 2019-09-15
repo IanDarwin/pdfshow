@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -20,6 +22,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.filechooser.FileFilter;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -60,6 +64,11 @@ public class PdfShow {
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		jtp = new JTabbedPane();
+		jtp.addChangeListener(evt -> {
+			tab = (DocTab)jtp.getSelectedComponent();
+			// This shouldn't be needed...
+			pageNumTF.setText(Integer.toString(tab.pageNumber));
+		});
 		jf.add(BorderLayout.CENTER, jtp);
 		
 		JMenuBar mb = new JMenuBar();
@@ -68,6 +77,8 @@ public class PdfShow {
 		JMenu fm = MenuUtils.mkMenu(b, "file");
 		mb.add(fm);
 		JMenuItem miOpen = MenuUtils.mkMenuItem(b, "file", "open");
+		miOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
+				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		fm.add(miOpen);
 		miOpen.addActionListener(e -> {
 			try {
@@ -76,6 +87,10 @@ public class PdfShow {
 				JOptionPane.showMessageDialog(jf, "Can't open file: " + e1);
 			}
 		});
+		JMenuItem miQuit = MenuUtils.mkMenuItem(b, "file", "exit");
+		miQuit.addActionListener(e -> checkAndQuit());
+		fm.addSeparator();
+		fm.add(miQuit);
 
 		JPanel toolbox = new JPanel();
 		toolbox.setBackground(Color.cyan);
@@ -96,15 +111,45 @@ public class PdfShow {
 		lastButton.addActionListener(e -> moveToPage(Integer.MAX_VALUE));
 		toolbox.add(lastButton);
 
-		openFile(new File("/Users/ian/lt2771", "lt2771add.pdf"));
-		moveToPage(0);
-
 		jf.add(BorderLayout.WEST, toolbox);
 		jf.setVisible(true);
 	}
 	
+	private static void checkAndQuit() {
+		// TODO Once we add drawing, check for unsaved changes
+		System.exit(0);
+	}
+
+	private static JFileChooser fc;
+	
 	private static File chooseFile() {
-		final JFileChooser fc = new JFileChooser();
+		String curDir = System.getProperty("user.dir");
+		fc = new JFileChooser(curDir);
+		FileFilter filter = new FileFilter() {
+
+			/** Return true if the given file is accepted by this filter. */
+			@Override
+			public boolean accept(File f) {
+				// Little trick: if you don't do this, only directory names
+				// ending in one of the extentions appear in the window.
+				if (f.isDirectory()) {
+					return true;
+
+				} else if (f.isFile()) {
+					if (f.getName().endsWith(".pdf"))
+						return true;
+				}
+				return false;
+			}
+
+			/** Return the printable description of this filter. */
+			@Override
+			public String getDescription() {
+					return "PDF Files";
+			}
+	};
+
+		fc.addChoosableFileFilter(filter);
 		// XXX start in curdir
 		// XXX add pdf-only filter
 		File f = null;
@@ -126,8 +171,10 @@ public class PdfShow {
 		t.renderer = new PDFRenderer(t.doc);
 		
 		jtp.addTab(file.getName(), t);
+		jtp.setSelectedIndex(jtp.getTabCount() - 1);
 		// If no exception, then change global tab
 		tab = t;
+		moveToPage(0);
 	}
 
 	private static void closeFile(DocTab dt) {
