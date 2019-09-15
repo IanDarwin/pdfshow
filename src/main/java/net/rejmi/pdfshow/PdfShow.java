@@ -9,78 +9,99 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
 public class PdfShow {
-	private static int pageNumber = 0;
-	private static PDDocument doc;
-	private static JPanel mainPanel;
+	
+	@SuppressWarnings("serial")
+	private static class DocTab extends JComponent {
+		private int pageNumber = 0;
+		private PDDocument doc;
+		private PDFRenderer renderer;
+		DocTab() {
+			super();
+			setSize(800, 800);
+		}
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			try {
+				renderer.renderPageToGraphics(pageNumber, (Graphics2D) g);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(jf, "Failure: " + e);
+			}
+		}
+	}
+	private static JFrame jf;
+	private static JTabbedPane jtp;
+	private static DocTab tab;
 	private static JButton upButton, downButton;
 	private static JTextField pageNumTF;
 
-	public static void main(String[] args) throws IOException {
-		File file = new File("/Users/ian/lt2771", "lt2771add.pdf");
-
-		doc = PDDocument.load(file);
-		final PDFRenderer renderer = new PDFRenderer(doc);
-		JFrame jf = new JFrame("PDFShow");
+	public static void main(String[] args) throws Exception {
+		
+		jf = new JFrame("PDFShow");
 		jf.setSize(1000,800);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		mainPanel = new JPanel() {
-			private static final long serialVersionUID = 1L;
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				try {
-					renderer.renderPageToGraphics(pageNumber, (Graphics2D) g);
-				} catch (IOException e) {
-					JOptionPane.showMessageDialog(jf, "Failure: " + e);
-				}
-			}
-		};
-		mainPanel.setSize(800, 800);
-		jf.add(BorderLayout.CENTER, mainPanel);
+		jtp = new JTabbedPane();
+		
+		jf.add(BorderLayout.CENTER, jtp);
 
 		JPanel toolbox = new JPanel();
 		toolbox.setBackground(Color.cyan);
 		toolbox.setPreferredSize(new Dimension(200, 800));
 		upButton = new JButton("Up");
-		upButton.addActionListener(e -> moveToPage(pageNumber - 1));
+		upButton.addActionListener(e -> moveToPage(tab.pageNumber - 1));
 		toolbox.add(upButton);
 		downButton = new JButton("Down");
-		downButton.addActionListener(e -> moveToPage(pageNumber + 1));
+		downButton.addActionListener(e -> moveToPage(tab.pageNumber + 1));
 		toolbox.add(downButton);
 		pageNumTF = new JTextField("0  ");
 		pageNumTF.addActionListener(e -> moveToPage(Integer.parseInt(pageNumTF.getText())));
 		toolbox.add(pageNumTF);
 
+		openFile(new File("/Users/ian/lt2771", "lt2771add.pdf"));
 		moveToPage(0);
 
 		jf.add(BorderLayout.WEST, toolbox);
 		jf.setVisible(true);
 	}
+	
+	private static void openFile(File file) throws Exception {
+		tab = new DocTab();
+		tab.doc = PDDocument.load(file);
+		tab.renderer = new PDFRenderer(tab.doc);
+
+		jtp.addTab(file.getName(), tab);
+	}
+
+	private static void closeFile(DocTab dt) {
+		// XXX
+	}
 
 	private static void moveToPage(int newPage) {
+		int docPages = tab.doc.getNumberOfPages();
 		if (newPage < 0) {
 			newPage = 0;
 		}
-		if (newPage >= doc.getNumberOfPages()) {
-			newPage = doc.getNumberOfPages() - 1;
+		if (newPage >= docPages) {
+			newPage = docPages - 1;
 		}
-		if (newPage == pageNumber) {
+		if (newPage == tab.pageNumber) {
 			return;
 		}
 		pageNumTF.setText(Integer.toString(newPage));
-		pageNumber = newPage;
-		upButton.setEnabled(pageNumber > 0);
-		downButton.setEnabled(pageNumber < doc.getNumberOfPages());
-		mainPanel.repaint();
+		tab.pageNumber = newPage;
+		upButton.setEnabled(tab.pageNumber > 0);
+		downButton.setEnabled(tab.pageNumber < docPages);
+		tab.repaint();
 	}
 }
