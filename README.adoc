@@ -5,3 +5,18 @@ PdfShow is a simple Swing-based PDF viewer for running slide shows.
 Pdf access (i.e., the heavy listing!) is via https://pdfbox.apache.org/[Apache PDFBox].
 
 I will add bells and whistles as time permits.
+
+== ToDo
+
+Obvious:
+	Menus, at least Open, Close
+	Key listener so down/up arrows work
+
+Tabs for multiple decks open at a time
+	Then: Ability to auto-back-and-forth between a chosen slide in each of two presos
+
+UI
+	Better layout of toolbox.
+
+Longer:
+	Drawing tools: text, polyline
