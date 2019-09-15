@@ -10,23 +10,30 @@ import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
 public class PdfShow {
 	private static int pageNumber = 0;
+	private static PDDocument doc;
+	private static JPanel mainPanel;
+	private static JButton upButton, downButton;
+	private static JTextField pageNumTF;
 
 	public static void main(String[] args) throws IOException {
 		File file = new File("/Users/ian/lt2771", "lt2771add.pdf");
 
-		PDDocument doc = PDDocument.load(file);
+		doc = PDDocument.load(file);
 		final PDFRenderer renderer = new PDFRenderer(doc);
 		JFrame jf = new JFrame("PDFShow");
 		jf.setSize(1000,800);
-		
-		JPanel mainPanel = new JPanel() {
+		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		mainPanel = new JPanel() {
 			private static final long serialVersionUID = 1L;
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -34,27 +41,46 @@ public class PdfShow {
 				try {
 					renderer.renderPageToGraphics(pageNumber, (Graphics2D) g);
 				} catch (IOException e) {
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(jf, "Failure: " + e);
 				}
 			}
-
 		};
 		mainPanel.setSize(800, 800);
 		jf.add(BorderLayout.CENTER, mainPanel);
+
 		JPanel toolbox = new JPanel();
 		toolbox.setBackground(Color.cyan);
 		toolbox.setPreferredSize(new Dimension(200, 800));
-		JButton upButton = new JButton("Up");
-		upButton.addActionListener(e -> { pageNumber = Math.max(0, pageNumber - 1);
-			mainPanel.repaint();
-			});
+		upButton = new JButton("Up");
+		upButton.addActionListener(e -> moveToPage(pageNumber - 1));
 		toolbox.add(upButton);
-		JButton downButton = new JButton("Down");
-		downButton.addActionListener(e -> { pageNumber = Math.min(doc.getNumberOfPages(), pageNumber + 1);
-			mainPanel.repaint();
-			});
+		downButton = new JButton("Down");
+		downButton.addActionListener(e -> moveToPage(pageNumber + 1));
 		toolbox.add(downButton);
+		pageNumTF = new JTextField("0  ");
+		pageNumTF.addActionListener(e -> moveToPage(Integer.parseInt(pageNumTF.getText())));
+		toolbox.add(pageNumTF);
+
+		moveToPage(0);
+
 		jf.add(BorderLayout.WEST, toolbox);
 		jf.setVisible(true);
+	}
+
+	private static void moveToPage(int newPage) {
+		if (newPage < 0) {
+			newPage = 0;
+		}
+		if (newPage >= doc.getNumberOfPages()) {
+			newPage = doc.getNumberOfPages() - 1;
+		}
+		if (newPage == pageNumber) {
+			return;
+		}
+		pageNumTF.setText(Integer.toString(newPage));
+		pageNumber = newPage;
+		upButton.setEnabled(pageNumber > 0);
+		downButton.setEnabled(pageNumber < doc.getNumberOfPages());
+		mainPanel.repaint();
 	}
 }
