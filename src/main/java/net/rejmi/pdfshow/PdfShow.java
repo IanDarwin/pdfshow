@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -15,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -92,26 +94,30 @@ public class PdfShow {
 		fm.addSeparator();
 		fm.add(miQuit);
 
-		JPanel toolbox = new JPanel();
-		toolbox.setBackground(Color.cyan);
-		toolbox.setPreferredSize(new Dimension(200, 800));
+		JPanel toolBox = new JPanel();
+		toolBox.setBackground(Color.cyan);
+		toolBox.setPreferredSize(new Dimension(200, 800));
+		JPanel navBox = new JPanel();
+		navBox.setLayout(new GridLayout(3,3));
 		upButton = new JButton("Up");
 		upButton.addActionListener(e -> moveToPage(tab.pageNumber - 1));
-		toolbox.add(upButton);
+		navBox.add(new JLabel()); navBox.add(upButton); navBox.add(new JLabel());
 		downButton = new JButton("Down");
 		downButton.addActionListener(e -> moveToPage(tab.pageNumber + 1));
-		toolbox.add(downButton);
 		JButton firstButton = new JButton("<<"), 
 			lastButton = new JButton(">>");
 		firstButton.addActionListener(e -> moveToPage(0));
-		toolbox.add(firstButton);
-		pageNumTF = new JTextField("0  ");
+		navBox.add(firstButton);
+		pageNumTF = new JTextField(3);
 		pageNumTF.addActionListener(e -> moveToPage(Integer.parseInt(pageNumTF.getText())));
-		toolbox.add(pageNumTF);
+		navBox.add(pageNumTF);
 		lastButton.addActionListener(e -> moveToPage(Integer.MAX_VALUE));
-		toolbox.add(lastButton);
+		navBox.add(lastButton);
+		navBox.add(new JLabel()); navBox.add(downButton); navBox.add(new JLabel());
+		navBox.setPreferredSize(new Dimension(200, 200));
+		toolBox.add(navBox);
 
-		jf.add(BorderLayout.WEST, toolbox);
+		jf.add(BorderLayout.WEST, toolBox);
 		jf.setVisible(true);
 	}
 	
