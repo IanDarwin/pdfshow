@@ -8,6 +8,9 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -33,10 +36,11 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import com.darwinsys.swingui.MenuUtils;
 
 public class PdfShow {
-	
+
 	@SuppressWarnings("serial")
 	private static class DocTab extends JComponent {
 		private int pageNumber = 0;
+		private int pageCount = 0;
 		private PDDocument doc;
 		private PDFRenderer renderer;
 		DocTab() {
@@ -53,6 +57,52 @@ public class PdfShow {
 			}
 		}
 	}
+
+	private static class DrawState implements MouseListener, KeyListener{
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// Probably want to override this
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			// empty
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// empty
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// probably want to override this
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// empty
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// empty
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// empty
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// Probably want to override this
+		}
+
+	}
+	DrawState drawState;
+
 	private static JFrame jf;
 	private static JTabbedPane jtp;
 	private static DocTab tab;
@@ -60,11 +110,13 @@ public class PdfShow {
 	private static JTextField pageNumTF;
 
 	public static void main(String[] args) throws Exception {
-		
+
 		jf = new JFrame("PDFShow");
 		jf.setSize(1000,800);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
+		// TABBEDPANE
+
 		jtp = new JTabbedPane();
 		jtp.addChangeListener(evt -> {
 			tab = (DocTab)jtp.getSelectedComponent();
@@ -72,13 +124,18 @@ public class PdfShow {
 			pageNumTF.setText(Integer.toString(tab.pageNumber));
 		});
 		jf.add(BorderLayout.CENTER, jtp);
-		
+		JPanel glassPane = (JPanel) jf.getGlassPane();
+		glassPane.setLayout(null); // Displace default FlowLayout
+		glassPane.setVisible(true);
+
+		// MENUS
+
 		JMenuBar mb = new JMenuBar();
 		jf.setJMenuBar(mb);
-		ResourceBundle b = ResourceBundle.getBundle("Menus");
-		JMenu fm = MenuUtils.mkMenu(b, "file");
+		ResourceBundle rb = ResourceBundle.getBundle("Menus");
+		JMenu fm = MenuUtils.mkMenu(rb, "file");
 		mb.add(fm);
-		JMenuItem miOpen = MenuUtils.mkMenuItem(b, "file", "open");
+		JMenuItem miOpen = MenuUtils.mkMenuItem(rb, "file", "open");
 		miOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		fm.add(miOpen);
@@ -89,10 +146,22 @@ public class PdfShow {
 				JOptionPane.showMessageDialog(jf, "Can't open file: " + e1);
 			}
 		});
-		JMenuItem miQuit = MenuUtils.mkMenuItem(b, "file", "exit");
-		miQuit.addActionListener(e -> checkAndQuit());
+		JMenuItem miRecents = MenuUtils.mkMenuItem(rb, "file", "recents");
+		fm.add(miRecents);
+		JMenuItem miClose = MenuUtils.mkMenuItem(rb, "file", "close");
+		miClose.addActionListener(e -> {
+			if (tab != null) {
+				closeFile(tab);
+			}
+		});
+		fm.add(miClose);
+
 		fm.addSeparator();
+		JMenuItem miQuit = MenuUtils.mkMenuItem(rb, "file", "exit");
+		miQuit.addActionListener(e -> checkAndQuit());
 		fm.add(miQuit);
+
+		// TOOLBOX
 
 		JPanel toolBox = new JPanel();
 		toolBox.setBackground(Color.cyan);
@@ -117,17 +186,33 @@ public class PdfShow {
 		navBox.setPreferredSize(new Dimension(200, 200));
 		toolBox.add(navBox);
 
+		final JButton textButton = MenuUtils.mkButton(rb, "toolbox", "text");
+		textButton.addActionListener(e -> {
+			@SuppressWarnings("serial")
+			JComponent dlg = new JComponent() {};
+			glassPane.add(dlg);
+			dlg.setLocation(20,20);
+			dlg.setSize(50,50);
+			dlg.setBackground(Color.cyan);
+		});
+		toolBox.add(textButton);
+		final JButton lineButton = MenuUtils.mkButton(rb, "toolbox", "line");
+		lineButton.addActionListener(e -> {
+			JOptionPane.showMessageDialog(jf, "Line drawing not implemented yet");
+		});
+		toolBox.add(lineButton);
+
 		jf.add(BorderLayout.WEST, toolBox);
 		jf.setVisible(true);
 	}
-	
+
 	private static void checkAndQuit() {
 		// TODO Once we add drawing, check for unsaved changes
 		System.exit(0);
 	}
 
 	private static JFileChooser fc;
-	
+
 	private static File chooseFile() {
 		String curDir = System.getProperty("user.dir");
 		fc = new JFileChooser(curDir);
@@ -174,8 +259,9 @@ public class PdfShow {
 	private static void openFile(File file) throws Exception {
 		DocTab t = new DocTab();
 		t.doc = PDDocument.load(file);
+		t.pageCount = t.doc.getNumberOfPages();
 		t.renderer = new PDFRenderer(t.doc);
-		
+
 		jtp.addTab(file.getName(), t);
 		jtp.setSelectedIndex(jtp.getTabCount() - 1);
 		// If no exception, then change global tab
@@ -188,7 +274,7 @@ public class PdfShow {
 	}
 
 	private static void moveToPage(int newPage) {
-		int docPages = tab.doc.getNumberOfPages();
+		int docPages = tab.pageCount;
 		if (newPage < 0) {
 			newPage = 0;
 		}
@@ -198,7 +284,7 @@ public class PdfShow {
 		if (newPage == tab.pageNumber) {
 			return;
 		}
-		pageNumTF.setText(Integer.toString(newPage));
+		pageNumTF.setText(Integer.toString(newPage) +  " of " + tab.pageCount);
 		tab.pageNumber = newPage;
 		upButton.setEnabled(tab.pageNumber > 0);
 		downButton.setEnabled(tab.pageNumber < docPages);

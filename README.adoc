@@ -12,8 +12,9 @@ UI
 	Scaleable layout, full-screen.
 	Better layout of toolbox.
 	Key listener so down/up arrows work
+	Recents menu (by full path)
 
-Ability to auto-back-and-forth between a chosen slide in each of two presos
+Ability to auto-transition back-and-forth between a chosen slide in each of two presos
 
 Longer:
 	Drawing tools: text, polyline
