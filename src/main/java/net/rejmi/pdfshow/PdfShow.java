@@ -7,8 +7,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -58,50 +60,63 @@ public class PdfShow {
 		}
 	}
 
-	private static class DrawState implements MouseListener, KeyListener{
+	private static class State {
 
-		@Override
+		/** Anything to be done on entering a given state */
+		public void enterState() {
+			//
+		}
+
+		public void leaveState() {
+			//
+		}
+
 		public void keyTyped(KeyEvent e) {
 			// Probably want to override this
 		}
 
-		@Override
-		public void keyPressed(KeyEvent e) {
-			// empty
-		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-			// empty
-		}
-
-		@Override
 		public void mouseClicked(MouseEvent e) {
 			// probably want to override this
 		}
 
-		@Override
 		public void mousePressed(MouseEvent e) {
 			// empty
 		}
 
-		@Override
 		public void mouseReleased(MouseEvent e) {
 			// empty
 		}
 
-		@Override
 		public void mouseEntered(MouseEvent e) {
 			// empty
 		}
 
-		@Override
 		public void mouseExited(MouseEvent e) {
 			// Probably want to override this
 		}
-
 	}
-	DrawState drawState;
+	static class ViewState extends State {
+		//
+	}
+	static final ViewState viewState = new ViewState();
+
+	static class TextDrawState extends State {
+		//
+	}
+	static final TextDrawState textDrawState = new TextDrawState();
+
+	static class LineDrawState extends State {
+		//
+	}
+	static final LineDrawState lineDrawState = new LineDrawState();
+
+	static State currentState;
+
+	static void gotoState(State state) {
+		currentState.leaveState();
+		currentState = state;
+		currentState.enterState();
+	}
 
 	private static JFrame jf;
 	private static JTabbedPane jtp;
@@ -115,7 +130,7 @@ public class PdfShow {
 		jf.setSize(1000,800);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		// TABBEDPANE
+		// TABBEDPANE (main window for viewing PDFs)
 
 		jtp = new JTabbedPane();
 		jtp.addChangeListener(evt -> {
@@ -201,6 +216,31 @@ public class PdfShow {
 			JOptionPane.showMessageDialog(jf, "Line drawing not implemented yet");
 		});
 		toolBox.add(lineButton);
+
+		// GENERIC VIEW LISTENERS - Just delegate directly to currentState
+		gotoState(viewState);
+		MouseListener ml = new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				currentState.mousePressed(e);
+			};
+			public void mouseClicked(MouseEvent e) {
+				currentState.mouseClicked(e);
+			}
+			public void mouseReleased(MouseEvent e) {
+				currentState.mouseReleased(e);
+			}
+			public void mouseEntered(MouseEvent e) {
+				currentState.mouseEntered(e);
+			}
+			public void mouseExited(MouseEvent e) {
+				currentState.mouseExited(e);
+			};
+		};
+		KeyListener kl = new KeyAdapter() {
+			public void keyTyped(KeyEvent e) {
+				currentState.keyTyped(e);
+			};
+		};
 
 		jf.add(BorderLayout.WEST, toolBox);
 		jf.setVisible(true);
