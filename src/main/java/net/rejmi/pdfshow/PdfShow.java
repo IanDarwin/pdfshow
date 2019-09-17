@@ -36,6 +36,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
 import com.darwinsys.swingui.MenuUtils;
+import com.darwinsys.swingui.RecentMenu;
 
 public class PdfShow {
 
@@ -96,7 +97,14 @@ public class PdfShow {
 		}
 	}
 	static class ViewState extends State {
-		//
+		@Override
+		public void keyTyped(KeyEvent e) {
+			System.out.println("PdfShow.ViewState.keyTyped() " + e.getKeyCode());
+		}
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			System.out.println("PdfShow.ViewState.mouseEntered()");
+		}
 	}
 	static final ViewState viewState = new ViewState();
 
@@ -113,7 +121,8 @@ public class PdfShow {
 	static State currentState;
 
 	static void gotoState(State state) {
-		currentState.leaveState();
+		if (currentState != null)	// At beginning of program
+			currentState.leaveState();
 		currentState = state;
 		currentState.enterState();
 	}
@@ -154,15 +163,19 @@ public class PdfShow {
 		miOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		fm.add(miOpen);
+		final RecentMenu recents = new RecentMenu(PdfShow.class) {
+			public void loadFile(String fileName) throws IOException {
+				openPdfFile(new File(fileName));
+			}
+		};
 		miOpen.addActionListener(e -> {
 			try {
-				openFile(chooseFile());
+				recents.openFile(chooseFile().getAbsolutePath());
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(jf, "Can't open file: " + e1);
 			}
 		});
-		JMenuItem miRecents = MenuUtils.mkMenuItem(rb, "file", "recents");
-		fm.add(miRecents);
+		fm.add(recents);
 		JMenuItem miClose = MenuUtils.mkMenuItem(rb, "file", "close");
 		miClose.addActionListener(e -> {
 			if (tab != null) {
@@ -220,27 +233,37 @@ public class PdfShow {
 		// GENERIC VIEW LISTENERS - Just delegate directly to currentState
 		gotoState(viewState);
 		MouseListener ml = new MouseAdapter() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 				currentState.mousePressed(e);
 			};
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				currentState.mouseClicked(e);
 			}
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				currentState.mouseReleased(e);
 			}
 			public void mouseEntered(MouseEvent e) {
 				currentState.mouseEntered(e);
 			}
+			@Override
 			public void mouseExited(MouseEvent e) {
 				currentState.mouseExited(e);
 			};
 		};
+		jf.addMouseListener(ml);
 		KeyListener kl = new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				System.out.println("PdfShow.main(...).new KeyAdapter() {...}.keyPressed()");
+			};
+			@Override
 			public void keyTyped(KeyEvent e) {
 				currentState.keyTyped(e);
 			};
 		};
+		jf.addKeyListener(kl);
 
 		jf.add(BorderLayout.WEST, toolBox);
 		jf.setVisible(true);
@@ -296,7 +319,7 @@ public class PdfShow {
 		return null;
 	}
 
-	private static void openFile(File file) throws Exception {
+	private static void openPdfFile(File file) throws IOException {
 		DocTab t = new DocTab();
 		t.doc = PDDocument.load(file);
 		t.pageCount = t.doc.getNumberOfPages();
@@ -304,7 +327,7 @@ public class PdfShow {
 
 		jtp.addTab(file.getName(), t);
 		jtp.setSelectedIndex(jtp.getTabCount() - 1);
-		// If no exception, then change global tab
+		// If no exception, then set 't' to be global current tab
 		tab = t;
 		moveToPage(0);
 	}
