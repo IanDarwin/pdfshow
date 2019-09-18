@@ -134,7 +134,10 @@ public class PdfShow {
 	private static JTextField pageNumTF;
 
 	public static void main(String[] args) throws Exception {
+		new PdfShow();
+	}
 
+	PdfShow() {
 		jf = new JFrame("PDFShow");
 		jf.setSize(1000,800);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -163,7 +166,7 @@ public class PdfShow {
 		miOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		fm.add(miOpen);
-		final RecentMenu recents = new RecentMenu(PdfShow.class) {
+		final RecentMenu recents = new RecentMenu(this) {
 			public void loadFile(String fileName) throws IOException {
 				openPdfFile(new File(fileName));
 			}
