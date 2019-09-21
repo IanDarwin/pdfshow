@@ -179,6 +179,9 @@ public class PdfShow {
 			}
 		});
 		fm.add(recents);
+		JMenuItem miClearRecents = MenuUtils.mkMenuItem(rb, "file", "clear_recents");
+		miClearRecents.addActionListener(e -> recents.clear());
+		fm.add(miClearRecents);
 		JMenuItem miClose = MenuUtils.mkMenuItem(rb, "file", "close");
 		miClose.addActionListener(e -> {
 			if (tab != null) {
@@ -263,6 +266,7 @@ public class PdfShow {
 			};
 			@Override
 			public void keyTyped(KeyEvent e) {
+				System.out.println("PdfShow.main(...).new KeyAdapter() {...}.keyTyped()");
 				currentState.keyTyped(e);
 			};
 		};
