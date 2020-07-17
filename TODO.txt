@@ -1,0 +1,23 @@
+== ToDo
+
+Buglets:
+	jump to page #, thinks on page 1 when on page n
+	Return key should advance, DEL should go back
+
+Major:
+	Add text and line annotation code
+
+UI
+	Scaleable layout, full-screen.
+	Better layout of toolbox.
+	Key listener so down/up arrows work
+
+Ability to auto-transition back-and-forth between a chosen slide in each of two presos
+
+Bookmarks (editable text)
+
+Longer:
+	Drawing tools: text, polyline
+
+Weird ideas:
+	A back button for when you scroll past a bunch of pages (Stack of page#s)
