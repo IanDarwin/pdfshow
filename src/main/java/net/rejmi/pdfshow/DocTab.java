@@ -29,7 +29,8 @@ class DocTab extends JComponent {
 		pageCount = doc.getNumberOfPages();
 		renderer = new PDFRenderer(doc);
 		addIns = new List[pageCount];
-		addIn(new GText(50, 50, "Hello World of Kludgery"));
+		// These were put in to confirm "draw" operation before UI to add them:
+		// addIn(new GText(50, 50, "Hello World of Kludgery"));
 		addIn(new GLine(100, 100, 400, 400));
 		setSize(800, 800);
 	}
@@ -39,6 +40,14 @@ class DocTab extends JComponent {
 			addIns[pageNumber] = new ArrayList<GObject>();
 		}
 		addIns[pageNumber].add(gobj);
+	}
+	
+	void close() {
+		try {
+			doc.close();
+		} catch (IOException e) {
+			e.printStackTrace();	// Nobody wants to listen to your chuntering.
+		}
 	}
 
 	@Override
@@ -52,7 +61,7 @@ class DocTab extends JComponent {
 				}
 			}
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Failure: " + e);
+			JOptionPane.showMessageDialog(PdfShow.jf, "Failure: " + e);
 		}
 	}
 }

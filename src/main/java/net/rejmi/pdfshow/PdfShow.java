@@ -11,12 +11,12 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,15 +39,24 @@ import com.darwinsys.swingui.RecentMenu;
  * @author Ian Darwin
  */
 public class PdfShow {
-	
+
 	public static void main(String[] args) throws Exception {
 		final PdfShow pdfShow = new PdfShow();
 		for (String arg : args) {
-			pdfShow.openPdfFile(new File(arg));
+			final File file = new File(arg);
+			if (!file.canRead()) {
+				JOptionPane.showMessageDialog(PdfShow.jf, "Can't open file " + file);
+				continue;
+			}
+			pdfShow.openPdfFile(file);
 		}
 	}
 
 
+	/** 
+	 * State is a class, not an interface, so subclasses don't
+	 * have to implement every method.
+	 */
 	private static abstract class State {
 
 		/** Anything to be done on entering a given state */
@@ -71,6 +80,10 @@ public class PdfShow {
 			// empty
 		}
 
+		public void mouseDragged(MouseEvent e) {
+			// empty
+		}
+
 		public void mouseReleased(MouseEvent e) {
 			// empty
 		}
@@ -83,6 +96,8 @@ public class PdfShow {
 			// Probably want to override this
 		}
 	}
+
+	/** State for normal viewing */
 	static class ViewState extends State {
 		@Override
 		public void keyTyped(KeyEvent e) {
@@ -95,15 +110,28 @@ public class PdfShow {
 	}
 	static final ViewState viewState = new ViewState();
 
+	/** State for adding text annotations */
 	static class TextDrawState extends State {
-		//
+		@Override
+		public void mousePressed(MouseEvent e) {
+			System.out.println("PdfShow.TextDrawState.mousePressed()");
+			String text = JOptionPane.showInputDialog("Text?");
+			if (text != null) {
+				currentTab.addIn(new GText(e.getX(), e.getY(), text));
+			}
+		}
 	}
-	static final TextDrawState textDrawState = new TextDrawState();
+	static final State textDrawState = new TextDrawState();
 
 	static class LineDrawState extends State {
 		//
 	}
-	static final LineDrawState lineDrawState = new LineDrawState();
+	static final State lineDrawState = new LineDrawState();
+
+	static class PolyLineDrawState extends State {
+		//
+	}
+	static final State polyLineDrawState = new PolyLineDrawState();
 
 	static State currentState;
 
@@ -114,13 +142,23 @@ public class PdfShow {
 		currentState.enterState();
 	}
 
-	private static JFrame jf;
+	static JFrame jf;
 	private static JTabbedPane tabPane;
 	private static DocTab currentTab;
 	private static JButton upButton, downButton;
 	private static JTextField pageNumTF;
 
+	// Listeners; these get added to each DocTab in openPdfFile().
+	private MouseListener ml;
+	private MouseMotionListener mml;
+	private KeyListener kl;
+
 	PdfShow() {
+
+		gotoState(viewState);
+
+		// GUI SETUP
+
 		jf = new JFrame("PDFShow");
 		jf.setSize(1000,800);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -134,10 +172,6 @@ public class PdfShow {
 			pageNumTF.setText(Integer.toString(currentTab.pageNumber));
 		});
 		jf.add(BorderLayout.CENTER, tabPane);
-		JPanel glassPane = (JPanel) jf.getGlassPane();
-		glassPane.setLayout(null); // Displace default FlowLayout
-		glassPane.setVisible(true);
-
 		// MENUS
 
 		JMenuBar mb = new JMenuBar();
@@ -203,29 +237,28 @@ public class PdfShow {
 		navBox.setPreferredSize(new Dimension(200, 200));
 		toolBox.add(navBox);
 
+		// Mode buttons
 		final JButton textButton = MenuUtils.mkButton(rb, "toolbox", "text");
 		textButton.addActionListener(e -> {
-			@SuppressWarnings("serial")
-			JComponent dlg = new JComponent() {};
-			glassPane.add(dlg);
-			dlg.setLocation(20,20);
-			dlg.setSize(50,50);
-			dlg.setBackground(Color.cyan);
+			System.out.println("PdfShow.PdfShow(): going to text state");
+			gotoState(textDrawState);
+//			@SuppressWarnings("serial")
+//			JComponent dlg = new JComponent() {};
+//			glassPane.add(dlg);
+//			dlg.setLocation(20,20);
+//			dlg.setSize(50,50);
+//			dlg.setBackground(Color.cyan);
 		});
 		toolBox.add(textButton);
 		final JButton lineButton = MenuUtils.mkButton(rb, "toolbox", "line");
 		lineButton.addActionListener(e -> {
-			@SuppressWarnings("serial")
-			JComponent dlg = new JComponent() {};
-			dlg.setLocation(20,20);
-			dlg.setSize(50,50);
-			dlg.setBackground(Color.cyan);
+			gotoState(lineDrawState);
 		});
 		toolBox.add(lineButton);
 
 		// GENERIC VIEW LISTENERS - Just delegate directly to currentState
 		gotoState(viewState);
-		MouseListener ml = new MouseAdapter() {
+		ml = new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				currentState.mousePressed(e);
@@ -238,6 +271,7 @@ public class PdfShow {
 			public void mouseReleased(MouseEvent e) {
 				currentState.mouseReleased(e);
 			}
+			@Override
 			public void mouseEntered(MouseEvent e) {
 				currentState.mouseEntered(e);
 			}
@@ -246,8 +280,22 @@ public class PdfShow {
 				currentState.mouseExited(e);
 			};
 		};
-		jf.addMouseListener(ml);
-		KeyListener kl = new KeyAdapter() {
+
+		mml = new MouseMotionListener() {
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				currentState.mouseDragged(e);
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				// Ignore
+			}		
+		};
+
+		kl = new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				System.out.println("PdfShow.main(...).new KeyAdapter() {...}.keyPressed()");
 			};
@@ -257,7 +305,6 @@ public class PdfShow {
 				currentState.keyTyped(e);
 			};
 		};
-		jf.addKeyListener(kl);
 
 		jf.add(BorderLayout.WEST, toolBox);
 		jf.setVisible(true);
@@ -315,6 +362,9 @@ public class PdfShow {
 
 	private void openPdfFile(File file) throws IOException {
 		DocTab t = new DocTab(PDDocument.load(file));
+		t.addKeyListener(kl);
+		t.addMouseListener(ml);
+		t.addMouseMotionListener(mml);
 
 		tabPane.addTab(file.getName(), currentTab = t);
 		tabPane.setSelectedIndex(tabPane.getTabCount() - 1);
@@ -322,7 +372,8 @@ public class PdfShow {
 	}
 
 	private static void closeFile(DocTab dt) {
-		// XXX
+		dt.close();
+		tabPane.remove(dt);
 	}
 
 	private static void moveToPage(int newPage) {
