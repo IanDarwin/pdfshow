@@ -38,11 +38,17 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import com.darwinsys.swingui.MenuUtils;
 import com.darwinsys.swingui.RecentMenu;
 
+/** A simpler PDF viewer
+ * @author Ian Darwin
+ */
 public class PdfShow {
 
+	/** A visual rep of one PDF document, for placing within a TabView */
 	@SuppressWarnings("serial")
 	private static class DocTab extends JComponent {
+		/** zero-origin pageNumber, not from document's page numbering */
 		private int pageNumber = 0;
+		/** Total size of this document */
 		private int pageCount = 0;
 		private PDDocument doc;
 		private PDFRenderer renderer;
