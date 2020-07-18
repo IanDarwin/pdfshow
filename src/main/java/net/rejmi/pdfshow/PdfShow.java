@@ -3,6 +3,7 @@ package net.rejmi.pdfshow;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -13,8 +14,11 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
@@ -42,32 +46,98 @@ import com.darwinsys.swingui.RecentMenu;
  * @author Ian Darwin
  */
 public class PdfShow {
+	
+	/** pdfbox leaves the Graphics object in upside down mode */
+	static final AffineTransform UPRIGHT_TRANSLATE_INSTANCE = AffineTransform.getTranslateInstance(1, -1);
+
+	public static void main(String[] args) throws Exception {
+		final PdfShow pdfShow = new PdfShow();
+		for (String arg : args) {
+			pdfShow.openPdfFile(new File(arg));
+		}
+	}
 
 	/** A visual rep of one PDF document, for placing within a TabView */
 	@SuppressWarnings("serial")
-	private static class DocTab extends JComponent {
+	private class DocTab extends JComponent {
 		/** zero-origin pageNumber, not from document's page numbering */
 		private int pageNumber = 0;
 		/** Total size of this document */
 		private int pageCount = 0;
 		private PDDocument doc;
 		private PDFRenderer renderer;
-		DocTab() {
+		private List<GObject>[] addIns;
+		DocTab(PDDocument document) {
 			super();
+			this.doc = document;
+			pageCount = doc.getNumberOfPages();
+			renderer = new PDFRenderer(doc);
+			addIns = new List[pageCount];
+			addIn(new GText(50, 50, "Hello World of Kludgery"));
+			addIn(new GLine(100, 100, 400, 400));
 			setSize(800, 800);
+		}
+		void addIn(GObject gobj) {
+			if (addIns[pageNumber] == null) {
+				addIns[pageNumber] = new ArrayList<GObject>();
+			}
+			addIns[pageNumber].add(gobj);
 		}
 		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			try {
 				renderer.renderPageToGraphics(pageNumber, (Graphics2D) g);
+				if (addIns[pageNumber] != null) {
+					for (GObject obj : addIns[pageNumber]) {
+						obj.render(g);
+					}
+				}
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(jf, "Failure: " + e);
 			}
 		}
 	}
+	
+	/** This represents additions that we make to the PDF.
+	 * In the present version they are not saved with the PDF!
+	 */
+	abstract class GObject {
+		int x, y;
+		Color color;
+		GObject(int x, int y) {
+			this.x = x; this.y = y;
+		}
+		abstract void render(Graphics g);
+	}
+	class GText extends GObject {
+		String text;
+		Font font;
+		GText(int x, int y, String text) {
+			super(x, y);
+			this.text = text;
+		}
+		void render(Graphics g) {
+			((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
+			g.drawString(text, x, y);
+		}
+	}
+	class GLine extends GObject {
+		int lineWidth;
+		int endX, endY;
+		GLine(int x, int y, int endX, int endY) {
+			super(x, y);
+			this.endX = endX;
+			this.endY = endY;
+		}
+		void render(Graphics g) {
+			((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
+			g.drawLine(x, y, endX, endY);
+		}
+	}
+	
 
-	private static class State {
+	private static abstract class State {
 
 		/** Anything to be done on entering a given state */
 		public void enterState() {
@@ -109,7 +179,7 @@ public class PdfShow {
 		}
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			System.out.println("PdfShow.ViewState.mouseEntered()");
+			// System.out.println("PdfShow.ViewState.mouseEntered()");
 		}
 	}
 	static final ViewState viewState = new ViewState();
@@ -134,14 +204,10 @@ public class PdfShow {
 	}
 
 	private static JFrame jf;
-	private static JTabbedPane jtp;
-	private static DocTab tab;
+	private static JTabbedPane tabPane;
+	private static DocTab currentTab;
 	private static JButton upButton, downButton;
 	private static JTextField pageNumTF;
-
-	public static void main(String[] args) throws Exception {
-		new PdfShow();
-	}
 
 	PdfShow() {
 		jf = new JFrame("PDFShow");
@@ -150,13 +216,13 @@ public class PdfShow {
 
 		// TABBEDPANE (main window for viewing PDFs)
 
-		jtp = new JTabbedPane();
-		jtp.addChangeListener(evt -> {
-			tab = (DocTab)jtp.getSelectedComponent();
+		tabPane = new JTabbedPane();
+		tabPane.addChangeListener(evt -> {
+			currentTab = (DocTab)tabPane.getSelectedComponent();
 			// This shouldn't be needed...
-			pageNumTF.setText(Integer.toString(tab.pageNumber));
+			pageNumTF.setText(Integer.toString(currentTab.pageNumber));
 		});
-		jf.add(BorderLayout.CENTER, jtp);
+		jf.add(BorderLayout.CENTER, tabPane);
 		JPanel glassPane = (JPanel) jf.getGlassPane();
 		glassPane.setLayout(null); // Displace default FlowLayout
 		glassPane.setVisible(true);
@@ -190,8 +256,8 @@ public class PdfShow {
 		fm.add(miClearRecents);
 		JMenuItem miClose = MenuUtils.mkMenuItem(rb, "file", "close");
 		miClose.addActionListener(e -> {
-			if (tab != null) {
-				closeFile(tab);
+			if (currentTab != null) {
+				closeFile(currentTab);
 			}
 		});
 		fm.add(miClose);
@@ -209,10 +275,10 @@ public class PdfShow {
 		JPanel navBox = new JPanel();
 		navBox.setLayout(new GridLayout(3,3));
 		upButton = new JButton("Up");
-		upButton.addActionListener(e -> moveToPage(tab.pageNumber - 1));
+		upButton.addActionListener(e -> moveToPage(currentTab.pageNumber - 1));
 		navBox.add(new JLabel()); navBox.add(upButton); navBox.add(new JLabel());
 		downButton = new JButton("Down");
-		downButton.addActionListener(e -> moveToPage(tab.pageNumber + 1));
+		downButton.addActionListener(e -> moveToPage(currentTab.pageNumber + 1));
 		JButton firstButton = new JButton("<<"), 
 			lastButton = new JButton(">>");
 		firstButton.addActionListener(e -> moveToPage(0));
@@ -238,7 +304,11 @@ public class PdfShow {
 		toolBox.add(textButton);
 		final JButton lineButton = MenuUtils.mkButton(rb, "toolbox", "line");
 		lineButton.addActionListener(e -> {
-			JOptionPane.showMessageDialog(jf, "Line drawing not implemented yet");
+			@SuppressWarnings("serial")
+			JComponent dlg = new JComponent() {};
+			dlg.setLocation(20,20);
+			dlg.setSize(50,50);
+			dlg.setBackground(Color.cyan);
 		});
 		toolBox.add(lineButton);
 
@@ -332,16 +402,11 @@ public class PdfShow {
 		return null;
 	}
 
-	private static void openPdfFile(File file) throws IOException {
-		DocTab t = new DocTab();
-		t.doc = PDDocument.load(file);
-		t.pageCount = t.doc.getNumberOfPages();
-		t.renderer = new PDFRenderer(t.doc);
+	private void openPdfFile(File file) throws IOException {
+		DocTab t = new DocTab(PDDocument.load(file));
 
-		jtp.addTab(file.getName(), t);
-		jtp.setSelectedIndex(jtp.getTabCount() - 1);
-		// If no exception, then set 't' to be global current tab
-		tab = t;
+		tabPane.addTab(file.getName(), currentTab = t);
+		tabPane.setSelectedIndex(tabPane.getTabCount() - 1);
 		moveToPage(0);
 	}
 
@@ -350,20 +415,20 @@ public class PdfShow {
 	}
 
 	private static void moveToPage(int newPage) {
-		int docPages = tab.pageCount;
+		int docPages = currentTab.pageCount;
 		if (newPage < 0) {
 			newPage = 0;
 		}
 		if (newPage >= docPages) {
 			newPage = docPages - 1;
 		}
-		if (newPage == tab.pageNumber) {
+		if (newPage == currentTab.pageNumber) {
 			return;
 		}
-		pageNumTF.setText(Integer.toString(newPage) +  " of " + tab.pageCount);
-		tab.pageNumber = newPage;
-		upButton.setEnabled(tab.pageNumber > 0);
-		downButton.setEnabled(tab.pageNumber < docPages);
-		tab.repaint();
+		pageNumTF.setText(Integer.toString(newPage) +  " of " + currentTab.pageCount);
+		currentTab.pageNumber = newPage;
+		upButton.setEnabled(currentTab.pageNumber > 0);
+		downButton.setEnabled(currentTab.pageNumber < docPages);
+		currentTab.repaint();
 	}
 }
