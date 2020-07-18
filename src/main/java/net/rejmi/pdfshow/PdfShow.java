@@ -3,9 +3,6 @@ package net.rejmi.pdfshow;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
@@ -14,11 +11,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
@@ -37,7 +31,6 @@ import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.rendering.PDFRenderer;
 
 import com.darwinsys.swingui.MenuUtils;
 import com.darwinsys.swingui.RecentMenu;
@@ -47,9 +40,6 @@ import com.darwinsys.swingui.RecentMenu;
  */
 public class PdfShow {
 	
-	/** pdfbox leaves the Graphics object in upside down mode */
-	static final AffineTransform UPRIGHT_TRANSLATE_INSTANCE = AffineTransform.getTranslateInstance(1, -1);
-
 	public static void main(String[] args) throws Exception {
 		final PdfShow pdfShow = new PdfShow();
 		for (String arg : args) {
@@ -57,86 +47,6 @@ public class PdfShow {
 		}
 	}
 
-	/** A visual rep of one PDF document, for placing within a TabView */
-	@SuppressWarnings("serial")
-	private class DocTab extends JComponent {
-		/** zero-origin pageNumber, not from document's page numbering */
-		private int pageNumber = 0;
-		/** Total size of this document */
-		private int pageCount = 0;
-		private PDDocument doc;
-		private PDFRenderer renderer;
-		private List<GObject>[] addIns;
-		DocTab(PDDocument document) {
-			super();
-			this.doc = document;
-			pageCount = doc.getNumberOfPages();
-			renderer = new PDFRenderer(doc);
-			addIns = new List[pageCount];
-			addIn(new GText(50, 50, "Hello World of Kludgery"));
-			addIn(new GLine(100, 100, 400, 400));
-			setSize(800, 800);
-		}
-		void addIn(GObject gobj) {
-			if (addIns[pageNumber] == null) {
-				addIns[pageNumber] = new ArrayList<GObject>();
-			}
-			addIns[pageNumber].add(gobj);
-		}
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			try {
-				renderer.renderPageToGraphics(pageNumber, (Graphics2D) g);
-				if (addIns[pageNumber] != null) {
-					for (GObject obj : addIns[pageNumber]) {
-						obj.render(g);
-					}
-				}
-			} catch (IOException e) {
-				JOptionPane.showMessageDialog(jf, "Failure: " + e);
-			}
-		}
-	}
-	
-	/** This represents additions that we make to the PDF.
-	 * In the present version they are not saved with the PDF!
-	 */
-	abstract class GObject {
-		int x, y;
-		Color color;
-		GObject(int x, int y) {
-			this.x = x; this.y = y;
-		}
-		abstract void render(Graphics g);
-	}
-	class GText extends GObject {
-		String text;
-		Font font = new Font("Sans", Font.PLAIN, 18);
-		GText(int x, int y, String text) {
-			super(x, y);
-			this.text = text;
-		}
-		void render(Graphics g) {
-			((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
-			g.setFont(font);
-			g.drawString(text, x, y);
-		}
-	}
-	class GLine extends GObject {
-		int lineWidth;
-		int endX, endY;
-		GLine(int x, int y, int endX, int endY) {
-			super(x, y);
-			this.endX = endX;
-			this.endY = endY;
-		}
-		void render(Graphics g) {
-			((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
-			g.drawLine(x, y, endX, endY);
-		}
-	}
-	
 
 	private static abstract class State {
 
