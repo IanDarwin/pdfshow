@@ -112,13 +112,14 @@ public class PdfShow {
 	}
 	class GText extends GObject {
 		String text;
-		Font font;
+		Font font = new Font("Sans", Font.PLAIN, 18);
 		GText(int x, int y, String text) {
 			super(x, y);
 			this.text = text;
 		}
 		void render(Graphics g) {
 			((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
+			g.setFont(font);
 			g.drawString(text, x, y);
 		}
 	}
