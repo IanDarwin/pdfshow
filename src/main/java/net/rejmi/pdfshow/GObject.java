@@ -30,6 +30,7 @@ class GText extends GObject {
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
+		g.setColor(Color.red);
 		g.setFont(font);
 		g.drawString(text, x, y);
 	}
@@ -51,8 +52,8 @@ class GLine extends GObject {
 
 class GPolyLine extends GObject {
 	private int[] xPoints, yPoints;
-	GPolyLine(int x, int y, int[] xPoints, int[] yPoints) {
-		super(x, y);
+	GPolyLine(int[] xPoints, int[] yPoints) {
+		super(xPoints[0], yPoints[0]);
 		if (xPoints.length != yPoints.length)
 			throw new IllegalArgumentException("GPolyLine(): xlen != ylen");
 		this.xPoints = xPoints;
@@ -60,6 +61,7 @@ class GPolyLine extends GObject {
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
+		g.setColor(Color.RED);
 		g.drawPolyline(xPoints, yPoints, xPoints.length);
 	}
 }

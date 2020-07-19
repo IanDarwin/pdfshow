@@ -64,6 +64,13 @@ public class PdfShow {
 		public void enterState() {
 			//
 		}
+		
+		/** Called by any State when it is done, e.g., after
+		 * composing and adding a GObject, currentTab.repaint(), done()
+		 */
+		public void done() {
+			gotoState(viewState);
+		}
 
 		public void leaveState() {
 			//
@@ -102,11 +109,8 @@ public class PdfShow {
 	static class ViewState extends State {
 		@Override
 		public void keyTyped(KeyEvent e) {
+			// XXX why does this not get activated?
 			System.out.println("PdfShow.ViewState.keyTyped() " + e.getKeyCode());
-		}
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// System.out.println("PdfShow.ViewState.mouseEntered()");
 		}
 	}
 	static final ViewState viewState = new ViewState();
@@ -119,18 +123,78 @@ public class PdfShow {
 			String text = JOptionPane.showInputDialog("Text?");
 			if (text != null) {
 				currentTab.addIn(new GText(e.getX(), e.getY(), text));
+				done();
 			}
 		}
 	}
 	static final State textDrawState = new TextDrawState();
 
+	/** For now, crude line-drawing: click start, click end. */
 	static class LineDrawState extends State {
-		//
+		int startX = -1, startY = -1;
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			final int NOT_SET = -1;
+			if (startX == NOT_SET) { // First click
+				startX = e.getX();
+				startY = e.getY();
+			} else {
+				currentTab.addIn(
+					new GLine(startX, startY, e.getX(), e.getY()));
+				startX = NOT_SET;
+				currentTab.repaint();
+				done();
+			}
+		}
 	}
 	static final State lineDrawState = new LineDrawState();
 
 	static class PolyLineDrawState extends State {
-		//
+		enum Mode {IDLE, DRAWING };
+		Mode mode = Mode.IDLE;
+		// Static arrays to avoid multiple allocations
+		static int[] x = new int[750];
+		static int[] y = new int[750];
+		int n = 0;
+		@Override
+		public void mousePressed(MouseEvent e) {
+			System.out.println("PdfShow.PolyLineDrawState.mouseClicked()");
+			n = 0;
+			mode = Mode.DRAWING;
+			addPoint(e.getX(), e.getY());
+		}
+		private void addPoint(int x, int y) {
+			PolyLineDrawState.x[n] = x;
+			PolyLineDrawState.y[n] = y;
+			++n;
+		}
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (n >= x.length) {
+				return;
+			}
+			int lastx = x[n-1]; int lasty = y[n-1];
+			int newx = e.getX(); int newy = e.getY();
+			int dx = newx - lastx;
+			if (dx > -5 && dx < +5)
+				return;
+			int dy = newy - lasty;
+			if (dy > -1 && dy < +5)
+				return;
+			addPoint(newx, newy);
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			System.out.println("PdfShow.PolyLineDrawState.mouseReleased()");
+			int[] xPoints = new int[n];
+			System.arraycopy(x, 0, xPoints, 0, n);
+			int[] yPoints = new int[n];
+			System.arraycopy(y, 0, yPoints, 0, n);
+			currentTab.addIn(
+				new GPolyLine(xPoints, yPoints));
+			currentTab.repaint();
+			done();
+		}
 	}
 	static final State polyLineDrawState = new PolyLineDrawState();
 
@@ -185,6 +249,7 @@ public class PdfShow {
 		miOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		fm.add(miOpen);
+		@SuppressWarnings("serial")
 		final RecentMenu recents = new RecentMenu(this) {
 			public void loadFile(String fileName) throws IOException {
 				openPdfFile(new File(fileName));
@@ -284,12 +349,14 @@ public class PdfShow {
 		toolBox.add(lineButton);
 		
 		final JButton polyLineButton = MenuUtils.mkButton(rb, "toolbox", "polyline");
+		polyLineButton.addActionListener(e -> {
+			gotoState(polyLineDrawState);
+		});
 		toolBox.add(polyLineButton);
 		
 		sidePanel.add(toolBox);
 
 		// GENERIC VIEW LISTENERS - Just delegate directly to currentState
-		gotoState(viewState);
 		ml = new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
