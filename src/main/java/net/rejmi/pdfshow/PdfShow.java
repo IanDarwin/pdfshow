@@ -133,18 +133,16 @@ public class PdfShow {
 	static class LineDrawState extends State {
 		int startX = -1, startY = -1;
 		@Override
-		public void mouseClicked(MouseEvent e) {
-			final int NOT_SET = -1;
-			if (startX == NOT_SET) { // First click
-				startX = e.getX();
-				startY = e.getY();
-			} else {
-				currentTab.addIn(
+		public void mousePressed(MouseEvent e) {
+			startX = e.getX();
+			startY = e.getY();
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			currentTab.addIn(
 					new GLine(startX, startY, e.getX(), e.getY()));
-				startX = NOT_SET;
-				currentTab.repaint();
-				done();
-			}
+			currentTab.repaint();
+			done();
 		}
 	}
 	static final State lineDrawState = new LineDrawState();
@@ -197,6 +195,23 @@ public class PdfShow {
 		}
 	}
 	static final State polyLineDrawState = new PolyLineDrawState();
+	
+	static class RectangleState extends State {
+		int ulX = -1, ulY = -1;
+		@Override
+		public void mousePressed(MouseEvent e) {
+			ulX = e.getX();
+			ulY = e.getY();
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			currentTab.addIn(new GRectangle(ulX, ulY, e.getX(), e.getY()));
+			currentTab.repaint(); // XXX Shoudl addIn() do repaint() for us?
+			done();
+		}
+		
+	}
+	static final State rectangleState = new RectangleState();
 
 	static State currentState;
 
@@ -330,29 +345,20 @@ public class PdfShow {
 		// Mode buttons
 		toolBox.add(new JButton("Select")); // Needed??
 		final JButton textButton = MenuUtils.mkButton(rb, "toolbox", "text");
-		textButton.addActionListener(e -> {
-			System.out.println("PdfShow.PdfShow(): going to text state");
-			gotoState(textDrawState);
-//			@SuppressWarnings("serial")
-//			JComponent dlg = new JComponent() {};
-//			glassPane.add(dlg);
-//			dlg.setLocation(20,20);
-//			dlg.setSize(50,50);
-//			dlg.setBackground(Color.cyan);
-		});
+		textButton.addActionListener(e -> gotoState(textDrawState));
 		toolBox.add(textButton);
 		
 		final JButton lineButton = MenuUtils.mkButton(rb, "toolbox", "line");
-		lineButton.addActionListener(e -> {
-			gotoState(lineDrawState);
-		});
+		lineButton.addActionListener(e -> gotoState(lineDrawState));
 		toolBox.add(lineButton);
 		
 		final JButton polyLineButton = MenuUtils.mkButton(rb, "toolbox", "polyline");
-		polyLineButton.addActionListener(e -> {
-			gotoState(polyLineDrawState);
-		});
+		polyLineButton.addActionListener(e -> gotoState(polyLineDrawState));
 		toolBox.add(polyLineButton);
+		
+		final JButton rectangleButton = MenuUtils.mkButton(rb, "toolbox", "rectangle");
+		rectangleButton.addActionListener(e -> gotoState(rectangleState));
+		toolBox.add(rectangleButton);
 		
 		sidePanel.add(toolBox);
 

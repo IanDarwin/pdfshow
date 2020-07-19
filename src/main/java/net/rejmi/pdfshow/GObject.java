@@ -69,3 +69,18 @@ class GPolyLine extends GObject {
 		g.drawPolyline(xPoints, yPoints, xPoints.length);
 	}
 }
+
+class GRectangle extends GObject {
+	private int llX, llY;
+	GRectangle(int ulX, int ulY, int llX, int llY) {
+		super(ulX, ulY);
+		this.llX = llX;
+		this.llY = llY;
+	}
+	void render(Graphics g) {
+		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
+		((Graphics2D)g).setStroke(new BasicStroke(3));
+		g.setColor(Color.RED);
+		g.drawRect(x, y, Math.abs(llX - x), Math.abs(llY - y));
+	}
+}
