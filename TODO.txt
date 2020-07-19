@@ -7,6 +7,7 @@ Buglets:
 Drawing:
 	GObjects should get BoundingBox for hit detection.
 	Delete objects, undo stack (then addIn would of course push a Delete cmd)
+	Properties: at least Font chooser, Color Chooser, LineWidth
 
 UI
 	Scaleable layout, full-screen.
