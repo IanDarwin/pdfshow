@@ -2,8 +2,7 @@
 <projectDescription>
 	<name>pdfshow</name>
 	<comment>pdfshow</comment>
-	<projects>
-	</projects>
+	<projects/>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
