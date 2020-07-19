@@ -4,5 +4,17 @@ PdfShow is a simple Swing-based PDF viewer for running slide shows.
 
 Pdf access (i.e., the heavy listing!) is via https://pdfbox.apache.org/[Apache PDFBox].
 
-I will add bells and whistles as time permits.
+I will add more bells and whistles as time permits.
+
+Pull requests will be gratefully accepted as long as they fit within the general tone of the program - _minimalist, but functional._ 
+
+== How-to
+
+To test run it, just open the project in Eclipse (or import into IntelliJ or
+other IDE) and run the PdfShow file.
+
+To make a clickable runnable JAR file, run "mvn package assembly:single"
+and you'll find a jar with dependencies in the target folder.
+It'll be named something like _pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar_
+You can run it with `java -jar` or click on it in Windows, Mac, or most *Nix windowed environments.
 

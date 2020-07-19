@@ -38,16 +38,26 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.darwinsys</groupId>
-			<artifactId>darwinsys-api</artifactId>
-			<version>1.5.2-SNAPSHOT</version>
-		</dependency>
+		<!-- The star of the show! -->
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
 			<version>2.0.16</version>
 		</dependency>
+
+		<!-- Nice peeps at "linoleum" project on java.net uploaded JLF icons Jar file -->
+		<dependency>
+			<groupId>net.java.linoleum</groupId>
+			<artifactId>jlfgr</artifactId>
+			<version>1_0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.darwinsys</groupId>
+			<artifactId>darwinsys-api</artifactId>
+			<version>1.5.2-SNAPSHOT</version>
+		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
