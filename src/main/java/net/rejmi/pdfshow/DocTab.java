@@ -31,7 +31,7 @@ class DocTab extends JComponent {
 		addIns = new List[pageCount];
 		// These were put in to confirm "draw" operation before UI to add them:
 		// addIn(new GText(50, 50, "Hello World of Kludgery"));
-		addIn(new GLine(100, 100, 400, 400));
+		// addIn(new GLine(100, 100, 400, 400));
 		setSize(800, 800);
 	}
 
@@ -50,11 +50,17 @@ class DocTab extends JComponent {
 		}
 	}
 
+	/**
+	 * Draw the stuff on this page, in the correct 1-2-3 order
+	 */
 	@Override
 	protected void paintComponent(Graphics g) {
+		// 1) Super
 		super.paintComponent(g);
 		try {
+			// 2) PdfBox - whole page
 			renderer.renderPageToGraphics(pageNumber, (Graphics2D) g);
+			// 3) Our annotations, if any
 			if (addIns[pageNumber] != null) {
 				for (GObject obj : addIns[pageNumber]) {
 					obj.render(g);
