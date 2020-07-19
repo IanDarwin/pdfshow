@@ -324,13 +324,15 @@ public class PdfShow {
 		final JMenu helpMenu = MenuUtils.mkMenu(rb, "help");
 		menuBar.add(helpMenu);
 		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
+		aboutButton.setIcon(getJLFImageIcon("general/About"));
 		aboutButton.addActionListener(e->
 			JOptionPane.showMessageDialog(jf, "PdfShow v0.0\n" +
 			"c 2020 Ian Darwin\n" +
 			"https://darwinsys.com/freeware\n" +
 			"Icons from the Sun JLF Image Repository (c) Sun Micro.\n"+
-			"Other icons Copyright(C) 1998  by  Dean S. Jones\n" +
-			"dean@gallant.com www.gallant.com/icons.htm",
+			"Other icons Copyright(C) 1998 by Dean S. Jones\n" +
+			"(formerly at gallant.com/icons.htm)\n" +
+			"and a few icons by Ian Darwin",
 			"About PdfShow(tm)",
 			JOptionPane.INFORMATION_MESSAGE));
 		helpMenu.add(aboutButton);
