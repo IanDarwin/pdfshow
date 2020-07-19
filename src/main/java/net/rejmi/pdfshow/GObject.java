@@ -1,5 +1,6 @@
 package net.rejmi.pdfshow;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -46,6 +47,8 @@ class GLine extends GObject {
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
+		((Graphics2D)g).setStroke(new BasicStroke(3));
+		g.setColor(Color.RED);
 		g.drawLine(x, y, endX, endY);
 	}
 }
@@ -61,6 +64,7 @@ class GPolyLine extends GObject {
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
+		((Graphics2D)g).setStroke(new BasicStroke(3));
 		g.setColor(Color.RED);
 		g.drawPolyline(xPoints, yPoints, xPoints.length);
 	}
