@@ -31,7 +31,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileFilter;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 
 import com.darwinsys.swingui.MenuUtils;
 import com.darwinsys.swingui.RecentMenu;
@@ -222,11 +222,23 @@ public class PdfShow {
 		currentState.enterState();
 	}
 
+	void showFileProps() {
+		final PDDocumentInformation docInfo = currentTab.doc.getDocumentInformation();
+		StringBuilder sb = new StringBuilder();
+		sb.append("Title: ").append(docInfo.getTitle()).append('\n');
+		sb.append("Author: ").append(docInfo.getAuthor()).append('\n');
+		sb.append("Producer: ").append(docInfo.getProducer()).append('\n');
+		sb.append("Subject: ").append(docInfo.getSubject()).append('\n');
+		JOptionPane.showMessageDialog(jf, sb.toString(), 
+			currentTab.file.getName(), JOptionPane.INFORMATION_MESSAGE);
+	}
+
 	static JFrame jf;
 	private static JTabbedPane tabPane;
 	private static DocTab currentTab;
 	private static JButton upButton, downButton;
 	private static JTextField pageNumTF;
+	final RecentMenu recents;
 
 	// Listeners; these get added to each DocTab in openPdfFile().
 	private MouseListener ml;
@@ -240,7 +252,8 @@ public class PdfShow {
 		// GUI SETUP
 
 		jf = new JFrame("PDFShow");
-		jf.setSize(1000,800);
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		jf.setSize(tk.getScreenSize());
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// TABBEDPANE (main window for viewing PDFs)
@@ -264,8 +277,9 @@ public class PdfShow {
 		miOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		fm.add(miOpen);
-		@SuppressWarnings("serial")
-		final RecentMenu recents = new RecentMenu(this) {
+		recents = new RecentMenu(this) {
+			private static final long serialVersionUID = 1L;
+			@Override
 			public void loadFile(String fileName) throws IOException {
 				openPdfFile(new File(fileName));
 			}
@@ -289,14 +303,25 @@ public class PdfShow {
 		});
 		fm.add(miClose);
 
+		final JMenuItem infoButton = MenuUtils.mkMenuItem(rb, "file", "properties");
+		infoButton.addActionListener(e -> showFileProps());
+		fm.add(infoButton);
+
 		fm.addSeparator();
 		JMenuItem miQuit = MenuUtils.mkMenuItem(rb, "file", "exit");
 		miQuit.addActionListener(e -> checkAndQuit());
 		fm.add(miQuit);
-		
+
+		final JMenu editMenu = MenuUtils.mkMenu(rb, "edit");
+		menuBar.add(editMenu);
+		final JMenuItem optionsMI = MenuUtils.mkMenuItem(rb, "edit", "options");
+		optionsMI.setEnabled(false);
+		// XXX should launch chooser for font, color, line width, etc.
+		editMenu.add(optionsMI);
+
 		final JMenu helpMenu = MenuUtils.mkMenu(rb, "help");
 		menuBar.add(helpMenu);
-		final JButton aboutButton = MenuUtils.mkButton(rb, "help", "about");
+		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
 		aboutButton.addActionListener(e->
 			JOptionPane.showMessageDialog(jf, "PdfShow v0.0\n" +
 			"c 2020 Ian Darwin\n" +
@@ -472,7 +497,7 @@ public class PdfShow {
 	}
 
 	private void openPdfFile(File file) throws IOException {
-		DocTab t = new DocTab(PDDocument.load(file));
+		DocTab t = new DocTab(file);
 		t.addKeyListener(kl);
 		t.addMouseListener(ml);
 		t.addMouseMotionListener(mml);

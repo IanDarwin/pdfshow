@@ -24,7 +24,7 @@ abstract class GObject {
 
 class GText extends GObject {
 	String text;
-	Font font = new Font("Sans", Font.PLAIN, 18);
+	Font font = new Font("Sans", Font.PLAIN, 24);
 	GText(int x, int y, String text) {
 		super(x, y);
 		this.text = text;

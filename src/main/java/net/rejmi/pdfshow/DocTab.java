@@ -2,6 +2,7 @@ package net.rejmi.pdfshow;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +20,19 @@ class DocTab extends JComponent {
 	int pageNumber = 0;
 	/** Total size of this document */
 	int pageCount = 0;
+	/** The current PDF */
 	PDDocument doc;
+	/** The disk file we got it from */
+	File file;
+	/** The PdfBox renderer for it */
 	PDFRenderer renderer;
+	/** Our user's annotations for this doc, indexed by page# */
 	List<GObject>[] addIns;
 	
-	DocTab(PDDocument document) {
+	DocTab(File file) throws IOException {
 		super();
-		this.doc = document;
+		this.file = file;
+		this.doc = PDDocument.load(file);
 		pageCount = doc.getNumberOfPages();
 		renderer = new PDFRenderer(doc);
 		addIns = new List[pageCount];

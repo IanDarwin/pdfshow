@@ -1,21 +1,24 @@
 == ToDo
 
 Buglets:
+	Text location is off, but corrects if other draw nearby(!)
 	Return key should advance, DEL should go back, up/down arrows, etc
 	Page number should be one-origin in Sidebar.
 
 Drawing:
 	GObjects should get BoundingBox for hit detection.
-	Delete objects, undo stack (then addIn would of course push a Delete cmd)
+	Delete indiv objects, undo stack (then addIn would push a Delete cmd)
 	Properties: at least Font chooser, Color Chooser, LineWidth
 
 UI
-	Scaleable layout, full-screen.
+	Scale the PDF to fit width (keeping it full screen?)
 	Icon buttons instead of text buttons
 	A back button for when you scroll past a bunch of pages (Stack of page#s)
+	File opened from argv should be added to recents menu.
 
 Longer Range Goals:
-	Bookmarks? (editable text)
+	Save annotations with the PDF (either in it or beside it)
+	User-creatable Bookmarks? (editable text)
 	Index tab (first line and page#)
 
 Weird ideas:
