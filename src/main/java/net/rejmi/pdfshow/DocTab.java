@@ -41,7 +41,17 @@ class DocTab extends JComponent {
 		}
 		addIns[pageNumber].add(gobj);
 	}
-	
+
+	void delete(GObject gobj) {
+		// not implemented yet
+		repaint();
+	}
+
+	void deleteAll() {
+		addIns[pageNumber] = null;
+		repaint();
+	}
+
 	void close() {
 		try {
 			doc.close();

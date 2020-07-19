@@ -307,7 +307,7 @@ public class PdfShow {
 	    	JOptionPane.showMessageDialog(jf, "Help not written yet, sorry!"));
 		helpMenu.add(helpButton);
 
-		// TOOLBOX
+		// NAV BOX
 
 		JPanel sidePanel = new JPanel();
 		sidePanel.setBackground(Color.cyan);
@@ -340,6 +340,8 @@ public class PdfShow {
 		navBox.setPreferredSize(new Dimension(200, 200));
 		sidePanel.add(navBox);
 
+		// TOOL BOX
+
 		JPanel toolBox = new JPanel();
 		toolBox.setLayout(new BoxLayout(toolBox, BoxLayout.PAGE_AXIS));
 		// Mode buttons
@@ -347,7 +349,7 @@ public class PdfShow {
 		final JButton textButton = MenuUtils.mkButton(rb, "toolbox", "text");
 		textButton.addActionListener(e -> gotoState(textDrawState));
 		toolBox.add(textButton);
-		
+
 		final JButton lineButton = MenuUtils.mkButton(rb, "toolbox", "line");
 		lineButton.addActionListener(e -> gotoState(lineDrawState));
 		toolBox.add(lineButton);
@@ -359,6 +361,10 @@ public class PdfShow {
 		final JButton rectangleButton = MenuUtils.mkButton(rb, "toolbox", "rectangle");
 		rectangleButton.addActionListener(e -> gotoState(rectangleState));
 		toolBox.add(rectangleButton);
+		
+		final JButton clearButton = MenuUtils.mkButton(rb,  "toolbox", "clearpage");
+		clearButton.addActionListener(e -> currentTab.deleteAll());
+		toolBox.add(clearButton);
 		
 		sidePanel.add(toolBox);
 
