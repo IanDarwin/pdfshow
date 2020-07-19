@@ -14,9 +14,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ResourceBundle;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -325,9 +327,14 @@ public class PdfShow {
 		aboutButton.addActionListener(e->
 			JOptionPane.showMessageDialog(jf, "PdfShow v0.0\n" +
 			"c 2020 Ian Darwin\n" +
-			"https://darwinsys.com/freeware"));
+			"https://darwinsys.com/freeware\n" +
+			"Icons from the Sun JLF Image Repository (c) Sun Micro.\n"+
+			"Other icons Copyright(C) 1998  by  Dean S. Jones\n" +
+			"dean@gallant.com www.gallant.com/icons.htm",
+			"About PdfShow(tm)",
+			JOptionPane.INFORMATION_MESSAGE));
 		helpMenu.add(aboutButton);
-		final JButton helpButton = MenuUtils.mkButton(rb, "help", "help");
+		final JMenuItem helpButton = MenuUtils.mkMenuItem(rb, "help", "help");
 		helpButton.addActionListener(e->
 	    	JOptionPane.showMessageDialog(jf, "Help not written yet, sorry!"));
 		helpMenu.add(helpButton);
@@ -340,13 +347,13 @@ public class PdfShow {
 		
 		JPanel navBox = new JPanel();
 		navBox.setLayout(new GridLayout(3,3));
-		upButton = new JButton("Up");
+		upButton = new JButton(getJLFImageIcon("navigation/Up"));
 		upButton.addActionListener(e -> moveToPage(currentTab.pageNumber - 1));
 		navBox.add(new JLabel()); navBox.add(upButton); navBox.add(new JLabel());
-		downButton = new JButton("Down");
+		downButton = new JButton(getJLFImageIcon("navigation/Down"));
 		downButton.addActionListener(e -> moveToPage(currentTab.pageNumber + 1));
-		JButton firstButton = new JButton("<<"), 
-			lastButton = new JButton(">>");
+		JButton firstButton = new JButton(getJLFImageIcon("media/Rewind")), 
+			lastButton = new JButton(getJLFImageIcon("media/FastForward"));
 		firstButton.addActionListener(e -> moveToPage(0));
 		navBox.add(firstButton);
 		pageNumTF = new JTextField(3);
@@ -370,26 +377,31 @@ public class PdfShow {
 		JPanel toolBox = new JPanel();
 		toolBox.setLayout(new BoxLayout(toolBox, BoxLayout.PAGE_AXIS));
 		// Mode buttons
-		toolBox.add(new JButton("Select")); // Needed??
-		final JButton textButton = MenuUtils.mkButton(rb, "toolbox", "text");
+		toolBox.add(new JButton("...")); // Needed??
+		
+		final JButton textButton = new JButton(getMyImageIcon("Text"));
 		textButton.addActionListener(e -> gotoState(textDrawState));
 		toolBox.add(textButton);
 
-		final JButton lineButton = MenuUtils.mkButton(rb, "toolbox", "line");
+		final JButton lineButton = new JButton(getMyImageIcon("Line"));
 		lineButton.addActionListener(e -> gotoState(lineDrawState));
 		toolBox.add(lineButton);
 		
-		final JButton polyLineButton = MenuUtils.mkButton(rb, "toolbox", "polyline");
+		final JButton polyLineButton = new JButton(getMyImageIcon("PolyLine"));
 		polyLineButton.addActionListener(e -> gotoState(polyLineDrawState));
 		toolBox.add(polyLineButton);
 		
-		final JButton rectangleButton = MenuUtils.mkButton(rb, "toolbox", "rectangle");
+		final JButton rectangleButton = new JButton(getMyImageIcon("Rectangle"));
 		rectangleButton.addActionListener(e -> gotoState(rectangleState));
 		toolBox.add(rectangleButton);
 		
-		final JButton clearButton = MenuUtils.mkButton(rb,  "toolbox", "clearpage");
+		final JButton clearButton = new JButton(getJLFImageIcon("general/Delete"));
 		clearButton.addActionListener(e -> currentTab.deleteAll());
 		toolBox.add(clearButton);
+		
+		final JButton undoButton = new JButton(getJLFImageIcon("general/Undo"));
+		undoButton.setEnabled(false);
+		toolBox.add(undoButton);
 		
 		sidePanel.add(toolBox);
 
@@ -529,4 +541,29 @@ public class PdfShow {
 		downButton.setEnabled(currentTab.pageNumber < docPages);
 		currentTab.repaint();
 	}
+	
+	// Graphics helpers
+	
+	/** Convenience routine to get an application-local image */
+	private ImageIcon getMyImageIcon(String name) {
+		String fullName = "/images" + '/' + name + ".gif";
+		return getImageIcon(fullName);
+	}
+	
+	/** Convenience routine to get a JLF-standard image */
+	private ImageIcon getJLFImageIcon(String name) {
+		String imgLocation = "/toolbarButtonGraphics/" + name + "24.gif";
+		return getImageIcon(imgLocation);
+	}
+
+	private ImageIcon getImageIcon(String imgName) {
+		URL imageURL = getClass().getResource(imgName);
+
+		if (imageURL == null) {
+			throw new IllegalArgumentException("No image: " + imgName);
+		}
+		ImageIcon ii = new ImageIcon(imageURL);
+		return ii;
+	}
+
 }
