@@ -20,6 +20,7 @@ abstract class GObject {
 	}
 	abstract void render(Graphics g);
 }
+
 class GText extends GObject {
 	String text;
 	Font font = new Font("Sans", Font.PLAIN, 18);
@@ -33,6 +34,7 @@ class GText extends GObject {
 		g.drawString(text, x, y);
 	}
 }
+
 class GLine extends GObject {
 	int lineWidth;
 	int endX, endY;
@@ -44,5 +46,20 @@ class GLine extends GObject {
 	void render(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
 		g.drawLine(x, y, endX, endY);
+	}
+}
+
+class GPolyLine extends GObject {
+	private int[] xPoints, yPoints;
+	GPolyLine(int x, int y, int[] xPoints, int[] yPoints) {
+		super(x, y);
+		if (xPoints.length != yPoints.length)
+			throw new IllegalArgumentException("GPolyLine(): xlen != ylen");
+		this.xPoints = xPoints;
+		this.yPoints = yPoints;
+	}
+	void render(Graphics g) {
+		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
+		g.drawPolyline(xPoints, yPoints, xPoints.length);
 	}
 }

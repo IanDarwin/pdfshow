@@ -1,23 +1,22 @@
 == ToDo
 
 Buglets:
-	jump to page #, thinks on page 1 when on page n
-	Return key should advance, DEL should go back
+	Return key should advance, DEL should go back, up/down arrows, etc
+	States should go back to ViewState after *successfully* calling addIn()
+	Page number should be one-origin in Sidebar.
 
-Major:
-	Add text and line annotation code
+Drawing:
+	Add line and polyline addIn() code
+	Delete objects, undo stack (then addIn would of course push a Delete cmd)
 
 UI
 	Scaleable layout, full-screen.
-	Better layout of toolbox.
-	Key listener so down/up arrows work
+	Icon buttons instead of text buttons
 
-Ability to auto-transition back-and-forth between a chosen slide in each of two presos
-
-Bookmarks (editable text)
-
-Longer:
-	Drawing tools: text, polyline
+Longer Range Goals:
+	Bookmarks? (editable text)
+	Index tab (first line and page#)
 
 Weird ideas:
 	A back button for when you scroll past a bunch of pages (Stack of page#s)
+	Ability to auto-transition back-and-forth between a chosen slide in each of two presos

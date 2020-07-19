@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -169,16 +170,17 @@ public class PdfShow {
 		tabPane.addChangeListener(evt -> {
 			currentTab = (DocTab)tabPane.getSelectedComponent();
 			// This shouldn't be needed...
-			pageNumTF.setText(Integer.toString(currentTab.pageNumber));
+			if (currentTab != null)
+				pageNumTF.setText(Integer.toString(currentTab.pageNumber));
 		});
 		jf.add(BorderLayout.CENTER, tabPane);
 		// MENUS
 
-		JMenuBar mb = new JMenuBar();
-		jf.setJMenuBar(mb);
+		JMenuBar menuBar = new JMenuBar();
+		jf.setJMenuBar(menuBar);
 		ResourceBundle rb = ResourceBundle.getBundle("Menus");
 		JMenu fm = MenuUtils.mkMenu(rb, "file");
-		mb.add(fm);
+		menuBar.add(fm);
 		JMenuItem miOpen = MenuUtils.mkMenuItem(rb, "file", "open");
 		miOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -211,12 +213,26 @@ public class PdfShow {
 		JMenuItem miQuit = MenuUtils.mkMenuItem(rb, "file", "exit");
 		miQuit.addActionListener(e -> checkAndQuit());
 		fm.add(miQuit);
+		
+		final JMenu helpMenu = MenuUtils.mkMenu(rb, "help");
+		menuBar.add(helpMenu);
+		final JButton aboutButton = MenuUtils.mkButton(rb, "help", "about");
+		aboutButton.addActionListener(e->
+			JOptionPane.showMessageDialog(jf, "PdfShow v0.0\n" +
+			"c 2020 Ian Darwin\n" +
+			"https://darwinsys.com/freeware"));
+		helpMenu.add(aboutButton);
+		final JButton helpButton = MenuUtils.mkButton(rb, "help", "help");
+		helpButton.addActionListener(e->
+	    	JOptionPane.showMessageDialog(jf, "Help not written yet, sorry!"));
+		helpMenu.add(helpButton);
 
 		// TOOLBOX
 
-		JPanel toolBox = new JPanel();
-		toolBox.setBackground(Color.cyan);
-		toolBox.setPreferredSize(new Dimension(200, 800));
+		JPanel sidePanel = new JPanel();
+		sidePanel.setBackground(Color.cyan);
+		sidePanel.setPreferredSize(new Dimension(200, 800));
+		
 		JPanel navBox = new JPanel();
 		navBox.setLayout(new GridLayout(3,3));
 		upButton = new JButton("Up");
@@ -229,15 +245,25 @@ public class PdfShow {
 		firstButton.addActionListener(e -> moveToPage(0));
 		navBox.add(firstButton);
 		pageNumTF = new JTextField(3);
+		pageNumTF.addMouseListener(new MouseAdapter() {
+			// If you click in it, select all so you can overtype
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				pageNumTF.selectAll();
+			}			
+		});
 		pageNumTF.addActionListener(e -> moveToPage(Integer.parseInt(pageNumTF.getText())));
 		navBox.add(pageNumTF);
 		lastButton.addActionListener(e -> moveToPage(Integer.MAX_VALUE));
 		navBox.add(lastButton);
 		navBox.add(new JLabel()); navBox.add(downButton); navBox.add(new JLabel());
 		navBox.setPreferredSize(new Dimension(200, 200));
-		toolBox.add(navBox);
+		sidePanel.add(navBox);
 
+		JPanel toolBox = new JPanel();
+		toolBox.setLayout(new BoxLayout(toolBox, BoxLayout.PAGE_AXIS));
 		// Mode buttons
+		toolBox.add(new JButton("Select")); // Needed??
 		final JButton textButton = MenuUtils.mkButton(rb, "toolbox", "text");
 		textButton.addActionListener(e -> {
 			System.out.println("PdfShow.PdfShow(): going to text state");
@@ -250,11 +276,17 @@ public class PdfShow {
 //			dlg.setBackground(Color.cyan);
 		});
 		toolBox.add(textButton);
+		
 		final JButton lineButton = MenuUtils.mkButton(rb, "toolbox", "line");
 		lineButton.addActionListener(e -> {
 			gotoState(lineDrawState);
 		});
 		toolBox.add(lineButton);
+		
+		final JButton polyLineButton = MenuUtils.mkButton(rb, "toolbox", "polyline");
+		toolBox.add(polyLineButton);
+		
+		sidePanel.add(toolBox);
 
 		// GENERIC VIEW LISTENERS - Just delegate directly to currentState
 		gotoState(viewState);
@@ -306,7 +338,7 @@ public class PdfShow {
 			};
 		};
 
-		jf.add(BorderLayout.WEST, toolBox);
+		jf.add(BorderLayout.WEST, sidePanel);
 		jf.setVisible(true);
 	}
 
