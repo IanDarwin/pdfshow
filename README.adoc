@@ -18,3 +18,25 @@ and you'll find a jar with dependencies in the target folder.
 It'll be named something like _pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar_
 You can run it with `java -jar` or click on it in Windows, Mac, or most *Nix windowed environments.
 
+== Development
+
+Fork the repo, clone your forked copy, make changes, test changes, send a pull request.
+
+Why didn't I use this for the drawing:
+
+	PDPageContentStream contentStream = new PDPageContentStream(document, page);
+	contentStream.setNonStrokingColor(Color.DARK_GRAY);
+	contentStream.addRect(200, 650, 100, 100);
+
+The problem is that it would be much harder (if not impossible) to implement Undo processing
+when using that approach. Perhaps a later Save PDF function could
+insert the GObjects into the PDF using this technique.
+
+== Credits
+
+Program by Ian Darwin of Rejminet Group Inc.
+
+Icons from the Sun JLF Image Repository (c) Sun Micro.
+Other icons Copyright(C) 1998 by Dean S. Jones
+(formerly at gallant.com/icons.htm)
+and a few icons by Ian Darwin.
