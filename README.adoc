@@ -9,7 +9,8 @@ its relative youth and its design goals.
 
 I will add more bells and whistles as time permits.
 
-Pull requests will be gratefully accepted as long as they fit within the general tone of the program - _minimalist, but functional._ 
+Pull requests will be gratefully accepted as long as they fit
+within the general tone of the program - _minimalist, but functional._ 
 
 == Using It
 
@@ -23,8 +24,8 @@ You can move around using:
 * The `Begin` and `End` buttons in the nav box (first and last page).
 * Typing a given page number in the page number box in the middle of the nav box;
 * Ensuring the mouse is in the window, and using:
-** ' ', 'j', `RETURN` to move to the next page;
-** 'k', `DELETE`, or `BACKSPACE` to move to the previous page.
+** `j`, `SPACE`, or `RETURN` to move to the next page;
+** `k`, `DELETE`, or `BACKSPACE` to move to the previous page.
 
 == Build It
 
