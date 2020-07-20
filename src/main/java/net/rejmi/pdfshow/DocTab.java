@@ -67,6 +67,18 @@ class DocTab extends JPanel {
 	int getPageNumber() {
 		return pageNumber;
 	}
+	
+	void gotoNext() {
+		if (pageNumber == pageCount)
+			return;
+		setPageNumber(pageNumber + 1);
+	}
+	void gotoPrev() {
+		if (pageNumber == 0) {
+			return;
+		}
+		setPageNumber(pageNumber - 1);
+	}
 
 	void addIn(GObject gobj) {
 		if (addIns[pageNumber] == null) {

@@ -78,8 +78,23 @@ public class PdfShow {
 			//
 		}
 
-		public void keyTyped(KeyEvent e) {
-			// Probably want to override this
+		public void keyPressed(KeyEvent e) {
+			// System.out.println("PdfShow.State.keyPressed(" + e + ")");
+			switch(e.getKeyChar()) {
+			case 'j':
+			case '\n':
+			case ' ':
+			case KeyEvent.VK_UP:
+				currentTab.gotoNext();
+				break;
+			case 'k':
+			case '\b':
+			case KeyEvent.VK_DOWN:
+				currentTab.gotoPrev();
+				break;
+			default:
+				System.out.println(e);
+			}
 		}
 
 		public void mouseClicked(MouseEvent e) {
@@ -109,11 +124,7 @@ public class PdfShow {
 
 	/** State for normal viewing */
 	static class ViewState extends State {
-		@Override
-		public void keyTyped(KeyEvent e) {
-			// XXX why does this not get activated?
-			System.out.println("PdfShow.ViewState.keyTyped() " + e.getKeyCode());
-		}
+		// Nothing to do - is default State
 	}
 	static final ViewState viewState = new ViewState();
 
@@ -257,6 +268,8 @@ public class PdfShow {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		jf.setSize(tk.getScreenSize());
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jf.setFocusable(true);
+		jf.addKeyListener(kl);
 
 		// TABBEDPANE (main window for viewing PDFs)
 
@@ -427,6 +440,7 @@ public class PdfShow {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				currentState.mouseEntered(e);
+				currentTab.requestFocus();
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
@@ -450,12 +464,7 @@ public class PdfShow {
 		kl = new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				System.out.println("PdfShow.main(...).new KeyAdapter() {...}.keyPressed()");
-			};
-			@Override
-			public void keyTyped(KeyEvent e) {
-				System.out.println("PdfShow.main(...).new KeyAdapter() {...}.keyTyped()");
-				currentState.keyTyped(e);
+				currentState.keyPressed(e);
 			};
 		};
 
@@ -515,6 +524,7 @@ public class PdfShow {
 
 	private void openPdfFile(File file) throws IOException {
 		DocTab t = new DocTab(file);
+		t.setFocusable(true);
 		t.addKeyListener(kl);
 		t.addMouseListener(ml);
 		t.addMouseMotionListener(mml);

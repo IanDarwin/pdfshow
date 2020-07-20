@@ -1,34 +1,52 @@
 = PdfShow
 
-PdfShow is a simple Java Swing-based PDF viewer for running slide shows.
+PdfShow is a simple Java Swing-based PDF viewer specifically for running slide shows.
 
-Pdf access (i.e., the heavy listing!) is via https://pdfbox.apache.org/[Apache PDFBox].
+Pdf access (i.e., the heavy listing!) is done by https://pdfbox.apache.org/[Apache PDFBox].
+
+It has many limitations compared with other tools (see the TODO file), due to 
+its relative youth and its design goals.
 
 I will add more bells and whistles as time permits.
 
 Pull requests will be gratefully accepted as long as they fit within the general tone of the program - _minimalist, but functional._ 
 
-== How-to
+== Using It
+
+Like most GUI tools, process a file by passing it on the command line or via the File->Open menu.
+You can have multiple files open, using the tab selecter at the top.
+
+You can move around using:
+
+* The scroll bar at the right side of the current tab;
+* The `Up` and `Down` buttons in the nav box;
+* The `Begin` and `End` buttons in the nav box (first and last page).
+* Typing a given page number in the page number box in the middle of the nav box;
+* Ensuring the mouse is in the window, and using:
+** ' ', 'j', `RETURN` to move to the next page;
+** 'k', `DELETE`, or `BACKSPACE` to move to the previous page.
+
+== Build It
 
 To test run it, just open the project in Eclipse (or import into IntelliJ or
 other IDE) and run the PdfShow file.
 
-To make a clickable runnable JAR file, run "mvn package assembly:single"
+To make a clickable runnable JAR file, run `mvn package assembly:single`
 and you'll find a jar with dependencies in the target folder.
 It'll be named something like _pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar_
 You can run it with `java -jar` or click on it in Windows, Mac, or most *Nix windowed environments.
 
-== Development
+== Develop It
 
 Fork the repo, clone your forked copy, make changes, test changes, send a pull request.
 
-Why didn't I use this for the drawing:
+Q: Why didn't I use this for the drawing:
 
 	PDPageContentStream contentStream = new PDPageContentStream(document, page);
 	contentStream.setNonStrokingColor(Color.DARK_GRAY);
 	contentStream.addRect(200, 650, 100, 100);
 
-The problem is that it would be much harder (if not impossible) to implement Undo processing
+A: The problem is that it would be much harder (if not impossible) to implement Undo processing
 when using that approach. Perhaps a later Save PDF function could
 insert the GObjects into the PDF using this technique.
 

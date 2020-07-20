@@ -2,19 +2,20 @@
 
 Buglets:
 	Items jump around a bit when adding other objects (Text?)
-	Return key should advance, DEL should go back, up/down arrows, etc
 	Page number should be one-origin in Sidebar.
 
 Drawing:
+	GObjects should draw as they are created (mouse drag)
 	GObjects should get BoundingBox for hit detection.
-	Delete indiv objects, undo stack (then addIn would push a Delete cmd)
+	Be able to edit at least the text of text objects.
+	Be able to delete indiv objects, undo stack (then addIn would push a Delete cmd)
 	Properties: at least Font chooser, Color Chooser, LineWidth
 
 UI
 	Scale the PDF to fit width (keeping it full screen?)
-	Icon buttons instead of text buttons
 	A back button for when you scroll past a bunch of pages (Stack of page#s)
 	File opened from argv should be added to recents menu.
+	Better, more unified, and larger, icons in toolbox.
 
 Longer Range Goals:
 	Save annotations with the PDF (either in it or beside it)

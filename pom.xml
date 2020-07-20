@@ -52,6 +52,7 @@
 			<version>1_0</version>
 		</dependency>
 
+		<!-- My own rather trivial API -->
 		<dependency>
 			<groupId>com.darwinsys</groupId>
 			<artifactId>darwinsys-api</artifactId>
