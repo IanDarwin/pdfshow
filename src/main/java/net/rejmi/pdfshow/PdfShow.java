@@ -379,8 +379,11 @@ public class PdfShow {
 		JPanel toolBox = new JPanel();
 		toolBox.setLayout(new BoxLayout(toolBox, BoxLayout.PAGE_AXIS));
 		// Mode buttons
-		toolBox.add(new JButton("...")); // Needed??
 		
+		final JButton selectButton = new JButton(getMyImageIcon("Select"));
+		selectButton.setEnabled(false);
+		toolBox.add(selectButton);
+
 		final JButton textButton = new JButton(getMyImageIcon("Text"));
 		textButton.addActionListener(e -> gotoState(textDrawState));
 		toolBox.add(textButton);
