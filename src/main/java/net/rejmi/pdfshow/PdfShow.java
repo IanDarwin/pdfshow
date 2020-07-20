@@ -86,13 +86,17 @@ public class PdfShow {
 			case ' ':
 			case KeyEvent.VK_UP:
 				currentTab.gotoNext();
-				break;
+				return;
 			case 'k':
 			case '\b':
 			case KeyEvent.VK_DOWN:
 				currentTab.gotoPrev();
-				break;
+				return;
 			default:
+				switch(e.getKeyCode()) {
+					case KeyEvent.VK_DOWN: currentTab.gotoNext(); return;
+					case KeyEvent.VK_UP: currentTab.gotoPrev(); return;
+				}
 				System.out.println(e);
 			}
 		}
@@ -132,7 +136,6 @@ public class PdfShow {
 	static class TextDrawState extends State {
 		@Override
 		public void mousePressed(MouseEvent e) {
-			System.out.println("PdfShow.TextDrawState.mousePressed()");
 			String text = JOptionPane.showInputDialog("Text?");
 			if (text != null) {
 				currentTab.addIn(new GText(e.getX(), e.getY(), text));

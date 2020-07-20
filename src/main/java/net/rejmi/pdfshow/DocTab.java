@@ -54,7 +54,7 @@ class DocTab extends JPanel {
 		setLayout(new BorderLayout());
 		pdfComponent = new MainComponent();
 		add(pdfComponent, BorderLayout.CENTER);
-		sbar = new JScrollBar(JScrollBar.VERTICAL,1, 1, 0, pageCount - 1);
+		sbar = new JScrollBar(JScrollBar.VERTICAL, 0, 1, 0, pageCount - 1);
 		sbar.addAdjustmentListener(e -> {
 			if (e.getValueIsAdjusting())
 				return;
@@ -70,12 +70,12 @@ class DocTab extends JPanel {
 	 */
 	void computeScaling() {
 		final PDRectangle pdfBBox = doc.getPage(0).getBBox();
-		System.out.println("BBox: " + pdfBBox);
+		// System.out.println("BBox: " + pdfBBox);
 		final Dimension compSize = pdfComponent.getSize();
-		System.out.println("Component size = " + compSize);
+		// System.out.println("Component size = " + compSize);
 		scaleX = (float)(compSize.getWidth() / pdfBBox.getWidth());
 		scaleY = (float)(compSize.getHeight() / pdfBBox.getHeight());
-		System.out.println("Computed scaling as " + scaleX + "," + scaleY);
+		// System.out.println("Computed scaling as " + scaleX + "," + scaleY);
 	}
 
 	void setPageNumber(int page) {
