@@ -12,7 +12,6 @@ Drawing:
 	Properties: at least Font chooser, Color Chooser, LineWidth
 
 UI
-	Scale the PDF to fit width (keeping it full screen?)
 	A back button for when you scroll past a bunch of pages (Stack of page#s)
 	File opened from argv should be added to recents menu.
 	Better, more unified, and larger, icons in toolbox.
