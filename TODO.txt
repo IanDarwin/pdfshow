@@ -1,7 +1,7 @@
 == ToDo
 
 Buglets:
-	Text location is off, but corrects if other draw nearby(!)
+	Items jump around a bit when adding other objects (Text?)
 	Return key should advance, DEL should go back, up/down arrows, etc
 	Page number should be one-origin in Sidebar.
 
