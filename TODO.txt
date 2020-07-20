@@ -2,7 +2,7 @@
 
 Buglets:
 	Items jump around a bit when adding other objects (Text?)
-	Page number should be one-origin in Sidebar.
+	Page N of M box not updating.
 
 Drawing:
 	GObjects should draw as they are created (mouse drag)
