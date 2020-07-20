@@ -48,7 +48,7 @@ class DocTab extends JPanel {
 		setLayout(new BorderLayout());
 		pdfComponent = new MainComponent();
 		add(pdfComponent, BorderLayout.CENTER);
-		sbar = new JScrollBar(JScrollBar.VERTICAL,1, 1, 1, pageCount);
+		sbar = new JScrollBar(JScrollBar.VERTICAL,1, 1, 0, pageCount - 1);
 		sbar.addAdjustmentListener(e -> {
 			if (e.getValueIsAdjusting())
 				return;
