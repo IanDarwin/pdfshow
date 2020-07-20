@@ -82,6 +82,7 @@ class DocTab extends JPanel {
 		pageNumber = page;
 		sbar.setValue(pageNumber);
 		pdfComponent.repaint();
+		PdfShow.pageNumberChanged();
 	}
 
 	int getPageNumber() {

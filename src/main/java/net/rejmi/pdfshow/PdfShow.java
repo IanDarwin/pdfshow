@@ -388,7 +388,19 @@ public class PdfShow {
 				pageNumTF.selectAll();
 			}			
 		});
-		pageNumTF.addActionListener(e -> moveToPage(Integer.parseInt(pageNumTF.getText())));
+		pageNumTF.addActionListener(e -> {
+			String text = pageNumTF.getText();
+			try {
+				final int pgNum = Integer.parseInt(text);
+				moveToPage(pgNum);
+			} catch (NumberFormatException nfe) {
+				JOptionPane.showMessageDialog(jf,
+					String.format(
+						"Could not interpret '%s' as a number, alas.", text),
+					"How's that?",
+					JOptionPane.ERROR_MESSAGE);
+			}
+		});
 		navBox.add(pageNumTF);
 		lastButton.addActionListener(e -> moveToPage(Integer.MAX_VALUE));
 		navBox.add(lastButton);
@@ -479,6 +491,10 @@ public class PdfShow {
 
 		jf.add(BorderLayout.WEST, sidePanel);
 		jf.setVisible(true);
+	}
+	
+	static void pageNumberChanged() {
+		pageNumTF.setText(String.format("%d of %d", currentTab.getPageNumber(), currentTab.pageCount));
 	}
 
 	private static void checkAndQuit() {
