@@ -356,6 +356,12 @@ public class PdfShow {
 		helpButton.addActionListener(e->
 	    	JOptionPane.showMessageDialog(jf, "Help not written yet, sorry!"));
 		helpMenu.add(helpButton);
+		final JMenuItem sourceButton = new JMenuItem("Source Code");
+		sourceButton.setIcon(getMyImageIcon("octocat"));
+		sourceButton.addActionListener(e -> {
+			JOptionPane.showMessageDialog(jf, "Visit https://github.com/IanDarwin/PDFShow");
+		});
+		helpMenu.add(sourceButton);
 
 		// NAV BOX
 
