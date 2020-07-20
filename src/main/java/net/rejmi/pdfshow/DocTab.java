@@ -1,5 +1,6 @@
 package net.rejmi.pdfshow;
 
+import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.File;
@@ -9,15 +10,19 @@ import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
 /** A visual rep of one PDF document, for placing within a TabView */
 @SuppressWarnings("serial")
-class DocTab extends JComponent {
+class DocTab extends JPanel {
+	private JScrollBar sbar;
+	private JComponent pdfComponent;
 	/** zero-origin pageNumber, not from document's page numbering */
-	int pageNumber = 0;
+	private int pageNumber = 0;
 	/** Total size of this document */
 	int pageCount = 0;
 	/** The current PDF */
@@ -31,15 +36,36 @@ class DocTab extends JComponent {
 	
 	DocTab(File file) throws IOException {
 		super();
+
+		// PDF stuff
 		this.file = file;
 		this.doc = PDDocument.load(file);
 		pageCount = doc.getNumberOfPages();
 		renderer = new PDFRenderer(doc);
 		addIns = new List[pageCount];
-		// These were put in to confirm "draw" operation before UI to add them:
-		// addIn(new GText(50, 50, "Hello World of Kludgery"));
-		// addIn(new GLine(100, 100, 400, 400));
-		setSize(800, 800);
+
+		// GUI stuff
+		setLayout(new BorderLayout());
+		pdfComponent = new MainComponent();
+		add(pdfComponent, BorderLayout.CENTER);
+		sbar = new JScrollBar(JScrollBar.VERTICAL,1, 1, 1, pageCount);
+		sbar.addAdjustmentListener(e -> {
+			if (e.getValueIsAdjusting())
+				return;
+			setPageNumber(e.getValue());
+		});
+		add(sbar, BorderLayout.EAST);
+		// setSize(800, 800);
+	}
+
+	void setPageNumber(int page) {
+		pageNumber = page;
+		sbar.setValue(pageNumber);
+		pdfComponent.repaint();
+	}
+
+	int getPageNumber() {
+		return pageNumber;
 	}
 
 	void addIn(GObject gobj) {
@@ -67,6 +93,7 @@ class DocTab extends JComponent {
 		}
 	}
 
+	class MainComponent extends JComponent {
 	/**
 	 * Draw the stuff on this page, in the correct 1-2-3 order
 	 */
@@ -86,5 +113,6 @@ class DocTab extends JComponent {
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(PdfShow.jf, "Failure: " + e);
 		}
+	}
 	}
 }

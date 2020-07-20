@@ -265,7 +265,7 @@ public class PdfShow {
 			currentTab = (DocTab)tabPane.getSelectedComponent();
 			// This shouldn't be needed...
 			if (currentTab != null)
-				pageNumTF.setText(Integer.toString(currentTab.pageNumber));
+				pageNumTF.setText(Integer.toString(currentTab.getPageNumber()));
 		});
 		jf.add(BorderLayout.CENTER, tabPane);
 		// MENUS
@@ -350,10 +350,10 @@ public class PdfShow {
 		JPanel navBox = new JPanel();
 		navBox.setLayout(new GridLayout(3,3));
 		upButton = new JButton(getJLFImageIcon("navigation/Up"));
-		upButton.addActionListener(e -> moveToPage(currentTab.pageNumber - 1));
+		upButton.addActionListener(e -> moveToPage(currentTab.getPageNumber() - 1));
 		navBox.add(new JLabel()); navBox.add(upButton); navBox.add(new JLabel());
 		downButton = new JButton(getJLFImageIcon("navigation/Down"));
-		downButton.addActionListener(e -> moveToPage(currentTab.pageNumber + 1));
+		downButton.addActionListener(e -> moveToPage(currentTab.getPageNumber() + 1));
 		JButton firstButton = new JButton(getJLFImageIcon("media/Rewind")), 
 			lastButton = new JButton(getJLFImageIcon("media/FastForward"));
 		firstButton.addActionListener(e -> moveToPage(0));
@@ -537,16 +537,16 @@ public class PdfShow {
 		if (newPage >= docPages) {
 			newPage = docPages - 1;
 		}
-		if (newPage == currentTab.pageNumber) {
+		if (newPage == currentTab.getPageNumber()) {
 			return;
 		}
 		pageNumTF.setText(Integer.toString(newPage) +  " of " + currentTab.pageCount);
-		currentTab.pageNumber = newPage;
-		upButton.setEnabled(currentTab.pageNumber > 0);
-		downButton.setEnabled(currentTab.pageNumber < docPages);
+		currentTab.setPageNumber(newPage);
+		upButton.setEnabled(currentTab.getPageNumber() > 0);
+		downButton.setEnabled(currentTab.getPageNumber() < docPages);
 		currentTab.repaint();
 	}
-	
+
 	// Graphics helpers
 	
 	/** Convenience routine to get an application-local image */
