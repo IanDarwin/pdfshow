@@ -98,8 +98,8 @@ public class PdfShow {
 					case KeyEvent.VK_DOWN: currentTab.gotoNext(); return;
 					case KeyEvent.VK_UP: currentTab.gotoPrev(); return;
 				}
-				System.out.println(e);
 			}
+			System.out.println("Unhandled key event: " + e);
 		}
 
 		public void mouseClicked(MouseEvent e) {
@@ -331,7 +331,7 @@ public class PdfShow {
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setFocusable(true);
 		final Image iconImage = getImage("/images/logo.png");
-		System.out.println("PdfShow.PdfShow(): " + iconImage);
+		// System.out.println("PdfShow.PdfShow(): " + iconImage);
 		jf.setIconImage(iconImage);
 
 
