@@ -31,7 +31,9 @@ Like most GUI tools, you can open a file either by passing it on the command lin
 or via the File->Open menu.
 You can have multiple files open, using the tab selecter at the top.
 
-You can move around using:
+=== Navigation
+
+You can move around within a file using:
 
 * The scroll bar at the right side of the current tab;
 * The `Up` and `Down` buttons in the nav box;
@@ -41,6 +43,18 @@ _Note that this is a programmer's tool so pages number from 0 to n-1_.
 * Ensuring the mouse is in the window, and using:
 ** `DownArrow`, `j`, `SPACE`, or `RETURN` to move to the next page;
 ** `UpArrow`, `k`, `DELETE`, or `BACKSPACE` to move to the previous page.
+
+=== Drawing
+
+The toolbox has icons for straight line, polyline and rectangle.
+Each of these will rubber-band as you draw it, like most draw programs.
+The Text icon currently pops up a dialog for the text, but that will
+hopefully be simplified soon.
+Each graphic object that you attach to a page will stay with that page
+until you close the file or exit the application.
+They are not saved, since that goes against the "make your slides come alive" mantra.
+But I am open to well-reasoned arguments in favor of saving them into the PDF,
+especially if accompanied by a "pull request" containing working code.
 
 == Credits
 
