@@ -27,6 +27,11 @@ I might build an RPM or DEB for Linux later.
 
 == Using It
 
+This is intended for slide shows, which are almost always in "landscape mode"
+(oriented like a laptop or computer monitor, not upright like a smartphone).
+Slide decks will be scaled to fit your monitor, so book-style documents
+(portrait mode documents) will appear unusually wide, though still readable.
+
 Like most GUI tools, you can open a file either by passing it on the command line 
 or via the File->Open menu.
 You can have multiple files open, using the tab selecter at the top.
@@ -46,6 +51,11 @@ _Note that this is a programmer's tool so pages number from 0 to n-1_.
 
 === Drawing
 
+There are multiple draw tool icons in the toolbox. Each of these
+only has effect once, that is, you have to click the Line button
+a second time to draw a second line.
+I may add an option later to remove this behaviour.
+
 The toolbox has icons for straight line, polyline and rectangle.
 Each of these will rubber-band as you draw it, like most draw programs.
 The Text icon currently pops up a dialog for the text, but that will
@@ -55,6 +65,9 @@ until you close the file or exit the application.
 They are not saved, since that goes against the "make your slides come alive" mantra.
 But I am open to well-reasoned arguments in favor of saving them into the PDF,
 especially if accompanied by a "pull request" containing working code.
+
+The Undo button removes the most-recently added graphic each time it's pressed.
+The Trash icon removes *all* graphics from the current page.
 
 == Credits
 
