@@ -55,18 +55,20 @@ class GLine extends GObject {
 
 class GPolyLine extends GObject {
 	private int[] xPoints, yPoints;
-	GPolyLine(int[] xPoints, int[] yPoints) {
+	private int nPoints;
+	GPolyLine(int[] xPoints, int[] yPoints, int nPoints) {
 		super(xPoints[0], yPoints[0]);
 		if (xPoints.length != yPoints.length)
 			throw new IllegalArgumentException("GPolyLine(): xlen != ylen");
 		this.xPoints = xPoints;
 		this.yPoints = yPoints;
+		this.nPoints = nPoints;
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
 		((Graphics2D)g).setStroke(new BasicStroke(3));
 		g.setColor(Color.RED);
-		g.drawPolyline(xPoints, yPoints, xPoints.length);
+		g.drawPolyline(xPoints, yPoints, nPoints);
 	}
 }
 

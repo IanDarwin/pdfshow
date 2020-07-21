@@ -173,18 +173,18 @@ public class PdfShow {
 	static final State lineDrawState = new LineDrawState();
 
 	static class PolyLineDrawState extends State {
-		enum Mode {IDLE, DRAWING };
-		Mode mode = Mode.IDLE;
 		// Static arrays to avoid multiple allocations
 		static int[] x = new int[750];
 		static int[] y = new int[750];
-		int n = 0;
+		int n = 0, ix;
+		GPolyLine line;
 		@Override
 		public void mousePressed(MouseEvent e) {
 			System.out.println("PdfShow.PolyLineDrawState.mouseClicked()");
 			n = 0;
-			mode = Mode.DRAWING;
 			addPoint(e.getX(), e.getY());
+			line = new GPolyLine(x, y, 1);
+			ix = currentTab.addIn(line);
 		}
 		private void addPoint(int x, int y) {
 			PolyLineDrawState.x[n] = x;
@@ -205,16 +205,13 @@ public class PdfShow {
 			if (dy > -1 && dy < +5)
 				return;
 			addPoint(newx, newy);
+			currentTab.setIn(ix, new GPolyLine(x, y, n));
+			currentTab.repaint();
 		}
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			System.out.println("PdfShow.PolyLineDrawState.mouseReleased()");
-			int[] xPoints = new int[n];
-			System.arraycopy(x, 0, xPoints, 0, n);
-			int[] yPoints = new int[n];
-			System.arraycopy(y, 0, yPoints, 0, n);
-			currentTab.addIn(
-				new GPolyLine(xPoints, yPoints));
+			currentTab.setIn(ix, new GPolyLine(x, y, n));
 			currentTab.repaint();
 			done();
 		}
