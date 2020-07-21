@@ -1,0 +1,1 @@
+jpackage --name PDFShow --input target --main-jar pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar
