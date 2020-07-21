@@ -136,7 +136,7 @@ public class PdfShow {
 	static class TextDrawState extends State {
 		@Override
 		public void mousePressed(MouseEvent e) {
-			String text = JOptionPane.showInputDialog("Text?");
+			String text = JOptionPane.showInputDialog(jf, "Text?");
 			if (text != null) {
 				currentTab.addIn(new GText(e.getX(), e.getY(), text));
 				done();
@@ -222,7 +222,7 @@ public class PdfShow {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			currentTab.addIn(new GRectangle(ulX, ulY, e.getX(), e.getY()));
-			currentTab.repaint(); // XXX Shoudl addIn() do repaint() for us?
+			currentTab.repaint(); // XXX Should addIn() do repaint() for us?
 			done();
 		}
 		
@@ -257,9 +257,48 @@ public class PdfShow {
 	final RecentMenu recents;
 
 	// Listeners; these get added to each DocTab in openPdfFile().
-	private MouseListener ml;
-	private MouseMotionListener mml;
-	private KeyListener kl;
+	private MouseListener ml = new MouseAdapter() {
+		@Override
+		public void mousePressed(MouseEvent e) {
+			currentState.mousePressed(e);
+		};
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			currentState.mouseClicked(e);
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			currentState.mouseReleased(e);
+		}
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			currentState.mouseEntered(e);
+			currentTab.requestFocus();
+		}
+		@Override
+		public void mouseExited(MouseEvent e) {
+			currentState.mouseExited(e);
+		};
+	};
+	private MouseMotionListener mml = new MouseMotionListener() {
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			currentState.mouseDragged(e);
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			// Ignore
+		}		
+	};
+ ;
+	private KeyListener kl = new KeyAdapter() {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			currentState.keyPressed(e);
+		};
+	};
 
 	PdfShow() {
 
@@ -443,51 +482,6 @@ public class PdfShow {
 		toolBox.add(undoButton);
 		
 		sidePanel.add(toolBox);
-
-		// GENERIC VIEW LISTENERS - Just delegate directly to currentState
-		ml = new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				currentState.mousePressed(e);
-			};
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				currentState.mouseClicked(e);
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				currentState.mouseReleased(e);
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				currentState.mouseEntered(e);
-				currentTab.requestFocus();
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				currentState.mouseExited(e);
-			};
-		};
-
-		mml = new MouseMotionListener() {
-
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				currentState.mouseDragged(e);
-			}
-
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				// Ignore
-			}		
-		};
-
-		kl = new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				currentState.keyPressed(e);
-			};
-		};
 
 		jf.add(BorderLayout.WEST, sidePanel);
 		jf.setVisible(true);
