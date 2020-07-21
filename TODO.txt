@@ -2,16 +2,15 @@
 
 Buglets:
 	Items jump around a bit when adding other objects (Text?)
-	Page N of M box not updating.
 
 Drawing:
-	GObjects should draw as they are created (mouse drag)
 	GObjects should get BoundingBox for hit detection.
 	Be able to edit at least the text of text objects.
-	Be able to delete indiv objects, undo stack (then addIn would push a Delete cmd)
+	Implement proper undo stack (then addIn would push a Delete cmd)
 	Properties: at least Font chooser, Color Chooser, LineWidth
 
 UI
+	App icon.
 	A back button for when you scroll past a bunch of pages (Stack of page#s)
 	File opened from argv should be added to recents menu.
 	Better, more unified, and larger, icons in toolbox.
@@ -19,7 +18,7 @@ UI
 Longer Range Goals:
 	Save annotations with the PDF (either in it or beside it)
 	User-creatable Bookmarks? (editable text)
-	Index tab (first line and page#)
 
-Weird ideas:
+"Maybe" ideas:
 	Ability to auto-transition back-and-forth between a chosen slide in each of two presos
+	Index tab (first line and page#)
