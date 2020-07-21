@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -147,17 +148,25 @@ public class PdfShow {
 
 	/** For now, crude line-drawing: click start, click end. */
 	static class LineDrawState extends State {
-		int startX = -1, startY = -1;
+		int startX = -1, startY = -1, ix;
+		GLine line;
 		@Override
 		public void mousePressed(MouseEvent e) {
 			startX = e.getX();
 			startY = e.getY();
 		}
 		@Override
-		public void mouseReleased(MouseEvent e) {
-			currentTab.addIn(
-					new GLine(startX, startY, e.getX(), e.getY()));
+		public void mouseDragged(MouseEvent e) {
+			if (line == null) {
+				line = new GLine(startX, startY, e.getX(), e.getY());
+				ix = currentTab.addIn(line);
+			} else {
+				currentTab.setIn(ix, new GLine(startX, startY, e.getX(), e.getY()));
+			}
 			currentTab.repaint();
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
 			done();
 		}
 	}
@@ -234,7 +243,7 @@ public class PdfShow {
 		}
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			currentTab.addIn(new GRectangle(ulX, ulY, e.getX(), e.getY()));
+			// currentTab.addIn(new GRectangle(ulX, ulY, e.getX(), e.getY()));
 			currentTab.repaint(); // XXX Should addIn() do repaint() for us?
 			done();
 		}
@@ -324,7 +333,10 @@ public class PdfShow {
 		jf.setSize(tk.getScreenSize());
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setFocusable(true);
-		jf.addKeyListener(kl);
+		final Image iconImage = getImage("/images/logo.png");
+		System.out.println("PdfShow.PdfShow(): " + iconImage);
+		jf.setIconImage(iconImage);
+
 
 		// TABBEDPANE (main window for viewing PDFs)
 
@@ -593,10 +605,10 @@ public class PdfShow {
 	
 	/** Convenience routine to get an application-local image */
 	private ImageIcon getMyImageIcon(String name) {
-		String fullName = "/images" + '/' + name + ".gif";
+		String fullName = "/images/" + name + ".gif";
 		return getImageIcon(fullName);
 	}
-	
+
 	/** Convenience routine to get a JLF-standard image */
 	private ImageIcon getJLFImageIcon(String name) {
 		String imgLocation = "/toolbarButtonGraphics/" + name + "24.gif";
@@ -613,4 +625,13 @@ public class PdfShow {
 		return ii;
 	}
 
+	// Old format, still needed for JFrame(?)
+	protected Image getImage(String imgName) {
+		URL imageURL = getClass().getResource(imgName);
+
+		if (imageURL == null) {
+			throw new IllegalArgumentException("No image: " + imgName);
+		}
+		return Toolkit.getDefaultToolkit().getImage(imageURL);
+	}
 }
