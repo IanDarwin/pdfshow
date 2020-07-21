@@ -101,11 +101,20 @@ class DocTab extends JPanel {
 		setPageNumber(pageNumber - 1);
 	}
 
-	void addIn(GObject gobj) {
+	int addIn(GObject gobj) {
 		if (addIns[pageNumber] == null) {
 			addIns[pageNumber] = new ArrayList<GObject>();
 		}
+		int ix = addIns[pageNumber].size();
 		addIns[pageNumber].add(gobj);
+		return ix;
+	}
+
+	/** Replace an object (for rubber-banding) */
+	void setIn(int ix, GObject gobj) {
+		if (addIns[pageNumber] == null)
+			throw new IllegalStateException("setIn with no list!");
+		addIns[pageNumber].set(ix, gobj);
 	}
 
 	void delete(GObject gobj) {
