@@ -214,10 +214,23 @@ public class PdfShow {
 	
 	static class RectangleState extends State {
 		int ulX = -1, ulY = -1;
+		GRectangle rect;
+		int ix;
 		@Override
 		public void mousePressed(MouseEvent e) {
 			ulX = e.getX();
 			ulY = e.getY();
+			rect = null;
+		}
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (rect == null) {
+				rect = new GRectangle(ulX, ulY, e.getX(), e.getY());
+				ix = currentTab.addIn(rect);
+			} else {
+				currentTab.setIn(ix, new GRectangle(ulX, ulY, e.getX(), e.getY()));
+			}
+			currentTab.repaint();
 		}
 		@Override
 		public void mouseReleased(MouseEvent e) {
