@@ -1,1 +1,7 @@
-jpackage --name PDFShow --input target --main-jar pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar
+jpackage \
+	--name PDFShow \
+	--license-file LICENSE.txt \
+	--vendor "Rejminet Group Inc." \
+	--icon src/main/resources/images/logo.png \
+	--input target \
+	--main-jar pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar
