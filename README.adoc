@@ -2,10 +2,9 @@
 
 PdfShow is a simple Java Swing-based PDF viewer specifically for running slide shows.
 
-Pdf access (i.e., the heavy listing!) is done by https://pdfbox.apache.org/[Apache PDFBox].
-
 It has many limitations compared with other tools (see the TODO file), due to 
-its relative youth and its design goals.
+its relative youth and, more importantly, its design goals.
+These are laid out in the User Guide.
 
 I will add more bells and whistles as time permits.
 
@@ -14,29 +13,24 @@ within the general tone of the program - _minimalist, but functional._
 
 == Using It
 
-Like most GUI tools, process a file by passing it on the command line or via the File->Open menu.
-You can have multiple files open, using the tab selecter at the top.
-
-You can move around using:
-
-* The scroll bar at the right side of the current tab;
-* The `Up` and `Down` buttons in the nav box;
-* The `Begin` and `End` buttons in the nav box (first and last page).
-* Typing a given page number in the page number box in the middle of the nav box;
-_Note that this is a programmer's tool so pages number from 0 to n-1_.
-* Ensuring the mouse is in the window, and using:
-** `DownArrow`, `j`, `SPACE`, or `RETURN` to move to the next page;
-** `UpArrow`, `k`, `DELETE`, or `BACKSPACE` to move to the previous page.
+The program is intuitive and easy to use.
+But there is documentation, in the `docs` folder.
 
 == Build It
 
+Download the repository from https://github.com/IanDarwin/pdfshow.
+
 To test run it, just open the project in Eclipse (or import into IntelliJ or
-other IDE) and run the PdfShow file.
+other IDE) and run PdfShow, the main-program file.
+
+To package just the program and its images (without the dependencies),
+do `mvn package`.
 
 To make a clickable runnable JAR file, run `mvn package assembly:single`
 and you'll find a jar with dependencies in the target folder.
 It'll be named something like _pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar_
-You can run it with `java -jar` or click on it in Windows, Mac, or most *Nix windowed environments.
+You can run it with `java -jar` or click on it in Windows, macOS, 
+or most *Nix windowed environments.
 
 == Develop It
 
@@ -55,6 +49,9 @@ insert the GObjects into the PDF using this technique.
 == Credits
 
 Program by Ian Darwin of Rejminet Group Inc.
+
+PDF access (i.e., some of the heavy listing!) is done by 
+https://pdfbox.apache.org/[Apache PDFBox] software.
 
 Icons from the Sun JLF Image Repository (c) Sun Micro.
 Other icons Copyright(C) 1998 by Dean S. Jones
