@@ -38,16 +38,16 @@
        height="4.1010418"
        id="rect193" />
     <filter
-       height="1.0002481"
-       y="-0.00012407032"
-       width="1.0011099"
-       x="-0.00055494284"
-       id="filter273"
+       height="1.0004243"
+       y="-0.00021216758"
+       width="1.001898"
+       x="-0.0009489851"
+       id="filter289"
        style="color-interpolation-filters:sRGB"
        inkscape:collect="always">
       <feGaussianBlur
-         id="feGaussianBlur275"
-         stdDeviation="0.00050105939"
+         id="feGaussianBlur291"
+         stdDeviation="0.0008568412"
          inkscape:collect="always" />
     </filter>
   </defs>
@@ -62,7 +62,7 @@
      inkscape:document-rotation="0"
      inkscape:current-layer="layer3"
      inkscape:document-units="mm"
-     inkscape:cy="61.756442"
+     inkscape:cy="31.756442"
      inkscape:cx="15.75"
      inkscape:zoom="4"
      inkscape:pageshadow="2"
@@ -89,40 +89,40 @@
      id="layer2"
      inkscape:groupmode="layer">
     <rect
-       y="-0.59531248"
-       x="-1.0583333"
-       height="14.155209"
-       width="14.618229"
+       y="2.4470076e-08"
+       x="0.066145889"
+       height="12.766147"
+       width="12.832292"
        id="rect181"
-       style="fill:#ffb380;stroke-width:0.264583" />
+       style="fill:#ffb380;stroke-width:0.235417" />
   </g>
   <g
-     style="display:inline;filter:url(#filter273)"
+     style="display:inline;filter:url(#filter289)"
      inkscape:label="Text"
      id="layer3"
      inkscape:groupmode="layer">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23332999999999959px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583;"
        x="10.147654"
        y="4.3831944"
        id="text84"><tspan
          sodipodi:role="line"
          x="10.147654"
          y="4.3831944"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ff0000;stroke-width:0.264583"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23332999999999959px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;stroke-width:0.264583;"
          id="tspan88">P</tspan></text>
     <text
        xml:space="preserve"
        id="text98"
-       style="font-size:3.52777999999999992px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';white-space:pre;shape-inside:url(#rect100-7);display:inline;fill:#ff0000;"
+       style="font-size:3.52777999999999992px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';white-space:pre;shape-inside:url(#rect100-7);display:inline;fill:#ffffff;"
        transform="translate(18.680471,-15.328264)"><tspan
          x="-8.4667969"
          y="22.863032"><tspan
-           style="fill:#ff0000">D</tspan></tspan></text>
+           style="fill:#ffffff">D</tspan></tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';display:inline;fill:#ff0000;stroke-width:0.264583"
+       style="font-size:3.52776999999999985px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';display:inline;fill:#ffffff;stroke-width:0.264583;"
        x="10.2138"
        y="10.997776"
        id="text106"><tspan
@@ -130,7 +130,7 @@
          id="tspan104"
          x="10.2138"
          y="10.997776"
-         style="fill:#ff0000;stroke-width:0.264583">F</tspan></text>
+         style="fill:#ffffff;stroke-width:0.264583;">F</tspan></text>
   </g>
   <g
      style="display:inline"
