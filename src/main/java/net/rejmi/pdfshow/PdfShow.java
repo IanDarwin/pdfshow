@@ -491,7 +491,7 @@ public class PdfShow {
 		toolBox.add(clearButton);
 		
 		final JButton undoButton = new JButton(getJLFImageIcon("general/Undo"));
-		undoButton.setEnabled(false);
+		undoButton.addActionListener(e -> { currentTab.removeLastIn(); currentTab.repaint(); });
 		toolBox.add(undoButton);
 		
 		sidePanel.add(toolBox);

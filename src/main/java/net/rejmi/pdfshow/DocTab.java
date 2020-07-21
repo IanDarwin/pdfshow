@@ -117,9 +117,14 @@ class DocTab extends JPanel {
 		addIns[pageNumber].set(ix, gobj);
 	}
 
-	void delete(GObject gobj) {
-		// not implemented yet
-		repaint();
+	void removeLastIn() {
+		List<GObject> l = addIns[pageNumber];
+		if (l != null && !l.isEmpty())
+			l.remove(l.size() - 1);
+	}
+
+	void removeIn(int ix) {
+		addIns[pageNumber].remove(ix);
 	}
 
 	void deleteAll() {
