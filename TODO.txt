@@ -22,3 +22,8 @@ Longer Range Goals:
 "Maybe" ideas:
 	Ability to auto-transition back-and-forth between a chosen slide in each of two presos
 	Index tab (first line and page#)
+
+Good Tasks for New Contributors (in addition to many of the above):
+	Easy: Change the resizing calculation from scale-both-axes to maxpect
+	Medium: Replace the "replace and repaint" rubberbanding with DrawingMode.XOR
+	Hard: Make it perfect :-)
