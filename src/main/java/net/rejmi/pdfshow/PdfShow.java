@@ -173,46 +173,34 @@ public class PdfShow {
 	static final State lineDrawState = new LineDrawState();
 
 	static class PolyLineDrawState extends State {
-		// Static arrays to avoid multiple allocations
-		static int[] x = new int[750];
-		static int[] y = new int[750];
 		int n = 0, ix;
+		int lastx, lasty;
 		GPolyLine line;
 		@Override
 		public void mousePressed(MouseEvent e) {
 			System.out.println("PdfShow.PolyLineDrawState.mouseClicked()");
 			n = 0;
-			addPoint(e.getX(), e.getY());
-			line = new GPolyLine(x, y, 1);
+			line = new GPolyLine(e.getX(), e.getY());
 			ix = currentTab.addIn(line);
-		}
-		private void addPoint(int x, int y) {
-			PolyLineDrawState.x[n] = x;
-			PolyLineDrawState.y[n] = y;
-			++n;
 		}
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			if (n >= x.length) {
-				return;
-			}
-			int lastx = x[n-1]; int lasty = y[n-1];
 			int newx = e.getX(); int newy = e.getY();
 			int dx = newx - lastx;
 			if (dx > -5 && dx < +5)
 				return;
 			int dy = newy - lasty;
-			if (dy > -1 && dy < +5)
+			if (dy > -5 && dy < +5)
 				return;
-			addPoint(newx, newy);
-			currentTab.setIn(ix, new GPolyLine(x, y, n));
+			line.addPoint(newx, newy);
 			currentTab.repaint();
+			lastx = newx; lasty = newy;
 		}
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			System.out.println("PdfShow.PolyLineDrawState.mouseReleased()");
-			currentTab.setIn(ix, new GPolyLine(x, y, n));
 			currentTab.repaint();
+			line = null;	// We are done with it.
 			done();
 		}
 	}

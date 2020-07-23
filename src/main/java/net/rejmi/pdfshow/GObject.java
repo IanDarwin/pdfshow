@@ -35,6 +35,10 @@ class GText extends GObject {
 		g.setFont(font);
 		g.drawString(text, x, y);
 	}
+	@Override
+	public String toString() {
+		return String.format("GText: %d, %d, %s", x, y, text);
+	}
 }
 
 class GLine extends GObject {
@@ -51,24 +55,53 @@ class GLine extends GObject {
 		g.setColor(Color.RED);
 		g.drawLine(x, y, endX, endY);
 	}
+	@Override
+	public String toString() {
+		return String.format("GLine from %d, %d to %d %d", x, y, endX, endY);
+	}
 }
 
 class GPolyLine extends GObject {
-	private int[] xPoints, yPoints;
+	final int MAX_POINTS = 250;
+	private int[] xPoints = new int[MAX_POINTS], yPoints = new int[MAX_POINTS];
 	private int nPoints;
-	GPolyLine(int[] xPoints, int[] yPoints, int nPoints) {
-		super(xPoints[0], yPoints[0]);
+	GPolyLine(int x, int y) {
+		super(x, y);
 		if (xPoints.length != yPoints.length)
 			throw new IllegalArgumentException("GPolyLine(): xlen != ylen");
-		this.xPoints = xPoints;
-		this.yPoints = yPoints;
-		this.nPoints = nPoints;
 	}
+	
+	void addPoint(int x, int y) {
+		if (nPoints == xPoints.length) {
+			throw new IllegalStateException("I never thought you'd draw a line with that many points");
+		}
+		this.xPoints[nPoints] = x;
+		this.yPoints[nPoints] = y;
+		++nPoints;
+	}
+	
 	void render(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
 		((Graphics2D)g).setStroke(new BasicStroke(3));
 		g.setColor(Color.RED);
 		g.drawPolyline(xPoints, yPoints, nPoints);
+	}
+
+	public int length() {
+		return nPoints;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("GPolyLine %d points from %d, %d to %d %d", nPoints, x, y, xPoints[nPoints - 1], yPoints[nPoints - 1]);
+	}
+
+	// Only for testing
+	int getX(int i) {
+		return xPoints[i];
+	}
+	int getY(int i) {
+		return yPoints[i];
 	}
 }
 
