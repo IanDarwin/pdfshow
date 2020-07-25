@@ -178,7 +178,7 @@ public class PdfShow {
 		GPolyLine line;
 		@Override
 		public void mousePressed(MouseEvent e) {
-			System.out.println("PdfShow.PolyLineDrawState.mouseClicked()");
+			// System.out.println("PdfShow.PolyLineDrawState.mousePressed()");
 			n = 0;
 			line = new GPolyLine(e.getX(), e.getY());
 			ix = currentTab.addIn(line);
@@ -198,7 +198,7 @@ public class PdfShow {
 		}
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			System.out.println("PdfShow.PolyLineDrawState.mouseReleased()");
+			// System.out.println("PdfShow.PolyLineDrawState.mouseReleased()");
 			currentTab.repaint();
 			line = null;	// We are done with it.
 			done();
