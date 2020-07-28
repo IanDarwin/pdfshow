@@ -1,3 +1,9 @@
+#!/bin/sh
+
+set -x
+
+mvn package assembly:single
+
 jpackage \
 	--name PDFShow \
 	--license-file LICENSE.txt \
