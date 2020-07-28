@@ -39,7 +39,8 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import com.darwinsys.swingui.MenuUtils;
 import com.darwinsys.swingui.RecentMenu;
 
-/** A simpler PDF viewer
+/** 
+ * A simpler PDF viewer
  * @author Ian Darwin
  */
 public class PdfShow {
@@ -72,7 +73,7 @@ public class PdfShow {
 		 * composing and adding a GObject, currentTab.repaint(), done()
 		 */
 		public void done() {
-			gotoState(viewState);
+			// gotoState(viewState);
 		}
 
 		public void leaveState() {
@@ -140,6 +141,7 @@ public class PdfShow {
 			String text = JOptionPane.showInputDialog(jf, "Text?");
 			if (text != null) {
 				currentTab.addIn(new GText(e.getX(), e.getY(), text));
+				currentTab.repaint();
 				done();
 			}
 		}
@@ -464,7 +466,7 @@ public class PdfShow {
 		// Mode buttons
 		
 		final JButton selectButton = new JButton(getMyImageIcon("Select"));
-		selectButton.setEnabled(false);
+		selectButton.addActionListener(e -> gotoState(viewState));
 		toolBox.add(selectButton);
 
 		final JButton textButton = new JButton(getMyImageIcon("Text"));
