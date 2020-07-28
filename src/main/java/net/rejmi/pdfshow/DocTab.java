@@ -51,6 +51,7 @@ class DocTab extends JPanel {
 		addIns = new List[pageCount];
 
 		// GUI stuff
+		setDoubleBuffered(true);
 		setLayout(new BorderLayout());
 		pdfComponent = new MainComponent();
 		add(pdfComponent, BorderLayout.CENTER);
