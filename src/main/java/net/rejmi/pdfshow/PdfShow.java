@@ -169,6 +169,7 @@ public class PdfShow {
 		}
 		@Override
 		public void mouseReleased(MouseEvent e) {
+			line = null;
 			done();
 		}
 	}
