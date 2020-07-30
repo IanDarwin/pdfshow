@@ -1,7 +1,7 @@
 == ToDo
 
 Buglets:
-	Items jump around a bit when adding other objects (Text?)
+	Items jump around a bit when adding Text - Happens on macOS, ObSD, but NOT MS-Win
 
 Drawing:
 	GObjects should get BoundingBox for hit detection.
