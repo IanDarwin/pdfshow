@@ -8,6 +8,7 @@ Drawing:
 	Be able to edit at least the text of text objects.
 	Implement proper undo stack (then addIn would push a Delete cmd)
 	Properties: at least Font chooser, Color Chooser, LineWidth
+	Lines should have arrowheads.
 
 UI
 	App icon.
