@@ -69,12 +69,6 @@ class GMarker extends GLine {
 		lineWidth = 15;
 		color = new Color(255, 255, 0, MARKER_TRANS_ALPHA); // Yellow w/ reduced alpha
 	}
-	@Override
-	void render(Graphics g) {
-		// Need to set transparency here
-		super.render(g);
-		// Need to unset transparency
-	}
 }
 
 class GPolyLine extends GObject {

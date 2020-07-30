@@ -517,11 +517,11 @@ public class PdfShow {
 		rectangleButton.addActionListener(e -> gotoState(rectangleState));
 		toolBox.add(rectangleButton);
 		
-		final JButton clearButton = new JButton(getJLFImageIcon("general/Delete"));
+		final JButton clearButton = new JButton(getMyImageIcon("Trash"));
 		clearButton.addActionListener(e -> currentTab.deleteAll());
 		toolBox.add(clearButton);
 		
-		final JButton undoButton = new JButton(getJLFImageIcon("general/Undo"));
+		final JButton undoButton = new JButton(getMyImageIcon("Undo"));
 		undoButton.addActionListener(e -> { currentTab.removeLastIn(); currentTab.repaint(); });
 		toolBox.add(undoButton);
 		
@@ -624,24 +624,30 @@ public class PdfShow {
 	
 	/** Convenience routine to get an application-local image */
 	private ImageIcon getMyImageIcon(String name) {
-		String fullName = "/images/" + name + ".gif";
+		String fullName = "/images/" + name;
 		return getImageIcon(fullName);
 	}
 
 	/** Convenience routine to get a JLF-standard image */
 	private ImageIcon getJLFImageIcon(String name) {
-		String imgLocation = "/toolbarButtonGraphics/" + name + "24.gif";
+		String imgLocation = "/toolbarButtonGraphics/" + name + "24";
 		return getImageIcon(imgLocation);
 	}
 
+	/** Grab an image off the resource path, which might be
+	 * in one of several formats (png, jpg, gif, etc.).
+	 * @param imgName The name with no extension, e.g., "/images/Line"
+	 * @return an ImageIcon to display the thing.
+	 */
 	private ImageIcon getImageIcon(String imgName) {
-		URL imageURL = getClass().getResource(imgName);
-
-		if (imageURL == null) {
-			throw new IllegalArgumentException("No image: " + imgName);
+		for (String ext : new String[] {".png", ".jpg", ".gif"}) {			
+			URL imageURL = getClass().getResource(imgName  + ext);
+			if (imageURL != null) {
+				ImageIcon ii = new ImageIcon(imageURL);
+				return ii;
+			}
 		}
-		ImageIcon ii = new ImageIcon(imageURL);
-		return ii;
+		throw new IllegalArgumentException("No image: " + imgName);
 	}
 
 	// Old format, still needed for JFrame(?)
