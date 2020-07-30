@@ -66,7 +66,7 @@ class GMarker extends GLine {
 	GMarker(int x, int y, int endx, int endy) {
 		super(x, y, endx, endy);
 		lineWidth = 15;
-		color = Color.YELLOW;
+		color = new Color(255, 255, 0, 128); // Color.YELLOW w/ reduced alpha
 	}
 	@Override
 	void render(Graphics g) {
