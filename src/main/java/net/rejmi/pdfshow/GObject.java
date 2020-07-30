@@ -63,10 +63,11 @@ class GLine extends GObject {
 }
 
 class GMarker extends GLine {
+	private static final int MARKER_TRANS_ALPHA = 100;
 	GMarker(int x, int y, int endx, int endy) {
 		super(x, y, endx, endy);
 		lineWidth = 15;
-		color = new Color(255, 255, 0, 128); // Color.YELLOW w/ reduced alpha
+		color = new Color(255, 255, 0, MARKER_TRANS_ALPHA); // Yellow w/ reduced alpha
 	}
 	@Override
 	void render(Graphics g) {
