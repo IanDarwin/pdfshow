@@ -15,7 +15,7 @@ abstract class GObject {
 	static final AffineTransform UPRIGHT_TRANSLATE_INSTANCE = AffineTransform.getTranslateInstance(1, -1);
 
 	int x, y;
-	Color color;
+	Color color = Color.RED;
 	GObject(int x, int y) {
 		this.x = x; this.y = y;
 	}
@@ -31,7 +31,7 @@ class GText extends GObject {
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
-		g.setColor(Color.red);
+		g.setColor(color);
 		g.setFont(font);
 		g.drawString(text, x, y);
 	}
@@ -42,7 +42,7 @@ class GText extends GObject {
 }
 
 class GLine extends GObject {
-	int lineWidth;
+	int lineWidth = 3;
 	int endX, endY;
 	GLine(int x, int y, int endX, int endY) {
 		super(x, y);
@@ -51,13 +51,28 @@ class GLine extends GObject {
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
-		((Graphics2D)g).setStroke(new BasicStroke(3));
-		g.setColor(Color.RED);
+		((Graphics2D)g).setStroke(new BasicStroke(lineWidth));
+		g.setColor(color);
 		g.drawLine(x, y, endX, endY);
 	}
 	@Override
 	public String toString() {
-		return String.format("GLine from %d, %d to %d %d", x, y, endX, endY);
+		return String.format("%s from %d, %d to %d %d", 
+			getClass().getSimpleName(), x, y, endX, endY);
+	}
+}
+
+class GMarker extends GLine {
+	GMarker(int x, int y, int endx, int endy) {
+		super(x, y, endx, endy);
+		lineWidth = 15;
+		color = Color.YELLOW;
+	}
+	@Override
+	void render(Graphics g) {
+		// Need to set transparency here
+		super.render(g);
+		// Need to unset transparency
 	}
 }
 
@@ -83,7 +98,7 @@ class GPolyLine extends GObject {
 	void render(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
 		((Graphics2D)g).setStroke(new BasicStroke(3));
-		g.setColor(Color.RED);
+		g.setColor(color);
 		g.drawPolyline(xPoints, yPoints, nPoints);
 	}
 
@@ -115,7 +130,7 @@ class GRectangle extends GObject {
 	void render(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
 		((Graphics2D)g).setStroke(new BasicStroke(3));
-		g.setColor(Color.RED);
+		g.setColor(color);
 		g.drawRect(x, y, Math.abs(llX - x), Math.abs(llY - y));
 	}
 }

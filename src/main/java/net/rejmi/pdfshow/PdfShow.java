@@ -148,6 +148,33 @@ public class PdfShow {
 	}
 	static final State textDrawState = new TextDrawState();
 
+	/** Marker: straight line: click start, click end. */
+	static class MarkingState extends State {
+		int startX = -1, startY = -1, ix;
+		GMarker mark;
+		@Override
+		public void mousePressed(MouseEvent e) {
+			startX = e.getX();
+			startY = e.getY();
+		}
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (mark == null) {
+				mark = new GMarker(startX, startY, e.getX(), e.getY());
+				ix = currentTab.addIn(mark);
+			} else {
+				currentTab.setIn(ix, new GMarker(startX, startY, e.getX(), e.getY()));
+			}
+			currentTab.repaint();
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			mark = null;
+			done();
+		}
+	}
+	static final State markingState = new MarkingState();
+
 	/** For now, crude line-drawing: click start, click end. */
 	static class LineDrawState extends State {
 		int startX = -1, startY = -1, ix;
@@ -473,6 +500,10 @@ public class PdfShow {
 		final JButton textButton = new JButton(getMyImageIcon("Text"));
 		textButton.addActionListener(e -> gotoState(textDrawState));
 		toolBox.add(textButton);
+
+		final JButton markerButton = new JButton(getMyImageIcon("Marker"));
+		markerButton.addActionListener(e -> gotoState(markingState));
+		toolBox.add(markerButton);
 
 		final JButton lineButton = new JButton(getMyImageIcon("Line"));
 		lineButton.addActionListener(e -> gotoState(lineDrawState));
