@@ -6,10 +6,10 @@ mvn package assembly:single
 
 case $(uname) in
 	MSYS_NT-10*)	inst_format=msi
-			icon_format=icns
+			icon_format=ico
 			;;
 	Darwin)		inst_format=pkg
-			icon_format=ico
+			icon_format=icns
 			;;
 	Linux)		inst_format=rpm
 			icon_format=png
