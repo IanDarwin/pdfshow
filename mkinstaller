@@ -7,6 +7,7 @@ mvn package assembly:single
 case $(uname) in
 	MSYS_NT-10*)	inst_format=msi
 			icon_format=ico
+			OS_SPECIFIC="--win-menu --win-shortcut"
 			;;
 	Darwin)		inst_format=pkg
 			icon_format=icns
@@ -27,4 +28,5 @@ jpackage \
 	--icon src/main/resources/images/logo.${icon_format} \
 	--file-associations install-aux/pdfassoc.properties \
 	--input target \
-	--main-jar pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar
+	--main-jar pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar \
+	${OS_SPECIFIC}
