@@ -76,7 +76,4 @@ Program by Ian Darwin of Rejminet Group Inc.
 PDF access (i.e., some of the heavy listing!) is done by 
 https://pdfbox.apache.org/[Apache PDFBox] software.
 
-Icons from the Sun JLF Image Repository (c) Sun Micro.
-Other icons Copyright(C) 1998 by Dean S. Jones
-(formerly at gallant.com/icons.htm)
-and a few icons by Ian Darwin.
+Most icons from feathericons.com, and a simpler ones icons by Ian Darwin.
