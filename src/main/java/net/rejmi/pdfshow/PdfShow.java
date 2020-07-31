@@ -443,7 +443,6 @@ public class PdfShow {
 		// NAV BOX
 
 		JPanel sidePanel = new JPanel();
-		sidePanel.setBackground(Color.cyan);
 		sidePanel.setPreferredSize(new Dimension(200, 800));
 		
 		JPanel navBox = new JPanel();
@@ -642,7 +641,7 @@ public class PdfShow {
 	 * @return an ImageIcon to display the thing.
 	 */
 	private ImageIcon getImageIcon(String imgName) {
-		for (String ext : new String[] {".png", ".jpg", ".gif"}) {			
+		for (String ext : new String[] {".png", ".jpg" }) {			
 			URL imageURL = getClass().getResource(imgName  + ext);
 			if (imageURL != null) {
 				ImageIcon ii = new ImageIcon(imageURL);
