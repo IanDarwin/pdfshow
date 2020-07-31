@@ -4,12 +4,27 @@ set -x
 
 mvn package assembly:single
 
+case $(uname) in
+	MSYS_NT-10*)	inst_format=msi
+			icon_format=png # XXX ICON
+			;;
+	Darwin)		inst_format=pkg
+			icon_format=png # XXX ICNS
+			;;
+	Linux)		inst_format=rpm
+			icon_format=png
+			;;
+	*)
+			echo "Don't know how to package for this OS, sorry.";
+			exit 1;
+esac
+
 jpackage \
 	--name PDFShow \
 	--license-file LICENSE.txt \
 	--vendor "Rejminet Group Inc." \
-	--type pkg \
-	--icon src/main/resources/images/logo.png \
+	--type "${inst_format}" \
+	--icon src/main/resources/images/logo.${icon_format} \
 	--file-associations install-aux/pdfassoc.properties \
 	--input target \
 	--main-jar pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar
