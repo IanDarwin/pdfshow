@@ -4,6 +4,10 @@ Buglets:
 	Page number is reset when scrolling
 	Items jump up about 50px when adding Text - Happens on macOS, ObSD, but NOT MS-Win
 
+SELECT Mode:
+	Select objects
+	Select TEXT from the PDF for copy-n-paste
+
 Drawing:
 	GObjects should get BoundingBox for hit detection.
 	Be able to edit at least the text of text objects.
