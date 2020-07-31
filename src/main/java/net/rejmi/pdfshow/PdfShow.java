@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -289,8 +288,8 @@ public class PdfShow {
 	static JFrame jf;
 	private static JTabbedPane tabPane;
 	private static DocTab currentTab;
-	private static JButton upButton, downButton;
-	private static JTextField pageNumTF;
+	private static JButton upButton, downButton; // Do not move into constr
+	private static JTextField pageNumTF;		 // Nor me.
 	final RecentMenu recents;
 
 	// Listeners; these get added to each DocTab in openPdfFile().
@@ -419,7 +418,6 @@ public class PdfShow {
 		final JMenu helpMenu = MenuUtils.mkMenu(rb, "help");
 		menuBar.add(helpMenu);
 		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
-		aboutButton.setIcon(getJLFImageIcon("general/About"));
 		aboutButton.addActionListener(e->
 			JOptionPane.showMessageDialog(jf, "PdfShow v0.0\n" +
 			"c 2020 Ian Darwin\n" +
@@ -450,13 +448,17 @@ public class PdfShow {
 		
 		JPanel navBox = new JPanel();
 		navBox.setLayout(new GridLayout(3,3));
-		upButton = new JButton(getJLFImageIcon("navigation/Up"));
+		
+		// Row 1 - just Up button
+		upButton = new JButton(getMyImageIcon("Chevron-Up"));
 		upButton.addActionListener(e -> moveToPage(currentTab.getPageNumber() - 1));
-		navBox.add(new JLabel()); navBox.add(upButton); navBox.add(new JLabel());
-		downButton = new JButton(getJLFImageIcon("navigation/Down"));
-		downButton.addActionListener(e -> moveToPage(currentTab.getPageNumber() + 1));
-		JButton firstButton = new JButton(getJLFImageIcon("media/Rewind")), 
-			lastButton = new JButton(getJLFImageIcon("media/FastForward"));
+		navBox.add(new JLabel());	// Placeholder for grid
+		navBox.add(upButton); 
+		navBox.add(new JLabel());	// Ditto
+
+		// Row 2 - first page, # page, last page
+		JButton firstButton = new JButton(getMyImageIcon("Rewind")), 
+			lastButton = new JButton(getMyImageIcon("Fast-Forward"));
 		firstButton.addActionListener(e -> moveToPage(0));
 		navBox.add(firstButton);
 		pageNumTF = new JTextField(3);
@@ -483,14 +485,20 @@ public class PdfShow {
 		navBox.add(pageNumTF);
 		lastButton.addActionListener(e -> moveToPage(Integer.MAX_VALUE));
 		navBox.add(lastButton);
-		navBox.add(new JLabel()); navBox.add(downButton); navBox.add(new JLabel());
+		
+		// Row 3 - just down button
+		navBox.add(new JLabel());
+		downButton = new JButton(getMyImageIcon("Chevron-Down"));
+		downButton.addActionListener(e -> moveToPage(currentTab.getPageNumber() + 1));
+		navBox.add(downButton);
+		navBox.add(new JLabel());
 		navBox.setPreferredSize(new Dimension(200, 200));
 		sidePanel.add(navBox);
 
 		// TOOL BOX
 
 		JPanel toolBox = new JPanel();
-		toolBox.setLayout(new BoxLayout(toolBox, BoxLayout.PAGE_AXIS));
+		toolBox.setLayout(new GridLayout(0, 2));
 		// Mode buttons
 		
 		final JButton selectButton = new JButton(getMyImageIcon("Select"));
@@ -626,12 +634,6 @@ public class PdfShow {
 	private ImageIcon getMyImageIcon(String name) {
 		String fullName = "/images/" + name;
 		return getImageIcon(fullName);
-	}
-
-	/** Convenience routine to get a JLF-standard image */
-	private ImageIcon getJLFImageIcon(String name) {
-		String imgLocation = "/toolbarButtonGraphics/" + name + "24";
-		return getImageIcon(imgLocation);
 	}
 
 	/** Grab an image off the resource path, which might be

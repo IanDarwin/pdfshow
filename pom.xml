@@ -45,13 +45,6 @@
 			<version>2.0.20</version>
 		</dependency>
 
-		<!-- Nice peeps at "linoleum" project on java.net uploaded JLF icons Jar file -->
-		<dependency>
-			<groupId>net.java.linoleum</groupId>
-			<artifactId>jlfgr</artifactId>
-			<version>1_0</version>
-		</dependency>
-
 		<!-- My own rather trivial API -->
 		<dependency>
 			<groupId>com.darwinsys</groupId>
