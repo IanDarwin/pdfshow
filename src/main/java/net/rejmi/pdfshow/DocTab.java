@@ -18,9 +18,12 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
-/** A visual rep of one PDF document, for placing within a TabView */
+/**
+ * A visual rep of one PDF document, for placing within a TabView
+ */
 @SuppressWarnings("serial")
 class DocTab extends JPanel {
+
 	private JScrollBar sbar;
 	private JComponent pdfComponent;
 	/** zero-origin pageNumber, not from document's page numbering */
@@ -162,7 +165,7 @@ class DocTab extends JPanel {
 				}
 			}
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(PdfShow.jf, "Failure: " + e);
+			JOptionPane.showMessageDialog(PdfShow.frame, "Failure: " + e);
 		}
 	}
 	}

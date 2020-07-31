@@ -48,7 +48,7 @@ public class PdfShow {
 		for (String arg : args) {
 			final File file = new File(arg);
 			if (!file.canRead()) {
-				JOptionPane.showMessageDialog(PdfShow.jf, "Can't open file " + file);
+				JOptionPane.showMessageDialog(PdfShow.frame, "Can't open file " + file);
 				continue;
 			}
 			pdfShow.openPdfFile(file);
@@ -136,7 +136,7 @@ public class PdfShow {
 	static class TextDrawState extends State {
 		@Override
 		public void mousePressed(MouseEvent e) {
-			String text = JOptionPane.showInputDialog(jf, "Text?");
+			String text = JOptionPane.showInputDialog(frame, "Text?");
 			if (text != null) {
 				currentTab.addIn(new GText(e.getX(), e.getY(), text));
 				currentTab.repaint();
@@ -280,11 +280,11 @@ public class PdfShow {
 		sb.append("Author: ").append(docInfo.getAuthor()).append('\n');
 		sb.append("Producer: ").append(docInfo.getProducer()).append('\n');
 		sb.append("Subject: ").append(docInfo.getSubject()).append('\n');
-		JOptionPane.showMessageDialog(jf, sb.toString(), 
+		JOptionPane.showMessageDialog(frame, sb.toString(), 
 			currentTab.file.getName(), JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	static JFrame jf;
+	static JFrame frame;
 	private static JTabbedPane tabPane;
 	private static DocTab currentTab;
 	private static JButton upButton, downButton; // Do not move into constr
@@ -341,14 +341,14 @@ public class PdfShow {
 
 		// GUI SETUP
 
-		jf = new JFrame("PDFShow");
+		frame = new JFrame("PDFShow");
 		Toolkit tk = Toolkit.getDefaultToolkit();
-		jf.setSize(tk.getScreenSize());
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jf.setFocusable(true);
+		frame.setSize(tk.getScreenSize());
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setFocusable(true);
 		final Image iconImage = getImage("/images/logo.png");
 		// System.out.println("PdfShow.PdfShow(): " + iconImage);
-		jf.setIconImage(iconImage);
+		frame.setIconImage(iconImage);
 
 
 		// TABBEDPANE (main window for viewing PDFs)
@@ -360,11 +360,11 @@ public class PdfShow {
 			if (currentTab != null)
 				pageNumTF.setText(Integer.toString(currentTab.getPageNumber()));
 		});
-		jf.add(BorderLayout.CENTER, tabPane);
+		frame.add(BorderLayout.CENTER, tabPane);
 		// MENUS
 
 		JMenuBar menuBar = new JMenuBar();
-		jf.setJMenuBar(menuBar);
+		frame.setJMenuBar(menuBar);
 		ResourceBundle rb = ResourceBundle.getBundle("Menus");
 		JMenu fm = MenuUtils.mkMenu(rb, "file");
 		menuBar.add(fm);
@@ -383,7 +383,7 @@ public class PdfShow {
 			try {
 				recents.openFile(chooseFile().getAbsolutePath());
 			} catch (Exception e1) {
-				JOptionPane.showMessageDialog(jf, "Can't open file: " + e1);
+				JOptionPane.showMessageDialog(frame, "Can't open file: " + e1);
 			}
 		});
 		fm.add(recents);
@@ -418,7 +418,7 @@ public class PdfShow {
 		menuBar.add(helpMenu);
 		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
 		aboutButton.addActionListener(e->
-			JOptionPane.showMessageDialog(jf, "PdfShow v0.0\n" +
+			JOptionPane.showMessageDialog(frame, "PdfShow v0.0\n" +
 			"c 2020 Ian Darwin\n" +
 			"https://darwinsys.com/freeware\n" +
 			"Icons from the Sun JLF Image Repository (c) Sun Micro.\n"+
@@ -430,12 +430,12 @@ public class PdfShow {
 		helpMenu.add(aboutButton);
 		final JMenuItem helpButton = MenuUtils.mkMenuItem(rb, "help", "help");
 		helpButton.addActionListener(e->
-	    	JOptionPane.showMessageDialog(jf, "Help not written yet, sorry!"));
+	    	JOptionPane.showMessageDialog(frame, "Help not written yet, sorry!"));
 		helpMenu.add(helpButton);
 		final JMenuItem sourceButton = new JMenuItem("Source Code");
 		sourceButton.setIcon(getMyImageIcon("octocat"));
 		sourceButton.addActionListener(e -> {
-			JOptionPane.showMessageDialog(jf, "Visit https://github.com/IanDarwin/PDFShow");
+			JOptionPane.showMessageDialog(frame, "Visit https://github.com/IanDarwin/PDFShow");
 		});
 		helpMenu.add(sourceButton);
 
@@ -473,7 +473,7 @@ public class PdfShow {
 				final int pgNum = Integer.parseInt(text);
 				moveToPage(pgNum);
 			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(jf,
+				JOptionPane.showMessageDialog(frame,
 					String.format(
 						"Could not interpret '%s' as a number, alas.", text),
 					"How's that?",
@@ -533,8 +533,8 @@ public class PdfShow {
 		
 		sidePanel.add(toolBox);
 
-		jf.add(BorderLayout.WEST, sidePanel);
-		jf.setVisible(true);
+		frame.add(BorderLayout.WEST, sidePanel);
+		frame.setVisible(true);
 	}
 	
 	static void pageNumberChanged() {
@@ -580,12 +580,12 @@ public class PdfShow {
 		// XXX add pdf-only filter
 		File f = null;
 		do {
-			fc.showOpenDialog(jf);
+			fc.showOpenDialog(frame);
 			f = fc.getSelectedFile();
 			if (f != null) {
 				return f;
 			} else {
-				JOptionPane.showMessageDialog(jf, "Please choose a file");
+				JOptionPane.showMessageDialog(frame, "Please choose a file");
 			}
 		} while (f != null);
 		return null;
