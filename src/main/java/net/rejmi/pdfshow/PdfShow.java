@@ -94,8 +94,10 @@ public class PdfShow {
 				return;
 			default:
 				switch(e.getKeyCode()) {
-					case KeyEvent.VK_DOWN: currentTab.gotoNext(); return;
-					case KeyEvent.VK_UP: currentTab.gotoPrev(); return;
+				case KeyEvent.VK_DOWN:
+					currentTab.gotoNext(); return;
+				case KeyEvent.VK_UP:
+					currentTab.gotoPrev(); return;
 				}
 			}
 			System.out.println("Unhandled key event: " + e);
