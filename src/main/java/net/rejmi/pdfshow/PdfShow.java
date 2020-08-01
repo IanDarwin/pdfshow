@@ -2,6 +2,7 @@ package net.rejmi.pdfshow;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Desktop;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -15,6 +16,7 @@ import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URI;
 import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
@@ -537,9 +539,15 @@ public class PdfShow {
 
 		final JButton feedbackButton = new JButton(getMyImageIcon("Feedback"));
 		feedbackButton.addActionListener(e -> { 
-			JOptionPane.showMessageDialog(frame, "Not implemented yet", "Feedback",
-				JOptionPane.INFORMATION_MESSAGE);
-			// XXX open a web page contact form, or, open an email address?
+			String FEEDBACK_URL = "https://darwinsys.com/contact";
+			try {
+				Desktop desktop=Desktop.getDesktop();
+				URI url = new URI(FEEDBACK_URL);
+				desktop.browse(url);
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(frame, "Unable to contact feedback form\n" + ex,
+					"Feedback Fail!", JOptionPane.ERROR_MESSAGE);
+			}
 		});
 		toolBox.add(feedbackButton);
 		
