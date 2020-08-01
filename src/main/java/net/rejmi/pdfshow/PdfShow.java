@@ -495,6 +495,8 @@ public class PdfShow {
 		navBox.setPreferredSize(new Dimension(200, 200));
 		sidePanel.add(navBox);
 
+		// END NAV BOX
+
 		// TOOL BOX
 
 		JPanel toolBox = new JPanel();
@@ -532,8 +534,18 @@ public class PdfShow {
 		final JButton undoButton = new JButton(getMyImageIcon("Undo"));
 		undoButton.addActionListener(e -> { currentTab.removeLastIn(); currentTab.repaint(); });
 		toolBox.add(undoButton);
+
+		final JButton feedbackButton = new JButton(getMyImageIcon("Feedback"));
+		feedbackButton.addActionListener(e -> { 
+			JOptionPane.showMessageDialog(frame, "Not implemented yet", "Feedback",
+				JOptionPane.INFORMATION_MESSAGE);
+			// XXX open a web page contact form, or, open an email address?
+		});
+		toolBox.add(feedbackButton);
 		
 		sidePanel.add(toolBox);
+
+		// END TOOL BOX
 
 		frame.add(BorderLayout.WEST, sidePanel);
 		frame.setVisible(true);
