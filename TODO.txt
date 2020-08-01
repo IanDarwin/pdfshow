@@ -1,7 +1,5 @@
 == ToDo
 
-Feedback button
-
 Buglets:
 	Page number is reset when scrolling
 	Items jump up about 50px when adding Text - Happens on macOS, ObSD, but NOT MS-Win
@@ -17,11 +15,11 @@ Drawing:
 	Properties: at least Font chooser, Color Chooser, LineWidth
 	Lines should have arrowheads.
 
+Show micro-preview of next page below the toolbox
+
 UI
-	App icon.
 	A back button for when you scroll past a bunch of pages (Stack of page#s)
 	File opened from argv should be added to recents menu.
-	Better, more unified, and larger, icons in toolbox.
 
 Longer Range Goals:
 	Save annotations with the PDF (either in it or beside it)
