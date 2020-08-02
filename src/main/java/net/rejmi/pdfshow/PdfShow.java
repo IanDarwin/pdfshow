@@ -362,7 +362,7 @@ public class PdfShow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setFocusable(true);
 		final Image iconImage = getImage("/images/logo.png");
-		System.out.println("PdfShow.PdfShow(): " + iconImage);
+		// System.out.println("PdfShow.PdfShow(): " + iconImage);
 		frame.setIconImage(iconImage);
 
 		programProps = new Properties();
@@ -372,7 +372,7 @@ public class PdfShow {
 		}
 		programProps.load(propwash);
 		propwash.close();
-		System.out.println("PdfShow.PdfShow(): Properties " + programProps);
+		// System.out.println("PdfShow.PdfShow(): Properties " + programProps);
 
 		// TABBEDPANE (main window for viewing PDFs)
 
@@ -465,7 +465,7 @@ public class PdfShow {
 		helpMenu.add(sourceButton);
 
 		// NAV BOX
-		System.out.println("PdfShow.PdfShow(): Building Nav Box");
+		// System.out.println("PdfShow.PdfShow(): Building Nav Box");
 
 		JPanel sidePanel = new JPanel();
 		sidePanel.setPreferredSize(new Dimension(200, 800));
@@ -522,7 +522,7 @@ public class PdfShow {
 		// END NAV BOX
 
 		// TOOL BOX
-		System.out.println("PdfShow.PdfShow(): Building Toolbox");
+		// System.out.println("PdfShow.PdfShow(): Building Toolbox");
 
 		JPanel toolBox = new JPanel();
 		toolBox.setLayout(new GridLayout(0, 2));
@@ -563,29 +563,29 @@ public class PdfShow {
 
 		final JButton feedbackButton = new JButton(getMyImageIcon("Feedback"));
 		feedbackButton.addActionListener(e -> {
-			String[] choices = { "Cancel", "Email", "Web" };
+			String[] choices = { "Web", "Email", "Cancel" };
 			int n = JOptionPane.showOptionDialog(frame, "How to send feedback?", "Send Feedback", 
 						JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, 
 						choices, 0);
 			try {
-			switch(n) {
-			case 0:
-				return;
-			case 1: // Email
-				String mailStr = programProps.getProperty(KEY_FEEDBACK_EMAIL);
-				URI mailurl = new URI(
-					String.format(EMAIL_TEMPLATE, mailStr).replaceAll(" ", "%20"));
-				desktop.mail(mailurl);
-				return;
-			case 2: // Web
-				String webStr = programProps.getProperty(KEY_FEEDBACK_URL);
-				URI weburl = new URI(webStr);
-				desktop.browse(weburl); 
-				return;
-			}
+				switch(n) {
+				case 0: // Web
+					String webStr = programProps.getProperty(KEY_FEEDBACK_URL);
+					URI weburl = new URI(webStr);
+					desktop.browse(weburl); 
+					return;
+				case 1: // Email
+					String mailStr = programProps.getProperty(KEY_FEEDBACK_EMAIL);
+					URI mailurl = new URI(
+							String.format(EMAIL_TEMPLATE, mailStr).replaceAll(" ", "%20"));
+					desktop.mail(mailurl);
+					return;
+				case 2:
+					return;
+				}
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(frame, "Unable to contact feedback form\n" + ex,
-					"Feedback Fail!", JOptionPane.ERROR_MESSAGE);
+						"Feedback Fail!", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		toolBox.add(feedbackButton);
