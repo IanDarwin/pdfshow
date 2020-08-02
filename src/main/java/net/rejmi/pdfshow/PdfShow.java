@@ -1,8 +1,8 @@
 package net.rejmi.pdfshow;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -15,8 +15,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
@@ -57,6 +59,13 @@ public class PdfShow {
 		}
 	}
 
+	Desktop desktop=Desktop.getDesktop();
+	Properties programProps = new Properties();
+	final static String PROPS_FILE_NAME = "/pdfshow.properties";
+	final static String KEY_FEEDBACK_URL = "feedback_url",
+			KEY_FEEDBACK_EMAIL = "feedback_email",
+			KEY_SOURCE_URL = "github_url";
+	final static String EMAIL_TEMPLATE = "mailto:%s?subject=PdfShow Feedback";
 
 	/** 
 	 * State is a class, not an interface, so subclasses don't
@@ -237,7 +246,7 @@ public class PdfShow {
 		}
 	}
 	static final State polyLineDrawState = new PolyLineDrawState();
-	
+
 	static class RectangleState extends State {
 		int ulX = -1, ulY = -1;
 		GRectangle rect;
@@ -339,7 +348,9 @@ public class PdfShow {
 		};
 	};
 
-	PdfShow() {
+	// MAIN CONSTRUCTOR
+
+	PdfShow() throws IOException {
 
 		gotoState(viewState);
 
@@ -351,9 +362,17 @@ public class PdfShow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setFocusable(true);
 		final Image iconImage = getImage("/images/logo.png");
-		// System.out.println("PdfShow.PdfShow(): " + iconImage);
+		System.out.println("PdfShow.PdfShow(): " + iconImage);
 		frame.setIconImage(iconImage);
 
+		programProps = new Properties();
+		InputStream propwash = getClass().getResourceAsStream(PROPS_FILE_NAME);
+		if (propwash == null) {
+			throw new IllegalStateException("Unable to load " + PROPS_FILE_NAME);
+		}
+		programProps.load(propwash);
+		propwash.close();
+		System.out.println("PdfShow.PdfShow(): Properties " + programProps);
 
 		// TABBEDPANE (main window for viewing PDFs)
 
@@ -425,10 +444,7 @@ public class PdfShow {
 			JOptionPane.showMessageDialog(frame, "PdfShow v0.0\n" +
 			"c 2020 Ian Darwin\n" +
 			"https://darwinsys.com/freeware\n" +
-			"Icons from the Sun JLF Image Repository (c) Sun Micro.\n"+
-			"Other icons Copyright(C) 1998 by Dean S. Jones\n" +
-			"(formerly at gallant.com/icons.htm)\n" +
-			"and a few icons by Ian Darwin",
+			"Most icons from feathericons.com; a few by the author.",
 			"About PdfShow(tm)",
 			JOptionPane.INFORMATION_MESSAGE));
 		helpMenu.add(aboutButton);
@@ -439,11 +455,17 @@ public class PdfShow {
 		final JMenuItem sourceButton = new JMenuItem("Source Code");
 		sourceButton.setIcon(getMyImageIcon("octocat"));
 		sourceButton.addActionListener(e -> {
-			JOptionPane.showMessageDialog(frame, "Visit https://github.com/IanDarwin/PDFShow");
+			String url = programProps.getProperty(KEY_SOURCE_URL);
+			try {
+				desktop.browse(new URI(url));
+			} catch (Exception e1) {
+				JOptionPane.showMessageDialog(frame, "Failed to open browser to " + url);
+			}
 		});
 		helpMenu.add(sourceButton);
 
 		// NAV BOX
+		System.out.println("PdfShow.PdfShow(): Building Nav Box");
 
 		JPanel sidePanel = new JPanel();
 		sidePanel.setPreferredSize(new Dimension(200, 800));
@@ -500,6 +522,7 @@ public class PdfShow {
 		// END NAV BOX
 
 		// TOOL BOX
+		System.out.println("PdfShow.PdfShow(): Building Toolbox");
 
 		JPanel toolBox = new JPanel();
 		toolBox.setLayout(new GridLayout(0, 2));
@@ -529,6 +552,7 @@ public class PdfShow {
 		rectangleButton.addActionListener(e -> gotoState(rectangleState));
 		toolBox.add(rectangleButton);
 		
+		// Other buttons
 		final JButton clearButton = new JButton(getMyImageIcon("Trash"));
 		clearButton.addActionListener(e -> currentTab.deleteAll());
 		toolBox.add(clearButton);
@@ -538,12 +562,27 @@ public class PdfShow {
 		toolBox.add(undoButton);
 
 		final JButton feedbackButton = new JButton(getMyImageIcon("Feedback"));
-		feedbackButton.addActionListener(e -> { 
-			String FEEDBACK_URL = "https://darwinsys.com/contact";
+		feedbackButton.addActionListener(e -> {
+			String[] choices = { "Cancel", "Email", "Web" };
+			int n = JOptionPane.showOptionDialog(frame, "How to send feedback?", "Send Feedback", 
+						JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, 
+						choices, 0);
 			try {
-				Desktop desktop=Desktop.getDesktop();
-				URI url = new URI(FEEDBACK_URL);
-				desktop.browse(url);
+			switch(n) {
+			case 0:
+				return;
+			case 1: // Email
+				String mailStr = programProps.getProperty(KEY_FEEDBACK_EMAIL);
+				URI mailurl = new URI(
+					String.format(EMAIL_TEMPLATE, mailStr).replaceAll(" ", "%20"));
+				desktop.mail(mailurl);
+				return;
+			case 2: // Web
+				String webStr = programProps.getProperty(KEY_FEEDBACK_URL);
+				URI weburl = new URI(webStr);
+				desktop.browse(weburl); 
+				return;
+			}
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(frame, "Unable to contact feedback form\n" + ex,
 					"Feedback Fail!", JOptionPane.ERROR_MESSAGE);
@@ -558,13 +597,13 @@ public class PdfShow {
 		frame.add(BorderLayout.WEST, sidePanel);
 		frame.setVisible(true);
 	}
-	
+
 	static void pageNumberChanged() {
 		pageNumTF.setText(String.format("%d of %d", currentTab.getPageNumber(), currentTab.pageCount));
 	}
 
 	private static void checkAndQuit() {
-		// TODO Once we add drawing, check for unsaved changes
+		// TODO Once we add saving, check for unsaved changes
 		System.exit(0);
 	}
 
@@ -595,7 +634,7 @@ public class PdfShow {
 			public String getDescription() {
 					return "PDF Files";
 			}
-	};
+		};
 
 		fc.addChoosableFileFilter(filter);
 		// XXX start in curdir
@@ -649,7 +688,7 @@ public class PdfShow {
 	}
 
 	// Graphics helpers
-	
+
 	/** Convenience routine to get an application-local image */
 	private ImageIcon getMyImageIcon(String name) {
 		String fullName = "/images/" + name;
