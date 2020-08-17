@@ -20,6 +20,9 @@ But there is documentation, in the `docs` folder.
 
 Download the repository from https://github.com/IanDarwin/pdfshow.
 
+Copy the file pdfshow.properties.sample to pdfshow.properties, and edit as per the comments.
+*If you miss this step, you will get obscure errors like "Cannot start JVM"!*.
+
 To test run it, just open the project in Eclipse (or import into IntelliJ or
 other IDE) and run PdfShow, the main-program file.
 
@@ -31,6 +34,9 @@ and you'll find a jar with dependencies in the target folder.
 It'll be named something like _pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar_
 You can run it with `java -jar` or click on it in Windows, macOS, 
 or most *Nix windowed environments.
+
+To make a full-blown, platform-specific installer, try the `mkinstaller` script.
+Note that on Windows this has pre-requisites, which it will let you know about.
 
 == Develop It
 
@@ -53,4 +59,4 @@ Program by Ian Darwin of Rejminet Group Inc.
 PDF access (i.e., some of the heavy listing!) is done by 
 https://pdfbox.apache.org/[Apache PDFBox] software.
 
-Most icons from feathericons.com; a few simpler ones icons by Ian Darwin.
+Some icons from feathericons.com; a few simpler ones icons by Ian Darwin.

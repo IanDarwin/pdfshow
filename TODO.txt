@@ -1,5 +1,9 @@
 == ToDo
 
+GUI:
+	An X button on each internal frame.
+	File opened from argv should be added to recents menu.
+
 Buglets:
 	Page number is reset when scrolling
 	Items jump up about 50px when adding Text - Happens on macOS, ObSD, but NOT MS-Win
@@ -17,10 +21,6 @@ Drawing:
 
 Show micro-preview of next page below the toolbox
 
-UI
-	A back button for when you scroll past a bunch of pages (Stack of page#s)
-	File opened from argv should be added to recents menu.
-
 Longer Range Goals:
 	Save annotations with the PDF (either in it or beside it)
 	User-creatable Bookmarks? (editable text)
@@ -28,6 +28,7 @@ Longer Range Goals:
 "Maybe" ideas:
 	Ability to auto-transition back-and-forth between a chosen slide in each of two presos
 	Index tab (first line and page#)
+	A back button for when you scroll past a bunch of pages (Stack of page#s)
 
 Good Tasks for New Contributors (in addition to many of the above):
 	Easy: Change the resizing calculation from scale-both-axes to maxpect
