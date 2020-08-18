@@ -1,6 +1,9 @@
 == ToDo
 
+
 GUI:
+	SHRINK ICONS
+	Highlight currently-selected icon
 	An X button on each internal frame.
 	File opened from argv should be added to recents menu.
 
