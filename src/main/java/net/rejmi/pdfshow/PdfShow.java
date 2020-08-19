@@ -48,16 +48,18 @@ import com.darwinsys.swingui.RecentMenu;
 public class PdfShow {
 
 	public static void main(String[] args) throws Exception {
-		final PdfShow pdfShow = new PdfShow();
+		PdfShow.instance = new PdfShow();
 		for (String arg : args) {
 			final File file = new File(arg);
 			if (!file.canRead()) {
 				JOptionPane.showMessageDialog(PdfShow.frame, "Can't open file " + file);
 				continue;
 			}
-			pdfShow.openPdfFile(file);
+			PdfShow.instance.openPdfFile(file);
 		}
 	}
+	
+	static PdfShow instance;
 
 	Desktop desktop=Desktop.getDesktop();
 	Properties programProps = new Properties();
@@ -66,288 +68,18 @@ public class PdfShow {
 			KEY_FEEDBACK_EMAIL = "feedback_email",
 			KEY_SOURCE_URL = "github_url";
 	final static String EMAIL_TEMPLATE = "mailto:%s?subject=PdfShow Feedback";
-
-	/** 
-	 * State is a class, not an interface, so subclasses don't
-	 * have to implement every method.
-	 */
-	private static abstract class State {
-
-		/** Anything to be done on entering a given state */
-		public void enterState() {
-			//
-		}
-		
-		/** Called by any State when it is done, e.g., after
-		 * composing and adding a GObject, currentTab.repaint(), done()
-		 */
-		public void done() {
-			// gotoState(viewState);
-		}
-
-		public void leaveState() {
-			//
-		}
-
-		public void keyPressed(KeyEvent e) {
-			// System.out.println("PdfShow.State.keyPressed(" + e + ")");
-			switch(e.getKeyChar()) {
-			case 'j':
-			case '\n':
-			case ' ':
-			case KeyEvent.VK_UP:
-				currentTab.gotoNext();
-				return;
-			case 'k':
-			case '\b':
-			case KeyEvent.VK_DOWN:
-				currentTab.gotoPrev();
-				return;
-			default:
-				switch(e.getKeyCode()) {
-				case KeyEvent.VK_DOWN:
-					currentTab.gotoNext(); return;
-				case KeyEvent.VK_UP:
-					currentTab.gotoPrev(); return;
-				}
-			}
-			System.out.println("Unhandled key event: " + e);
-		}
-
-		public void mouseClicked(MouseEvent e) {
-			// probably want to override this
-		}
-
-		public void mousePressed(MouseEvent e) {
-			// empty
-		}
-
-		public void mouseDragged(MouseEvent e) {
-			// empty
-		}
-
-		public void mouseReleased(MouseEvent e) {
-			// empty
-		}
-
-		public void mouseEntered(MouseEvent e) {
-			// empty
-		}
-
-		public void mouseExited(MouseEvent e) {
-			// Probably want to override this
-		}
-	}
-
-	/** State for normal viewing */
-	static class ViewState extends State {
-		// Nothing to do - is default State
-	}
-	static final ViewState viewState = new ViewState();
-
-	/** State for adding text annotations */
-	static class TextDrawState extends State {
-		@Override
-		public void mousePressed(MouseEvent e) {
-			String text = JOptionPane.showInputDialog(frame, "Text?");
-			if (text != null) {
-				currentTab.addIn(new GText(e.getX(), e.getY(), text));
-				currentTab.repaint();
-				done();
-			}
-		}
-	}
-	static final State textDrawState = new TextDrawState();
-
-	/** Marker: straight line: click start, click end. */
-	static class MarkingState extends State {
-		int startX = -1, startY = -1, ix;
-		GMarker mark;
-		@Override
-		public void mousePressed(MouseEvent e) {
-			startX = e.getX();
-			startY = e.getY();
-		}
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			if (mark == null) {
-				mark = new GMarker(startX, startY, e.getX(), e.getY());
-				ix = currentTab.addIn(mark);
-			} else {
-				currentTab.setIn(ix, new GMarker(startX, startY, e.getX(), e.getY()));
-			}
-			currentTab.repaint();
-		}
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			mark = null;
-			done();
-		}
-	}
-	static final State markingState = new MarkingState();
-
-	/** For now, crude line-drawing: click start, click end. */
-	static class LineDrawState extends State {
-		int startX = -1, startY = -1, ix;
-		GLine line;
-		@Override
-		public void mousePressed(MouseEvent e) {
-			startX = e.getX();
-			startY = e.getY();
-		}
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			if (line == null) {
-				line = new GLine(startX, startY, e.getX(), e.getY());
-				ix = currentTab.addIn(line);
-			} else {
-				currentTab.setIn(ix, new GLine(startX, startY, e.getX(), e.getY()));
-			}
-			currentTab.repaint();
-		}
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			line = null;
-			done();
-		}
-	}
-	static final State lineDrawState = new LineDrawState();
-
-	static class PolyLineDrawState extends State {
-		int n = 0, ix;
-		int lastx, lasty;
-		GPolyLine line;
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// System.out.println("PdfShow.PolyLineDrawState.mousePressed()");
-			n = 0;
-			line = new GPolyLine(e.getX(), e.getY());
-			ix = currentTab.addIn(line);
-		}
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			int newx = e.getX(); int newy = e.getY();
-			int dx = newx - lastx;
-			if (dx > -5 && dx < +5)
-				return;
-			int dy = newy - lasty;
-			if (dy > -5 && dy < +5)
-				return;
-			line.addPoint(newx, newy);
-			currentTab.repaint();
-			lastx = newx; lasty = newy;
-		}
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// System.out.println("PdfShow.PolyLineDrawState.mouseReleased()");
-			currentTab.repaint();
-			line = null;	// We are done with it.
-			done();
-		}
-	}
-	static final State polyLineDrawState = new PolyLineDrawState();
-
-	static class RectangleState extends State {
-		int ulX = -1, ulY = -1;
-		GRectangle rect;
-		int ix;
-		@Override
-		public void mousePressed(MouseEvent e) {
-			ulX = e.getX();
-			ulY = e.getY();
-			rect = null;
-		}
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			if (rect == null) {
-				rect = new GRectangle(ulX, ulY, e.getX(), e.getY());
-				ix = currentTab.addIn(rect);
-			} else {
-				currentTab.setIn(ix, new GRectangle(ulX, ulY, e.getX(), e.getY()));
-			}
-			currentTab.repaint();
-		}
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// currentTab.addIn(new GRectangle(ulX, ulY, e.getX(), e.getY()));
-			currentTab.repaint(); // XXX Should addIn() do repaint() for us?
-			done();
-		}
-		
-	}
-	static final State rectangleState = new RectangleState();
-
-	static State currentState;
-
-	static void gotoState(State state) {
-		if (currentState != null)	// At beginning of program
-			currentState.leaveState();
-		currentState = state;
-		currentState.enterState();
-	}
-
-	void showFileProps() {
-		final PDDocumentInformation docInfo = currentTab.doc.getDocumentInformation();
-		StringBuilder sb = new StringBuilder();
-		sb.append("Title: ").append(docInfo.getTitle()).append('\n');
-		sb.append("Author: ").append(docInfo.getAuthor()).append('\n');
-		sb.append("Producer: ").append(docInfo.getProducer()).append('\n');
-		sb.append("Subject: ").append(docInfo.getSubject()).append('\n');
-		JOptionPane.showMessageDialog(frame, sb.toString(), 
-			currentTab.file.getName(), JOptionPane.INFORMATION_MESSAGE);
-	}
-
+	
+	// GUI Controls - defined here since referenced throughout
 	static JFrame frame;
-	private static JTabbedPane tabPane;
-	private static DocTab currentTab;
-	private static JButton upButton, downButton; // Do not move into constr
-	private static JTextField pageNumTF;		 // Nor me.
+	private JTabbedPane tabPane;
+	private DocTab currentTab;
+	private JButton upButton, downButton; // Do not move into constr
+	private JTextField pageNumTF;		 // Nor me.
+	// These can't be final due to constructor operation ordering
+	private /*final*/ JButton selectButton, textButton, markerButton,
+		lineButton, polyLineButton, ovalButton, rectangleButton; // Me three
 	final RecentMenu recents;
-
-	// Listeners; these get added to each DocTab in openPdfFile().
-	private MouseListener ml = new MouseAdapter() {
-		@Override
-		public void mousePressed(MouseEvent e) {
-			currentState.mousePressed(e);
-		};
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			currentState.mouseClicked(e);
-		}
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			currentState.mouseReleased(e);
-		}
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			currentState.mouseEntered(e);
-			currentTab.requestFocus();
-		}
-		@Override
-		public void mouseExited(MouseEvent e) {
-			currentState.mouseExited(e);
-		};
-	};
-	private MouseMotionListener mml = new MouseMotionListener() {
-
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			currentState.mouseDragged(e);
-		}
-
-		@Override
-		public void mouseMoved(MouseEvent e) {
-			// Ignore
-		}		
-	};
- ;
-	private KeyListener kl = new KeyAdapter() {
-		@Override
-		public void keyPressed(KeyEvent e) {
-			currentState.keyPressed(e);
-		};
-	};
-
+	
 	// MAIN CONSTRUCTOR
 
 	PdfShow() throws IOException {
@@ -526,29 +258,34 @@ public class PdfShow {
 
 		JPanel toolBox = new JPanel();
 		toolBox.setLayout(new GridLayout(0, 2));
+
 		// Mode buttons
-		
-		final JButton selectButton = new JButton(getMyImageIcon("Select"));
+
+		selectButton = new JButton(getMyImageIcon("Select"));
 		selectButton.addActionListener(e -> gotoState(viewState));
 		toolBox.add(selectButton);
 
-		final JButton textButton = new JButton(getMyImageIcon("Text"));
+		textButton = new JButton(getMyImageIcon("Text"));
 		textButton.addActionListener(e -> gotoState(textDrawState));
 		toolBox.add(textButton);
 
-		final JButton markerButton = new JButton(getMyImageIcon("Marker"));
+		markerButton = new JButton(getMyImageIcon("Marker"));
 		markerButton.addActionListener(e -> gotoState(markingState));
 		toolBox.add(markerButton);
 
-		final JButton lineButton = new JButton(getMyImageIcon("Line"));
+		lineButton = new JButton(getMyImageIcon("Line"));
 		lineButton.addActionListener(e -> gotoState(lineDrawState));
 		toolBox.add(lineButton);
 		
-		final JButton polyLineButton = new JButton(getMyImageIcon("PolyLine"));
+		polyLineButton = new JButton(getMyImageIcon("PolyLine"));
 		polyLineButton.addActionListener(e -> gotoState(polyLineDrawState));
 		toolBox.add(polyLineButton);
 		
-		final JButton rectangleButton = new JButton(getMyImageIcon("Rectangle"));
+		ovalButton = new JButton(getMyImageIcon("Oval"));
+		ovalButton.addActionListener(e -> gotoState(ovalState));
+		toolBox.add(ovalButton);
+		
+		rectangleButton = new JButton(getMyImageIcon("Rectangle"));
 		rectangleButton.addActionListener(e -> gotoState(rectangleState));
 		toolBox.add(rectangleButton);
 		
@@ -598,7 +335,349 @@ public class PdfShow {
 		frame.setVisible(true);
 	}
 
-	static void pageNumberChanged() {
+
+	/** 
+	 * State is a class, not an interface, so subclasses don't
+	 * have to implement every method.
+	 */
+	private abstract class State {
+
+		protected JButton button;
+
+		public State(JButton button) {
+			this.button = button;
+		}
+		/** Anything to be done on entering a given state */
+		public void enterState() {
+			//
+		}
+		
+		/** Called by any State when it is done, e.g., after
+		 * composing and adding a GObject, currentTab.repaint(), done()
+		 */
+		public void done() {
+			// gotoState(viewState);
+		}
+
+		public void leaveState() {
+			//
+		}
+
+		public void keyPressed(KeyEvent e) {
+			// System.out.println("PdfShow.State.keyPressed(" + e + ")");
+			switch(e.getKeyChar()) {
+			case 'j':
+			case '\n':
+			case ' ':
+			case KeyEvent.VK_UP:
+				currentTab.gotoNext();
+				return;
+			case 'k':
+			case '\b':
+			case KeyEvent.VK_DOWN:
+				currentTab.gotoPrev();
+				return;
+			default:
+				switch(e.getKeyCode()) {
+				case KeyEvent.VK_DOWN:
+					currentTab.gotoNext(); return;
+				case KeyEvent.VK_UP:
+					currentTab.gotoPrev(); return;
+				}
+			}
+			System.out.println("Unhandled key event: " + e);
+		}
+
+		public void mouseClicked(MouseEvent e) {
+			// probably want to override this
+		}
+
+		public void mousePressed(MouseEvent e) {
+			// empty
+		}
+
+		public void mouseDragged(MouseEvent e) {
+			// empty
+		}
+
+		public void mouseReleased(MouseEvent e) {
+			// empty
+		}
+
+		public void mouseEntered(MouseEvent e) {
+			// empty
+		}
+
+		public void mouseExited(MouseEvent e) {
+			// Probably want to override this
+		}
+	}
+
+	/** State for normal viewing */
+	class ViewState extends State {
+		// Nothing to do - is default State
+		ViewState(JButton button) {
+			super(button);
+		}
+	}
+	final State viewState = new ViewState(selectButton);
+
+	/** State for adding text annotations */
+	class TextDrawState extends State {
+		TextDrawState(JButton button) {
+			super(button);
+		}
+		@Override
+		public void mousePressed(MouseEvent e) {
+			String text = JOptionPane.showInputDialog(frame, "Text?");
+			if (text != null) {
+				currentTab.addIn(new GText(e.getX(), e.getY(), text));
+				currentTab.repaint();
+				done();
+			}
+		}
+	}
+	final State textDrawState = new TextDrawState(textButton);
+
+	/** Marker: straight line: click start, click end. */
+	class MarkingState extends State {
+		
+		MarkingState(JButton button) {
+			super(button);
+		}
+		
+		int startX = -1, startY = -1, ix;
+		GMarker mark;
+		@Override
+		public void mousePressed(MouseEvent e) {
+			startX = e.getX();
+			startY = e.getY();
+		}
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (mark == null) {
+				mark = new GMarker(startX, startY, e.getX(), e.getY());
+				ix = currentTab.addIn(mark);
+			} else {
+				currentTab.setIn(ix, new GMarker(startX, startY, e.getX(), e.getY()));
+			}
+			currentTab.repaint();
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			mark = null;
+			done();
+		}
+	}
+	final State markingState = new MarkingState(markerButton);
+
+	/** For now, crude line-drawing: click start, click end. */
+	class LineDrawState extends State {
+
+		LineDrawState(JButton button) {
+			super(button);
+		}
+
+		int startX = -1, startY = -1, ix;
+		GLine line;
+		@Override
+		public void mousePressed(MouseEvent e) {
+			startX = e.getX();
+			startY = e.getY();
+		}
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (line == null) {
+				line = new GLine(startX, startY, e.getX(), e.getY());
+				ix = currentTab.addIn(line);
+			} else {
+				currentTab.setIn(ix, new GLine(startX, startY, e.getX(), e.getY()));
+			}
+			currentTab.repaint();
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			line = null;
+			done();
+		}
+	}
+	final State lineDrawState = new LineDrawState(lineButton);
+
+	class PolyLineDrawState extends State {
+		
+		PolyLineDrawState(JButton button) {
+			super(button);
+		}
+		
+		int n = 0, ix;
+		int lastx, lasty;
+		GPolyLine line;
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// System.out.println("PdfShow.PolyLineDrawState.mousePressed()");
+			n = 0;
+			line = new GPolyLine(e.getX(), e.getY());
+			ix = currentTab.addIn(line);
+		}
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			int newx = e.getX(); int newy = e.getY();
+			int dx = newx - lastx;
+			if (dx > -5 && dx < +5)
+				return;
+			int dy = newy - lasty;
+			if (dy > -5 && dy < +5)
+				return;
+			line.addPoint(newx, newy);
+			currentTab.repaint();
+			lastx = newx; lasty = newy;
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// System.out.println("PdfShow.PolyLineDrawState.mouseReleased()");
+			currentTab.repaint();
+			line = null;	// We are done with it.
+			done();
+		}
+	}
+	final State polyLineDrawState = new PolyLineDrawState(polyLineButton);
+
+	class RectangleState extends State {
+		
+		RectangleState(JButton button) {
+			super(button);
+		}
+		
+		int ulX = -1, ulY = -1;
+		GRectangle rect;
+		int ix;
+		@Override
+		public void mousePressed(MouseEvent e) {
+			ulX = e.getX();
+			ulY = e.getY();
+			rect = null;
+		}
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (rect == null) {
+				rect = new GRectangle(ulX, ulY, e.getX(), e.getY());
+				ix = currentTab.addIn(rect);
+			} else {
+				currentTab.setIn(ix, new GRectangle(ulX, ulY, e.getX(), e.getY()));
+			}
+			currentTab.repaint();
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// currentTab.addIn(new GRectangle(ulX, ulY, e.getX(), e.getY()));
+			currentTab.repaint(); // XXX Should addIn() do repaint() for us?
+			done();
+		}
+		
+	}
+	final State rectangleState = new RectangleState(rectangleButton);
+	
+	class OvalState extends State {
+		
+		OvalState(JButton button) {
+			super(button);
+		}
+		
+		int ulX = -1, ulY = -1;
+		GOval oval;
+		int ix;
+		@Override
+		public void mousePressed(MouseEvent e) {
+			ulX = e.getX();
+			ulY = e.getY();
+			oval = null;
+		}
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (oval == null) {
+				oval = new GOval(ulX, ulY, e.getX(), e.getY());
+				ix = currentTab.addIn(oval);
+			} else {
+				currentTab.setIn(ix, new GOval(ulX, ulY, e.getX(), e.getY()));
+			}
+			currentTab.repaint();
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// currentTab.addIn(new GRectangle(ulX, ulY, e.getX(), e.getY()));
+			currentTab.repaint(); // XXX Should addIn() do repaint() for us?
+			done();
+		}
+		
+	}
+	final State ovalState = new OvalState(ovalButton);
+
+	static State currentState;
+
+	static void gotoState(State state) {
+		if (currentState != null)	// At beginning of program
+			currentState.leaveState();
+		currentState = state;
+		currentState.enterState();
+	}
+
+	void showFileProps() {
+		final PDDocumentInformation docInfo = currentTab.doc.getDocumentInformation();
+		StringBuilder sb = new StringBuilder();
+		sb.append("Title: ").append(docInfo.getTitle()).append('\n');
+		sb.append("Author: ").append(docInfo.getAuthor()).append('\n');
+		sb.append("Producer: ").append(docInfo.getProducer()).append('\n');
+		sb.append("Subject: ").append(docInfo.getSubject()).append('\n');
+		JOptionPane.showMessageDialog(frame, sb.toString(), 
+			currentTab.file.getName(), JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	// Listeners; these get added to each DocTab in openPdfFile().
+	private MouseListener ml = new MouseAdapter() {
+		@Override
+		public void mousePressed(MouseEvent e) {
+			currentState.mousePressed(e);
+		};
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			currentState.mouseClicked(e);
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			currentState.mouseReleased(e);
+		}
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			currentState.mouseEntered(e);
+			currentTab.requestFocus();
+		}
+		@Override
+		public void mouseExited(MouseEvent e) {
+			currentState.mouseExited(e);
+		};
+	};
+	private MouseMotionListener mml = new MouseMotionListener() {
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			currentState.mouseDragged(e);
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			// Ignore
+		}		
+	};
+ 
+	private KeyListener kl = new KeyAdapter() {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			currentState.keyPressed(e);
+		};
+	};
+
+
+	void pageNumberChanged() {
 		pageNumTF.setText(String.format("%d of %d", currentTab.getPageNumber(), currentTab.pageCount));
 	}
 
@@ -664,12 +743,12 @@ public class PdfShow {
 		moveToPage(0);
 	}
 
-	private static void closeFile(DocTab dt) {
+	private void closeFile(DocTab dt) {
 		dt.close();
 		tabPane.remove(dt);
 	}
 
-	private static void moveToPage(int newPage) {
+	private void moveToPage(int newPage) {
 		int docPages = currentTab.pageCount;
 		if (newPage < 0) {
 			newPage = 0;
