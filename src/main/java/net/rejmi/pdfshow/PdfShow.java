@@ -3,6 +3,7 @@ package net.rejmi.pdfshow;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -90,7 +91,11 @@ public class PdfShow {
 
 		frame = new JFrame("PDFShow");
 		Toolkit tk = Toolkit.getDefaultToolkit();
-		frame.setSize(tk.getScreenSize());
+		final Dimension screenSize = tk.getScreenSize();
+		final Dimension windowSize = 
+			new Dimension(screenSize.width, screenSize.height - 50);
+		frame.setSize(windowSize);
+		frame.setLocation(0, 0);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setFocusable(true);
 		final Image iconImage = getImage("/images/logo.png");
@@ -335,6 +340,7 @@ public class PdfShow {
 		frame.setVisible(true);
 	}
 
+	// ALL STATE CLASSES HERE
 
 	/** 
 	 * State is a class, not an interface, so subclasses don't
@@ -608,9 +614,11 @@ public class PdfShow {
 			currentTab.repaint(); // XXX Should addIn() do repaint() for us?
 			done();
 		}
-		
 	}
+
 	final State ovalState = new OvalState(ovalButton);
+
+	// State Management
 
 	static State currentState;
 
@@ -620,6 +628,8 @@ public class PdfShow {
 		currentState = state;
 		currentState.enterState();
 	}
+
+	// Everything Else
 
 	void showFileProps() {
 		final PDDocumentInformation docInfo = currentTab.doc.getDocumentInformation();
@@ -739,8 +749,24 @@ public class PdfShow {
 		t.addMouseMotionListener(mml);
 
 		tabPane.addTab(file.getName(), currentTab = t);
-		tabPane.setSelectedIndex(tabPane.getTabCount() - 1);
+		final int index = tabPane.getTabCount() - 1;
+		tabPane.setSelectedIndex(index);
+		tabPane.setTabComponentAt(index, new ClosableTabHeader(this, t));
 		moveToPage(0);
+	}
+
+	/** The header for the TabbedPane doctabs */
+	final class ClosableTabHeader extends JPanel {
+		private static final long serialVersionUID = 1L;
+
+		public ClosableTabHeader(PdfShow pdfShow, DocTab docTab) {
+			setLayout(new FlowLayout());
+			add(new JLabel(docTab.file.getName()));
+			JButton xButton = new JButton("X");
+			add(xButton);
+			xButton.setPreferredSize(new Dimension(16,16));
+			xButton.addActionListener(e -> pdfShow.closeFile(docTab));
+		}
 	}
 
 	private void closeFile(DocTab dt) {
