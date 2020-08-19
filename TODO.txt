@@ -8,7 +8,7 @@ GUI:
 	File opened from argv should be added to recents menu.
 
 Buglets:
-	Page number is reset when scrolling(??)
+	Page number is too wide for nav box in 3-digit numbers
 	Text items drawn about 50px too high - Happens on macOS, ObSD, but NOT MS-Win
 
 IMPLEMENT SELECT MODE:
