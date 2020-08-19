@@ -704,35 +704,31 @@ public class PdfShow {
 	private static JFileChooser fc;
 
 	private static File chooseFile() {
-		String curDir = System.getProperty("user.dir");
+		String curDir = System.getProperty("user.home");
 		fc = new JFileChooser(curDir);
 		FileFilter filter = new FileFilter() {
 
 			/** Return true if the given file is accepted by this filter. */
 			@Override
 			public boolean accept(File f) {
-				// Little trick: if you don't do this, only directory names
-				// ending in one of the extentions appear in the window.
+				// Little trick: if you don't do this, directory names not
+				// ending in one of the extensions don't show up!
 				if (f.isDirectory()) {
 					return true;
-
-				} else if (f.isFile()) {
-					if (f.getName().endsWith(".pdf"))
-						return true;
-				}
-				return false;
+				};
+				return (f.isFile() && f.getName().endsWith(".pdf"));
 			}
 
 			/** Return the printable description of this filter. */
 			@Override
 			public String getDescription() {
-					return "PDF Files";
+				return "PDF Files";
 			}
 		};
 
 		fc.addChoosableFileFilter(filter);
+		fc.setAcceptAllFileFilterUsed(false);
 		// XXX start in remembered directory
-		// XXX add pdf-only filter
 
 		fc.showOpenDialog(frame);
 		return fc.getSelectedFile();

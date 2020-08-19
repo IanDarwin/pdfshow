@@ -6,7 +6,7 @@ GUI:
 	Highlight currently-selected icon (hard now due to circular dependency)
 	Neaten DocTab tab headers?
 	CTRL/W to close a tab.
-	File Dialog: remember directory (in prefs).
+	File Dialog: remember directory (in prefs). Is there a dir change listener?
 	File opened from argv should be added to recents menu. Unbreak recents in dsapi.
 
 Buglets:
