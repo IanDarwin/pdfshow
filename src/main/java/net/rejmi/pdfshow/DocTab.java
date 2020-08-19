@@ -139,6 +139,7 @@ class DocTab extends JPanel {
 	void close() {
 		try {
 			doc.close();
+			doc = null;
 		} catch (IOException e) {
 			e.printStackTrace();	// Nobody wants to listen to your chuntering.
 		}

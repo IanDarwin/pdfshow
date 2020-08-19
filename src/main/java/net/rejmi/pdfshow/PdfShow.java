@@ -378,6 +378,7 @@ public class PdfShow {
 			// System.out.println("PdfShow.State.keyPressed(" + e + ")");
 			switch(e.getKeyChar()) {
 			case 'j':
+			case '\r':
 			case '\n':
 			case ' ':
 			case KeyEvent.VK_UP:
@@ -388,6 +389,7 @@ public class PdfShow {
 			case KeyEvent.VK_DOWN:
 				currentTab.gotoPrev();
 				return;
+			
 			default:
 				switch(e.getKeyCode()) {
 				case KeyEvent.VK_DOWN:
@@ -395,6 +397,13 @@ public class PdfShow {
 				case KeyEvent.VK_UP:
 					currentTab.gotoPrev(); return;
 				}
+				if (e.getKeyCode() == 'W') {
+					if (e.isControlDown() || e.isMetaDown()) {
+						closeFile(currentTab);
+						return;
+					}
+				}
+					
 			}
 			System.out.println("Unhandled key event: " + e);
 		}
