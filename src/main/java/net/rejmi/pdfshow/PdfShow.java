@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -141,7 +142,11 @@ public class PdfShow {
 		};
 		miOpen.addActionListener(e -> {
 			try {
-				recents.openFile(chooseFile().getAbsolutePath());
+				final File chosenFile = chooseFile();
+				if (chosenFile == null) {
+					return;
+				}
+				recents.openFile(chosenFile.getAbsolutePath());
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(frame, "Can't open file: " + e1);
 			}
@@ -726,19 +731,11 @@ public class PdfShow {
 		};
 
 		fc.addChoosableFileFilter(filter);
-		// XXX start in curdir
+		// XXX start in remembered directory
 		// XXX add pdf-only filter
-		File f = null;
-		do {
-			fc.showOpenDialog(frame);
-			f = fc.getSelectedFile();
-			if (f != null) {
-				return f;
-			} else {
-				JOptionPane.showMessageDialog(frame, "Please choose a file");
-			}
-		} while (f != null);
-		return null;
+
+		fc.showOpenDialog(frame);
+		return fc.getSelectedFile();
 	}
 
 	private void openPdfFile(File file) throws IOException {
@@ -762,11 +759,25 @@ public class PdfShow {
 		public ClosableTabHeader(PdfShow pdfShow, DocTab docTab) {
 			setLayout(new FlowLayout());
 			add(new JLabel(docTab.file.getName()));
-			JButton xButton = new JButton("X");
+			JButton xButton = new MyCloseButton();
 			add(xButton);
 			xButton.setPreferredSize(new Dimension(16,16));
 			xButton.addActionListener(e -> pdfShow.closeFile(docTab));
 		}
+		class MyCloseButton extends JButton {
+			  public MyCloseButton() {
+			    super("x");
+			    setBorder(BorderFactory.createEmptyBorder());
+			    setFocusPainted(false);
+			    setBorderPainted(false);
+			    setContentAreaFilled(false);
+			    setRolloverEnabled(false);
+			  }
+			  @Override
+			  public Dimension getPreferredSize() {
+			    return new Dimension(16, 16);
+			  }
+			};
 	}
 
 	private void closeFile(DocTab dt) {
