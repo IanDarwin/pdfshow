@@ -21,6 +21,8 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -65,10 +67,12 @@ public class PdfShow {
 
 	Desktop desktop=Desktop.getDesktop();
 	Properties programProps = new Properties();
+	Preferences prefs = Preferences.userNodeForPackage(PdfShow.class);
 	final static String PROPS_FILE_NAME = "/pdfshow.properties";
 	final static String KEY_FEEDBACK_URL = "feedback_url",
 			KEY_FEEDBACK_EMAIL = "feedback_email",
 			KEY_SOURCE_URL = "github_url";
+	final static String KEY_FILECHOOSER_DIR = "file_chooser_dir";
 	final static String EMAIL_TEMPLATE = "mailto:%s?subject=PdfShow Feedback";
 	
 	// GUI Controls - defined here since referenced throughout
@@ -133,7 +137,7 @@ public class PdfShow {
 		miOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		fm.add(miOpen);
-		recents = new RecentMenu(this) {
+		recents = new RecentMenu(prefs) {
 			private static final long serialVersionUID = 1L;
 			@Override
 			public void loadFile(String fileName) throws IOException {
@@ -710,11 +714,12 @@ public class PdfShow {
 		System.exit(0);
 	}
 
-	private static JFileChooser fc;
-
-	private static File chooseFile() {
-		String curDir = System.getProperty("user.home");
-		fc = new JFileChooser(curDir);
+	private File chooseFile() {
+		String prevDir = prefs.get(KEY_FILECHOOSER_DIR, null);
+		System.out.println("PdfShow.chooseFile(): prevDir = " + prevDir);
+		String dir = prevDir != null ? prevDir :
+				System.getProperty("user.home");
+		JFileChooser fc = new JFileChooser(dir);
 		FileFilter filter = new FileFilter() {
 
 			/** Return true if the given file is accepted by this filter. */
@@ -737,10 +742,20 @@ public class PdfShow {
 
 		fc.addChoosableFileFilter(filter);
 		fc.setAcceptAllFileFilterUsed(false);
-		// XXX start in remembered directory
 
 		fc.showOpenDialog(frame);
-		return fc.getSelectedFile();
+		final File selectedFile = fc.getSelectedFile();
+		if (selectedFile != null) {
+			System.out.println("PdfShow.chooseFile(): put: " + selectedFile.getParent());
+			prefs.put(KEY_FILECHOOSER_DIR, selectedFile.getParent());
+			try {
+				prefs.flush();
+			} catch (BackingStoreException e) {
+				JOptionPane.showMessageDialog(frame, "Failed to save prefs: " + e);
+				e.printStackTrace();
+			}
+		}
+		return selectedFile;
 	}
 
 	private void openPdfFile(File file) throws IOException {
