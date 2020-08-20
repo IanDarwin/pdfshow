@@ -161,9 +161,4 @@ class GOval extends GObject {
 		g.setColor(color);
 		g.drawOval(x, y, width, height);
 	}
-	
-	@Override
-	public String toString() {
-		return String.format("GOval at %d, %s size %d, %d\n", x, y, width, height);
-	}
 }
