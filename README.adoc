@@ -20,6 +20,8 @@ But there is documentation, in the `docs` folder.
 
 Download the repository from https://github.com/IanDarwin/pdfshow.
 
+[For now you have to clone darwinsys-api from the same place, cd darwinsys-api, mvn install]
+
 Copy the file pdfshow.properties.sample to pdfshow.properties, and edit as per the comments.
 *If you miss this step, you will get obscure errors like "Cannot start JVM"!*.
 
@@ -52,6 +54,9 @@ A: The problem is that it would be much harder (if not impossible) to implement 
 when using that approach. Perhaps a later Save PDF function could
 insert the GObjects into the PDF using this technique.
 
+Q: Why not use the built-in contains for hit detection?
+A: The GObject hierarchy is intentionally light-weight, not JComponent, and
+it's gotta be the same amount of work.
 == Credits
 
 Program by Ian Darwin of Rejminet Group Inc.
