@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -437,7 +438,20 @@ public class PdfShow {
 			// Probably want to override this
 		}
 	}
+	
+	void visitCurrentPageGObjs(Consumer<GObject> consumer) {
+		final List<GObject> currentPageAddIns = currentTab.getCurrentAddIns();
+		if (currentPageAddIns.isEmpty()) {
+			System.out.println("No annotations");
+			return;
+		}
+		for (GObject gobj : currentPageAddIns) {
+			consumer.accept(gobj);
+		}
+	}
 
+	boolean changed = false;
+	
 	/** State for normal viewing */
 	class ViewState extends State {
 		// Default State
@@ -446,22 +460,48 @@ public class PdfShow {
 		}
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			System.out.println("PdfShow.ViewState.mouseClicked()");
+			// System.out.println("PdfShow.ViewState.mouseClicked()");
 			int x = e.getX(), y = e.getY();
-			final List<GObject> currentPageAddIns = currentTab.getCurrentAddIns();
-			if (currentPageAddIns.isEmpty()) {
-				System.out.println("No annotations");
-				return;
-			}
-			for (GObject gobj : currentPageAddIns) {
+			changed = false;
+			visitCurrentPageGObjs(gobj -> {
+				if (gobj.isSelected) {
+					gobj.isSelected = false;
+					changed = true;
+				}
 				if (x >= gobj.x && x <= gobj.maxX &&
 					y >= gobj.y && y <= gobj.maxY) {
-					System.out.println("HIT: " + gobj);
-					return;
-				} else {
-					System.out.println("MISS: " + gobj);
+					// System.out.println("HIT: " + gobj);
+					gobj.isSelected = true;
+					changed = true;
 				}
+			});
+			if (changed) {
+				currentTab.repaint();
 			}
+		}
+		
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			int x = e.getX(), y = e.getY();
+			visitCurrentPageGObjs(gobj -> {
+				if (gobj.isSelected) {
+					gobj.x = x; gobj.y = y;
+					currentTab.repaint();
+				}
+			});
+		}
+		
+		@Override
+		public void leaveState() {
+			visitCurrentPageGObjs(gobj->{
+				if (gobj.isSelected) {
+					gobj.isSelected = false;
+					changed = true;
+				}	
+				if (changed) {
+					currentTab.repaint();
+				}
+			});
 		}
 	}
 	final State viewState = new ViewState(selectButton);

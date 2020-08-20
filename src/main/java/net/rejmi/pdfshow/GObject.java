@@ -15,11 +15,22 @@ abstract class GObject {
 	static final AffineTransform UPRIGHT_TRANSLATE_INSTANCE = AffineTransform.getTranslateInstance(1, -1);
 
 	int x, y, maxX, maxY;	// ULX, ULY, LRX, LRY!
+	boolean isSelected = false;
 	Color color = Color.RED;
 	GObject(int x, int y) {
 		this.x = x; this.y = y;
 	}
 	abstract void render(Graphics g);
+	
+	void draw(Graphics g) {
+		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
+		render(g);
+		if (isSelected) {
+			((Graphics2D)g).setStroke(new BasicStroke(1));
+			g.setColor(Color.BLACK);
+			g.drawRect(x-1, y-1, maxX - x + 1, maxY - y + 1);
+		}
+	}
 }
 
 class GText extends GObject {
@@ -32,7 +43,6 @@ class GText extends GObject {
 		this.text = text;
 	}
 	void render(Graphics g) {
-		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
 		g.setColor(color);
 		g.setFont(font);
 		g.drawString(text, x, y);
@@ -51,7 +61,6 @@ class GLine extends GObject {
 		this.maxY = endY;
 	}
 	void render(Graphics g) {
-		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
 		((Graphics2D)g).setStroke(new BasicStroke(lineWidth));
 		g.setColor(color);
 		g.drawLine(x, y, maxX, maxY);
@@ -94,7 +103,6 @@ class GPolyLine extends GObject {
 	}
 	
 	void render(Graphics g) {
-		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
 		((Graphics2D)g).setStroke(new BasicStroke(3));
 		g.setColor(color);
 		g.drawPolyline(xPoints, yPoints, nPoints);
@@ -125,7 +133,6 @@ class GRectangle extends GObject {
 		this.maxY = maxY;
 	}
 	void render(Graphics g) {
-		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
 		((Graphics2D)g).setStroke(new BasicStroke(3));
 		g.setColor(color);
 		g.drawRect(x, y, Math.abs(maxX - x), Math.abs(maxY - y));
@@ -139,7 +146,6 @@ class GOval extends GObject {
 		this.maxY = maxY;
 	}
 	void render(Graphics g) {
-		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
 		((Graphics2D)g).setStroke(new BasicStroke(3));
 		g.setColor(color);
 		g.drawOval(x, y, Math.abs(maxX - x), Math.abs(maxY - y));

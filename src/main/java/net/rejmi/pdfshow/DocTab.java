@@ -171,7 +171,7 @@ class DocTab extends JPanel {
 			// 3) Our annotations, if any
 			if (addIns[pageNumber] != null) {
 				for (GObject obj : addIns[pageNumber]) {
-					obj.render(g);
+					obj.draw(g);
 				}
 			}
 		} catch (IOException e) {
