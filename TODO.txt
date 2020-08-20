@@ -1,22 +1,20 @@
 == ToDo
 
-
 GUI:
 	SHRINK ICONS - make all 48x48
-	Highlight currently-selected icon (hard now due to circular dependency)
+	Highlight currently-selected Toolbox icon (complicated now due to circular dependency)
 	File opened from argv should be added to recents menu. Unbreak recents in dsapi.
+
+IMPLEMENT SELECT MODE:
+	Delete selected with delete key or menu (needs change from GObject[] to List<GObject>)
+	Bonus: Select TEXT from the PDF for copy-n-paste
 
 Buglets:
 	Page number is too wide for nav box in 3-digit numbers
 	Text items drawn about 50px too high - Happens on macOS, ObSD, but NOT MS-Win
 
-IMPLEMENT SELECT MODE:
-	Select objects; move 'em around!
-	Bonus: Select TEXT from the PDF for copy-n-paste
-
 Drawing:
-	GObjects should get BoundingBox for hit detection (needed for select mode)
-	Be able to edit at least the text of text objects.
+	Be able to edit the text of text objects.
 	Implement proper undo stack (then addIn would push a Delete cmd)
 	Properties: at least Font chooser, Color Chooser, LineWidth
 	Lines should be able to have arrowheads.
