@@ -442,7 +442,7 @@ public class PdfShow {
 	void visitCurrentPageGObjs(Consumer<GObject> consumer) {
 		final List<GObject> currentPageAddIns = currentTab.getCurrentAddIns();
 		if (currentPageAddIns.isEmpty()) {
-			System.out.println("No annotations");
+			// System.out.println("No annotations");
 			return;
 		}
 		for (GObject gobj : currentPageAddIns) {
@@ -450,7 +450,7 @@ public class PdfShow {
 		}
 	}
 
-	boolean changed = false;
+	boolean changed = false, found = false;
 	
 	/** State for normal viewing */
 	class ViewState extends State {
@@ -460,19 +460,26 @@ public class PdfShow {
 		}
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			// System.out.println("PdfShow.ViewState.mouseClicked()");
 			int x = e.getX(), y = e.getY();
-			changed = false;
+			System.out.printf(
+					"PdfShow.ViewState.mouseClicked() x %d y %d\n", x, y);
+			changed = found = false;
 			visitCurrentPageGObjs(gobj -> {
+				if (found) {
+					return;	// Only select one
+				}
 				if (gobj.isSelected) {
 					gobj.isSelected = false;
 					changed = true;
 				}
-				if (x >= gobj.x && x <= gobj.maxX &&
-					y >= gobj.y && y <= gobj.maxY) {
-					// System.out.println("HIT: " + gobj);
+				if (x >= gobj.x && x <= gobj.x + gobj.width &&
+					y >= gobj.y && y <= gobj.y + gobj.height) {
+					System.out.println("HIT: " + gobj);
 					gobj.isSelected = true;
 					changed = true;
+					found = true;
+				} else {
+					System.out.println("MISS: " + gobj);
 				}
 			});
 			if (changed) {
@@ -486,7 +493,7 @@ public class PdfShow {
 			visitCurrentPageGObjs(gobj -> {
 				if (gobj.isSelected) {
 					gobj.x = x; gobj.y = y;
-					currentTab.repaint();
+					currentTab.repaint(); // XXX expensive
 				}
 			});
 		}
@@ -540,10 +547,12 @@ public class PdfShow {
 		@Override
 		public void mouseDragged(MouseEvent e) {
 			if (mark == null) {
-				mark = new GMarker(startX, startY, e.getX(), e.getY());
+				mark = 
+					new GMarker(startX, startY, e.getX() - startX, e.getY() - startY);
 				ix = currentTab.addIn(mark);
 			} else {
-				currentTab.setIn(ix, new GMarker(startX, startY, e.getX(), e.getY()));
+				currentTab.setIn(ix, 
+					new GMarker(startX, startY, e.getX() - startX, e.getY() - startY));
 			}
 			currentTab.repaint();
 		}
@@ -555,7 +564,7 @@ public class PdfShow {
 	}
 	final State markingState = new MarkingState(markerButton);
 
-	/** For now, crude line-drawing: click start, click end. */
+	/** For now, crude line-drawing: click start, drag to end. */
 	class LineDrawState extends State {
 
 		LineDrawState(JButton button) {
@@ -572,10 +581,10 @@ public class PdfShow {
 		@Override
 		public void mouseDragged(MouseEvent e) {
 			if (line == null) {
-				line = new GLine(startX, startY, e.getX(), e.getY());
+				line = new GLine(startX, startY, e.getX() - startX, e.getY() - startY);
 				ix = currentTab.addIn(line);
 			} else {
-				currentTab.setIn(ix, new GLine(startX, startY, e.getX(), e.getY()));
+				currentTab.setIn(ix, new GLine(startX, startY, e.getX() - startX, e.getY() - startY));
 			}
 			currentTab.repaint();
 		}
@@ -587,6 +596,11 @@ public class PdfShow {
 	}
 	final State lineDrawState = new LineDrawState(lineButton);
 
+	/** A simple multi-straight-line poly-point line. No Bezier &c.
+	 * Unlike most of the other GObject types, the points in a
+	 * polyline are RELATIVE and get absolutized in the GPolyLine
+	 * drawing code.
+	 */
 	class PolyLineDrawState extends State {
 		
 		PolyLineDrawState(JButton button) {
@@ -600,19 +614,21 @@ public class PdfShow {
 		public void mousePressed(MouseEvent e) {
 			// System.out.println("PdfShow.PolyLineDrawState.mousePressed()");
 			n = 0;
-			line = new GPolyLine(e.getX(), e.getY());
+			line = new GPolyLine(lastx = e.getX(), lasty = e.getY());
 			ix = currentTab.addIn(line);
 		}
+		/** We get a stream of events; skip over trivial moves */
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			int newx = e.getX(); int newy = e.getY();
+			int newx = e.getX();
+			int newy = e.getY();
 			int dx = newx - lastx;
 			if (dx > -5 && dx < +5)
 				return;
 			int dy = newy - lasty;
 			if (dy > -5 && dy < +5)
 				return;
-			line.addPoint(newx, newy);
+			line.addPoint(dx, dy);
 			currentTab.repaint();
 			lastx = newx; lasty = newy;
 		}
@@ -644,10 +660,10 @@ public class PdfShow {
 		@Override
 		public void mouseDragged(MouseEvent e) {
 			if (rect == null) {
-				rect = new GRectangle(ulX, ulY, e.getX(), e.getY());
+				rect = new GRectangle(ulX, ulY, e.getX() - ulX, e.getY() - ulY);
 				ix = currentTab.addIn(rect);
 			} else {
-				currentTab.setIn(ix, new GRectangle(ulX, ulY, e.getX(), e.getY()));
+				currentTab.setIn(ix, new GRectangle(ulX, ulY, e.getX() - ulX, e.getY() - ulY));
 			}
 			currentTab.repaint();
 		}
@@ -678,11 +694,12 @@ public class PdfShow {
 		}
 		@Override
 		public void mouseDragged(MouseEvent e) {
+			int x = e.getX(), y = e.getY();
 			if (oval == null) {
-				oval = new GOval(ulX, ulY, e.getX(), e.getY());
+				oval = new GOval(ulX, ulY, x - ulX, y - ulY);
 				ix = currentTab.addIn(oval);
 			} else {
-				currentTab.setIn(ix, new GOval(ulX, ulY, e.getX(), e.getY()));
+				currentTab.setIn(ix, new GOval(ulX, ulY, x - ulX, y - ulY));
 			}
 			currentTab.repaint();
 		}
