@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.prefs.BackingStoreException;
@@ -439,9 +440,28 @@ public class PdfShow {
 
 	/** State for normal viewing */
 	class ViewState extends State {
-		// Nothing to do - is default State
+		// Default State
 		ViewState(JButton button) {
 			super(button);
+		}
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			System.out.println("PdfShow.ViewState.mouseClicked()");
+			int x = e.getX(), y = e.getY();
+			final List<GObject> currentPageAddIns = currentTab.getCurrentAddIns();
+			if (currentPageAddIns.isEmpty()) {
+				System.out.println("No annotations");
+				return;
+			}
+			for (GObject gobj : currentPageAddIns) {
+				if (x >= gobj.x && x <= gobj.maxX &&
+					y >= gobj.y && y <= gobj.maxY) {
+					System.out.println("HIT: " + gobj);
+					return;
+				} else {
+					System.out.println("MISS: " + gobj);
+				}
+			}
 		}
 	}
 	final State viewState = new ViewState(selectButton);

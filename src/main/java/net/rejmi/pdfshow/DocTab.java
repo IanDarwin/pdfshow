@@ -93,6 +93,11 @@ class DocTab extends JPanel {
 		return pageNumber;
 	}
 	
+	List<GObject> getCurrentAddIns() {
+		ensurePageHasAddinsArray();
+		return addIns[pageNumber];
+	}
+	
 	void gotoNext() {
 		if (pageNumber == pageCount)
 			return;
@@ -106,12 +111,16 @@ class DocTab extends JPanel {
 	}
 
 	int addIn(GObject gobj) {
-		if (addIns[pageNumber] == null) {
-			addIns[pageNumber] = new ArrayList<GObject>();
-		}
+		ensurePageHasAddinsArray();
 		int ix = addIns[pageNumber].size();
 		addIns[pageNumber].add(gobj);
 		return ix;
+	}
+
+	protected void ensurePageHasAddinsArray() {
+		if (addIns[pageNumber] == null) {
+			addIns[pageNumber] = new ArrayList<GObject>();
+		}
 	}
 
 	/** Replace an object (for rubber-banding) */

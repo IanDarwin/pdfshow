@@ -14,7 +14,7 @@ abstract class GObject {
 	/** pdfbox leaves the Graphics object in upside down mode */
 	static final AffineTransform UPRIGHT_TRANSLATE_INSTANCE = AffineTransform.getTranslateInstance(1, -1);
 
-	int x, y;
+	int x, y, maxX, maxY;	// ULX, ULY, LRX, LRY!
 	Color color = Color.RED;
 	GObject(int x, int y) {
 		this.x = x; this.y = y;
@@ -27,6 +27,8 @@ class GText extends GObject {
 	Font font = new Font("Sans", Font.PLAIN, 24);
 	GText(int x, int y, String text) {
 		super(x, y);
+		maxX = x + 200;	// XXX Use FontMetrics
+		maxY = y + 50;
 		this.text = text;
 	}
 	void render(Graphics g) {
@@ -43,22 +45,21 @@ class GText extends GObject {
 
 class GLine extends GObject {
 	int lineWidth = 3;
-	int endX, endY;
 	GLine(int x, int y, int endX, int endY) {
 		super(x, y);
-		this.endX = endX;
-		this.endY = endY;
+		this.maxX = endX;
+		this.maxY = endY;
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
 		((Graphics2D)g).setStroke(new BasicStroke(lineWidth));
 		g.setColor(color);
-		g.drawLine(x, y, endX, endY);
+		g.drawLine(x, y, maxX, maxY);
 	}
 	@Override
 	public String toString() {
 		return String.format("%s from %d, %d to %d %d", 
-			getClass().getSimpleName(), x, y, endX, endY);
+			getClass().getSimpleName(), x, y, maxX, maxY);
 	}
 }
 
@@ -86,7 +87,9 @@ class GPolyLine extends GObject {
 			throw new IllegalStateException("I never thought you'd draw a line with that many points");
 		}
 		this.xPoints[nPoints] = x;
+		maxX = Math.max(x, maxX);
 		this.yPoints[nPoints] = y;
+		maxY = Math.max(y, maxY);
 		++nPoints;
 	}
 	
@@ -116,31 +119,29 @@ class GPolyLine extends GObject {
 }
 
 class GRectangle extends GObject {
-	private int llX, llY;
-	GRectangle(int ulX, int ulY, int llX, int llY) {
+	GRectangle(int ulX, int ulY, int maxX, int maxY) {
 		super(ulX, ulY);
-		this.llX = llX;
-		this.llY = llY;
+		this.maxX = maxX;
+		this.maxY = maxY;
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
 		((Graphics2D)g).setStroke(new BasicStroke(3));
 		g.setColor(color);
-		g.drawRect(x, y, Math.abs(llX - x), Math.abs(llY - y));
+		g.drawRect(x, y, Math.abs(maxX - x), Math.abs(maxY - y));
 	}
 }
 
 class GOval extends GObject {
-	private int llX, llY;
-	GOval(int ulX, int ulY, int llX, int llY) {
+	GOval(int ulX, int ulY, int maxX, int maxY) {
 		super(ulX, ulY);
-		this.llX = llX;
-		this.llY = llY;
+		this.maxX = maxX;
+		this.maxY = maxY;
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
 		((Graphics2D)g).setStroke(new BasicStroke(3));
 		g.setColor(color);
-		g.drawOval(x, y, Math.abs(llX - x), Math.abs(llY - y));
+		g.drawOval(x, y, Math.abs(maxX - x), Math.abs(maxY - y));
 	}
 }
