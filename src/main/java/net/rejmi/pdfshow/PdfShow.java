@@ -368,13 +368,6 @@ public class PdfShow {
 		public void enterState() {
 			//
 		}
-		
-		/** Called by any State when it is done, e.g., after
-		 * composing and adding a GObject, currentTab.repaint(), done()
-		 */
-		public void done() {
-			// gotoState(viewState);
-		}
 
 		public void leaveState() {
 			//
@@ -524,7 +517,6 @@ public class PdfShow {
 			if (text != null) {
 				currentTab.addIn(new GText(e.getX(), e.getY(), text));
 				currentTab.repaint();
-				done();
 			}
 		}
 	}
@@ -559,7 +551,6 @@ public class PdfShow {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			mark = null;
-			done();
 		}
 	}
 	final State markingState = new MarkingState(markerButton);
@@ -591,7 +582,6 @@ public class PdfShow {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			line = null;
-			done();
 		}
 	}
 	final State lineDrawState = new LineDrawState(lineButton);
@@ -623,11 +613,11 @@ public class PdfShow {
 			int newx = e.getX();
 			int newy = e.getY();
 			int dx = newx - lastx;
-			if (dx > -5 && dx < +5)
-				return;
+//			if (dx > -5 && dx < +5)
+//				return;
 			int dy = newy - lasty;
-			if (dy > -5 && dy < +5)
-				return;
+//			if (dy > -5 && dy < +5)
+//				return;
 			line.addPoint(dx, dy);
 			currentTab.repaint();
 			lastx = newx; lasty = newy;
@@ -637,7 +627,6 @@ public class PdfShow {
 			// System.out.println("PdfShow.PolyLineDrawState.mouseReleased()");
 			currentTab.repaint();
 			line = null;	// We are done with it.
-			done();
 		}
 	}
 	final State polyLineDrawState = new PolyLineDrawState(polyLineButton);
@@ -671,7 +660,6 @@ public class PdfShow {
 		public void mouseReleased(MouseEvent e) {
 			// currentTab.addIn(new GRectangle(ulX, ulY, e.getX(), e.getY()));
 			currentTab.repaint(); // XXX Should addIn() do repaint() for us?
-			done();
 		}
 		
 	}
@@ -705,9 +693,7 @@ public class PdfShow {
 		}
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// currentTab.addIn(new GRectangle(ulX, ulY, e.getX(), e.getY()));
 			currentTab.repaint(); // XXX Should addIn() do repaint() for us?
-			done();
 		}
 	}
 
