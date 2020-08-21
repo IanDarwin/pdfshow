@@ -451,6 +451,8 @@ public class PdfShow {
 		ViewState(JButton button) {
 			super(button);
 		}
+		
+		// Select an object
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			int x = e.getX(), y = e.getY();
@@ -479,14 +481,21 @@ public class PdfShow {
 				currentTab.repaint();
 			}
 		}
-		
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			mouseClicked(e);
+		}
+
+		// Move the selected object
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			int x = e.getX(), y = e.getY();
+			final int mx = e.getX(), my = e.getY();
 			visitCurrentPageGObjs(gobj -> {
 				if (gobj.isSelected) {
-					gobj.x = x; gobj.y = y;
-					currentTab.repaint(); // XXX expensive
+					// XXX Adjust for mousex - x
+					gobj.x = mx; gobj.y = my;
+					currentTab.repaint(); // XXX expensive during drag?
 				}
 			});
 		}
