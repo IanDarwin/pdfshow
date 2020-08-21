@@ -20,10 +20,15 @@ But there is documentation, in the `docs` folder.
 
 Download the repository from https://github.com/IanDarwin/pdfshow.
 
-[For now you have to clone darwinsys-api from the same place, cd darwinsys-api, mvn install]
-
 Copy the file pdfshow.properties.sample to pdfshow.properties, and edit as per the comments.
 *If you miss this step, you will get obscure errors like "Cannot start JVM"!*.
+
+There is a Maven dependency on darwinsys-api; if the required version isn't fetched 
+automatically from Maven Central when you run maven, do the following:
+
+	git clone https://github.com/IanDarwin/darwinsys-api
+	cd darwinsys-api
+	mvn package install
 
 To test run it, just open the project in Eclipse (or import into IntelliJ or
 other IDE) and run PdfShow, the main-program file.
