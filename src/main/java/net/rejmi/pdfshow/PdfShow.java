@@ -856,8 +856,12 @@ public class PdfShow {
 			xButton.setPreferredSize(new Dimension(16,16));
 			xButton.addActionListener(e -> pdfShow.closeFile(docTab));
 		}
+
+		// The X button for tabs
 		class MyCloseButton extends JButton {
-			  public MyCloseButton() {
+			private static final long serialVersionUID = 1L;
+
+			public MyCloseButton() {
 			    super("x");
 			    setBorder(BorderFactory.createEmptyBorder());
 			    setFocusPainted(false);
@@ -920,7 +924,7 @@ public class PdfShow {
 	}
 
 	// Old format, still needed for JFrame(?)
-	protected Image getImage(String imgName) {
+	private Image getImage(String imgName) {
 		URL imageURL = getClass().getResource(imgName);
 
 		if (imageURL == null) {
