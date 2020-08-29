@@ -54,7 +54,17 @@ import com.darwinsys.swingui.RecentMenu;
 public class PdfShow {
 
 	public static void main(String[] args) throws Exception {
+
+		// Configure for macOS if possible/applicable
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
+		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
+			PdfShow.class.getSimpleName());
+
+		// Instantiate main program
 		PdfShow.instance = new PdfShow();
+		PdfShow.instance.setVisible(true);
+
+		// Open files form command line, if any
 		for (String arg : args) {
 			final File file = new File(arg);
 			if (!file.canRead()) {
@@ -345,10 +355,13 @@ public class PdfShow {
 		
 		sidePanel.add(toolBox);
 
-		// END TOOL BOX
-
 		frame.add(BorderLayout.WEST, sidePanel);
-		frame.setVisible(true);
+
+		// END TOOL BOX
+	}
+
+	void setVisible(boolean vis) {
+		frame.setVisible(vis);
 	}
 
 	// ALL STATE CLASSES HERE
