@@ -1,6 +1,6 @@
 # This sample properties file must be copied to pdfshow.properties and edited.
 # DO NOT put live data into the ".sample" version of this file!!
 
-feedback_url=https://domain.com/contact_form.jsp
+feedback_url=https://domain.com/contact_form.jsp?subject=PdfShow Feedback
 feedback_email=user@domain.com
 github_url=https://github.com/IanDarwin/pdfshow
