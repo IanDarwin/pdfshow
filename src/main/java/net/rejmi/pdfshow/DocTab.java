@@ -86,11 +86,16 @@ class DocTab extends JPanel {
 		pageNumber = page;
 		sbar.setValue(pageNumber);
 		pdfComponent.repaint();
-		PdfShow.pageNumberChanged();
+		PdfShow.instance.pageNumberChanged();
 	}
 
 	int getPageNumber() {
 		return pageNumber;
+	}
+	
+	List<GObject> getCurrentAddIns() {
+		ensurePageHasAddinsArray();
+		return addIns[pageNumber];
 	}
 	
 	void gotoNext() {
@@ -106,12 +111,16 @@ class DocTab extends JPanel {
 	}
 
 	int addIn(GObject gobj) {
-		if (addIns[pageNumber] == null) {
-			addIns[pageNumber] = new ArrayList<GObject>();
-		}
+		ensurePageHasAddinsArray();
 		int ix = addIns[pageNumber].size();
 		addIns[pageNumber].add(gobj);
 		return ix;
+	}
+
+	protected void ensurePageHasAddinsArray() {
+		if (addIns[pageNumber] == null) {
+			addIns[pageNumber] = new ArrayList<GObject>();
+		}
 	}
 
 	/** Replace an object (for rubber-banding) */
@@ -139,6 +148,7 @@ class DocTab extends JPanel {
 	void close() {
 		try {
 			doc.close();
+			doc = null;
 		} catch (IOException e) {
 			e.printStackTrace();	// Nobody wants to listen to your chuntering.
 		}
@@ -161,7 +171,7 @@ class DocTab extends JPanel {
 			// 3) Our annotations, if any
 			if (addIns[pageNumber] != null) {
 				for (GObject obj : addIns[pageNumber]) {
-					obj.render(g);
+					obj.draw(g);
 				}
 			}
 		} catch (IOException e) {

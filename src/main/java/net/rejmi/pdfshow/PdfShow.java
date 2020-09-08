@@ -3,6 +3,7 @@ package net.rejmi.pdfshow;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -18,9 +19,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -48,306 +54,50 @@ import com.darwinsys.swingui.RecentMenu;
 public class PdfShow {
 
 	public static void main(String[] args) throws Exception {
-		final PdfShow pdfShow = new PdfShow();
+
+		// Configure for macOS if possible/applicable
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
+		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
+			PdfShow.class.getSimpleName());
+
+		// Instantiate main program
+		PdfShow.instance = new PdfShow();
+		PdfShow.instance.setVisible(true);
+
+		// Open files form command line, if any
 		for (String arg : args) {
 			final File file = new File(arg);
 			if (!file.canRead()) {
 				JOptionPane.showMessageDialog(PdfShow.frame, "Can't open file " + file);
 				continue;
 			}
-			pdfShow.openPdfFile(file);
+			PdfShow.instance.openPdfFile(file);
 		}
 	}
+	
+	static PdfShow instance;
 
 	Desktop desktop=Desktop.getDesktop();
 	Properties programProps = new Properties();
+	Preferences prefs = Preferences.userNodeForPackage(PdfShow.class);
 	final static String PROPS_FILE_NAME = "/pdfshow.properties";
 	final static String KEY_FEEDBACK_URL = "feedback_url",
 			KEY_FEEDBACK_EMAIL = "feedback_email",
 			KEY_SOURCE_URL = "github_url";
+	final static String KEY_FILECHOOSER_DIR = "file_chooser_dir";
 	final static String EMAIL_TEMPLATE = "mailto:%s?subject=PdfShow Feedback";
-
-	/** 
-	 * State is a class, not an interface, so subclasses don't
-	 * have to implement every method.
-	 */
-	private static abstract class State {
-
-		/** Anything to be done on entering a given state */
-		public void enterState() {
-			//
-		}
-		
-		/** Called by any State when it is done, e.g., after
-		 * composing and adding a GObject, currentTab.repaint(), done()
-		 */
-		public void done() {
-			// gotoState(viewState);
-		}
-
-		public void leaveState() {
-			//
-		}
-
-		public void keyPressed(KeyEvent e) {
-			// System.out.println("PdfShow.State.keyPressed(" + e + ")");
-			switch(e.getKeyChar()) {
-			case 'j':
-			case '\n':
-			case ' ':
-			case KeyEvent.VK_UP:
-				currentTab.gotoNext();
-				return;
-			case 'k':
-			case '\b':
-			case KeyEvent.VK_DOWN:
-				currentTab.gotoPrev();
-				return;
-			default:
-				switch(e.getKeyCode()) {
-				case KeyEvent.VK_DOWN:
-					currentTab.gotoNext(); return;
-				case KeyEvent.VK_UP:
-					currentTab.gotoPrev(); return;
-				}
-			}
-			System.out.println("Unhandled key event: " + e);
-		}
-
-		public void mouseClicked(MouseEvent e) {
-			// probably want to override this
-		}
-
-		public void mousePressed(MouseEvent e) {
-			// empty
-		}
-
-		public void mouseDragged(MouseEvent e) {
-			// empty
-		}
-
-		public void mouseReleased(MouseEvent e) {
-			// empty
-		}
-
-		public void mouseEntered(MouseEvent e) {
-			// empty
-		}
-
-		public void mouseExited(MouseEvent e) {
-			// Probably want to override this
-		}
-	}
-
-	/** State for normal viewing */
-	static class ViewState extends State {
-		// Nothing to do - is default State
-	}
-	static final ViewState viewState = new ViewState();
-
-	/** State for adding text annotations */
-	static class TextDrawState extends State {
-		@Override
-		public void mousePressed(MouseEvent e) {
-			String text = JOptionPane.showInputDialog(frame, "Text?");
-			if (text != null) {
-				currentTab.addIn(new GText(e.getX(), e.getY(), text));
-				currentTab.repaint();
-				done();
-			}
-		}
-	}
-	static final State textDrawState = new TextDrawState();
-
-	/** Marker: straight line: click start, click end. */
-	static class MarkingState extends State {
-		int startX = -1, startY = -1, ix;
-		GMarker mark;
-		@Override
-		public void mousePressed(MouseEvent e) {
-			startX = e.getX();
-			startY = e.getY();
-		}
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			if (mark == null) {
-				mark = new GMarker(startX, startY, e.getX(), e.getY());
-				ix = currentTab.addIn(mark);
-			} else {
-				currentTab.setIn(ix, new GMarker(startX, startY, e.getX(), e.getY()));
-			}
-			currentTab.repaint();
-		}
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			mark = null;
-			done();
-		}
-	}
-	static final State markingState = new MarkingState();
-
-	/** For now, crude line-drawing: click start, click end. */
-	static class LineDrawState extends State {
-		int startX = -1, startY = -1, ix;
-		GLine line;
-		@Override
-		public void mousePressed(MouseEvent e) {
-			startX = e.getX();
-			startY = e.getY();
-		}
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			if (line == null) {
-				line = new GLine(startX, startY, e.getX(), e.getY());
-				ix = currentTab.addIn(line);
-			} else {
-				currentTab.setIn(ix, new GLine(startX, startY, e.getX(), e.getY()));
-			}
-			currentTab.repaint();
-		}
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			line = null;
-			done();
-		}
-	}
-	static final State lineDrawState = new LineDrawState();
-
-	static class PolyLineDrawState extends State {
-		int n = 0, ix;
-		int lastx, lasty;
-		GPolyLine line;
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// System.out.println("PdfShow.PolyLineDrawState.mousePressed()");
-			n = 0;
-			line = new GPolyLine(e.getX(), e.getY());
-			ix = currentTab.addIn(line);
-		}
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			int newx = e.getX(); int newy = e.getY();
-			int dx = newx - lastx;
-			if (dx > -5 && dx < +5)
-				return;
-			int dy = newy - lasty;
-			if (dy > -5 && dy < +5)
-				return;
-			line.addPoint(newx, newy);
-			currentTab.repaint();
-			lastx = newx; lasty = newy;
-		}
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// System.out.println("PdfShow.PolyLineDrawState.mouseReleased()");
-			currentTab.repaint();
-			line = null;	// We are done with it.
-			done();
-		}
-	}
-	static final State polyLineDrawState = new PolyLineDrawState();
-
-	static class RectangleState extends State {
-		int ulX = -1, ulY = -1;
-		GRectangle rect;
-		int ix;
-		@Override
-		public void mousePressed(MouseEvent e) {
-			ulX = e.getX();
-			ulY = e.getY();
-			rect = null;
-		}
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			if (rect == null) {
-				rect = new GRectangle(ulX, ulY, e.getX(), e.getY());
-				ix = currentTab.addIn(rect);
-			} else {
-				currentTab.setIn(ix, new GRectangle(ulX, ulY, e.getX(), e.getY()));
-			}
-			currentTab.repaint();
-		}
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// currentTab.addIn(new GRectangle(ulX, ulY, e.getX(), e.getY()));
-			currentTab.repaint(); // XXX Should addIn() do repaint() for us?
-			done();
-		}
-		
-	}
-	static final State rectangleState = new RectangleState();
-
-	static State currentState;
-
-	static void gotoState(State state) {
-		if (currentState != null)	// At beginning of program
-			currentState.leaveState();
-		currentState = state;
-		currentState.enterState();
-	}
-
-	void showFileProps() {
-		final PDDocumentInformation docInfo = currentTab.doc.getDocumentInformation();
-		StringBuilder sb = new StringBuilder();
-		sb.append("Title: ").append(docInfo.getTitle()).append('\n');
-		sb.append("Author: ").append(docInfo.getAuthor()).append('\n');
-		sb.append("Producer: ").append(docInfo.getProducer()).append('\n');
-		sb.append("Subject: ").append(docInfo.getSubject()).append('\n');
-		JOptionPane.showMessageDialog(frame, sb.toString(), 
-			currentTab.file.getName(), JOptionPane.INFORMATION_MESSAGE);
-	}
-
+	
+	// GUI Controls - defined here since referenced throughout
 	static JFrame frame;
-	private static JTabbedPane tabPane;
-	private static DocTab currentTab;
-	private static JButton upButton, downButton; // Do not move into constr
-	private static JTextField pageNumTF;		 // Nor me.
+	private JTabbedPane tabPane;
+	private DocTab currentTab;
+	private JButton upButton, downButton; // Do not move into constr
+	private JTextField pageNumTF;		 // Nor me.
+	// These can't be final due to constructor operation ordering
+	private /*final*/ JButton selectButton, textButton, markerButton,
+		lineButton, polyLineButton, ovalButton, rectangleButton; // Me three
 	final RecentMenu recents;
-
-	// Listeners; these get added to each DocTab in openPdfFile().
-	private MouseListener ml = new MouseAdapter() {
-		@Override
-		public void mousePressed(MouseEvent e) {
-			currentState.mousePressed(e);
-		};
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			currentState.mouseClicked(e);
-		}
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			currentState.mouseReleased(e);
-		}
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			currentState.mouseEntered(e);
-			currentTab.requestFocus();
-		}
-		@Override
-		public void mouseExited(MouseEvent e) {
-			currentState.mouseExited(e);
-		};
-	};
-	private MouseMotionListener mml = new MouseMotionListener() {
-
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			currentState.mouseDragged(e);
-		}
-
-		@Override
-		public void mouseMoved(MouseEvent e) {
-			// Ignore
-		}		
-	};
- ;
-	private KeyListener kl = new KeyAdapter() {
-		@Override
-		public void keyPressed(KeyEvent e) {
-			currentState.keyPressed(e);
-		};
-	};
-
+	
 	// MAIN CONSTRUCTOR
 
 	PdfShow() throws IOException {
@@ -358,7 +108,11 @@ public class PdfShow {
 
 		frame = new JFrame("PDFShow");
 		Toolkit tk = Toolkit.getDefaultToolkit();
-		frame.setSize(tk.getScreenSize());
+		final Dimension screenSize = tk.getScreenSize();
+		final Dimension windowSize = 
+			new Dimension(screenSize.width, screenSize.height - 50);
+		frame.setSize(windowSize);
+		frame.setLocation(0, 0);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setFocusable(true);
 		final Image iconImage = getImage("/images/logo.png");
@@ -395,7 +149,7 @@ public class PdfShow {
 		miOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		fm.add(miOpen);
-		recents = new RecentMenu(this) {
+		recents = new RecentMenu(prefs) {
 			private static final long serialVersionUID = 1L;
 			@Override
 			public void loadFile(String fileName) throws IOException {
@@ -404,7 +158,11 @@ public class PdfShow {
 		};
 		miOpen.addActionListener(e -> {
 			try {
-				recents.openFile(chooseFile().getAbsolutePath());
+				final File chosenFile = chooseFile();
+				if (chosenFile == null) {
+					return;
+				}
+				recents.openFile(chosenFile.getAbsolutePath());
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(frame, "Can't open file: " + e1);
 			}
@@ -526,29 +284,34 @@ public class PdfShow {
 
 		JPanel toolBox = new JPanel();
 		toolBox.setLayout(new GridLayout(0, 2));
+
 		// Mode buttons
-		
-		final JButton selectButton = new JButton(getMyImageIcon("Select"));
+
+		selectButton = new JButton(getMyImageIcon("Select"));
 		selectButton.addActionListener(e -> gotoState(viewState));
 		toolBox.add(selectButton);
 
-		final JButton textButton = new JButton(getMyImageIcon("Text"));
+		textButton = new JButton(getMyImageIcon("Text"));
 		textButton.addActionListener(e -> gotoState(textDrawState));
 		toolBox.add(textButton);
 
-		final JButton markerButton = new JButton(getMyImageIcon("Marker"));
+		markerButton = new JButton(getMyImageIcon("Marker"));
 		markerButton.addActionListener(e -> gotoState(markingState));
 		toolBox.add(markerButton);
 
-		final JButton lineButton = new JButton(getMyImageIcon("Line"));
+		lineButton = new JButton(getMyImageIcon("Line"));
 		lineButton.addActionListener(e -> gotoState(lineDrawState));
 		toolBox.add(lineButton);
 		
-		final JButton polyLineButton = new JButton(getMyImageIcon("PolyLine"));
+		polyLineButton = new JButton(getMyImageIcon("PolyLine"));
 		polyLineButton.addActionListener(e -> gotoState(polyLineDrawState));
 		toolBox.add(polyLineButton);
 		
-		final JButton rectangleButton = new JButton(getMyImageIcon("Rectangle"));
+		ovalButton = new JButton(getMyImageIcon("Oval"));
+		ovalButton.addActionListener(e -> gotoState(ovalState));
+		toolBox.add(ovalButton);
+		
+		rectangleButton = new JButton(getMyImageIcon("Rectangle"));
 		rectangleButton.addActionListener(e -> gotoState(rectangleState));
 		toolBox.add(rectangleButton);
 		
@@ -592,13 +355,442 @@ public class PdfShow {
 		
 		sidePanel.add(toolBox);
 
-		// END TOOL BOX
-
 		frame.add(BorderLayout.WEST, sidePanel);
-		frame.setVisible(true);
+
+		// END TOOL BOX
 	}
 
-	static void pageNumberChanged() {
+	void setVisible(boolean vis) {
+		frame.setVisible(vis);
+	}
+
+	// ALL STATE CLASSES HERE
+
+	/** 
+	 * State is a class, not an interface, so subclasses don't
+	 * have to implement every method.
+	 */
+	private abstract class State {
+
+		protected JButton button;
+
+		public State(JButton button) {
+			this.button = button;
+		}
+		/** Anything to be done on entering a given state */
+		public void enterState() {
+			//
+		}
+
+		public void leaveState() {
+			//
+		}
+
+		public void keyPressed(KeyEvent e) {
+			// System.out.println("PdfShow.State.keyPressed(" + e + ")");
+			switch(e.getKeyChar()) {
+			case 'j':
+			case '\r':
+			case '\n':
+			case ' ':
+			case KeyEvent.VK_UP:
+				currentTab.gotoNext();
+				return;
+			case 'k':
+			case '\b':
+			case KeyEvent.VK_DOWN:
+				currentTab.gotoPrev();
+				return;
+			
+			default:
+				switch(e.getKeyCode()) {
+				case KeyEvent.VK_DOWN:
+					currentTab.gotoNext(); return;
+				case KeyEvent.VK_UP:
+					currentTab.gotoPrev(); return;
+				}
+				if (e.getKeyCode() == 'W') {
+					if (e.isControlDown() || e.isMetaDown()) {
+						closeFile(currentTab);
+						return;
+					}
+				}
+					
+			}
+			System.out.println("Unhandled key event: " + e);
+		}
+
+		public void mouseClicked(MouseEvent e) {
+			// probably want to override this
+		}
+
+		public void mousePressed(MouseEvent e) {
+			// empty
+		}
+
+		public void mouseDragged(MouseEvent e) {
+			// empty
+		}
+
+		public void mouseReleased(MouseEvent e) {
+			// empty
+		}
+
+		public void mouseEntered(MouseEvent e) {
+			// empty
+		}
+
+		public void mouseExited(MouseEvent e) {
+			// Probably want to override this
+		}
+	}
+	
+	void visitCurrentPageGObjs(Consumer<GObject> consumer) {
+		final List<GObject> currentPageAddIns = currentTab.getCurrentAddIns();
+		if (currentPageAddIns.isEmpty()) {
+			// System.out.println("No annotations");
+			return;
+		}
+		for (GObject gobj : currentPageAddIns) {
+			consumer.accept(gobj);
+		}
+	}
+
+	boolean changed = false, found = false;
+	
+	/** State for normal viewing */
+	class ViewState extends State {
+		// Default State
+		ViewState(JButton button) {
+			super(button);
+		}
+		
+		// Select an object
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			int x = e.getX(), y = e.getY();
+			System.out.printf(
+					"PdfShow.ViewState.mouseClicked() x %d y %d\n", x, y);
+			changed = found = false;
+			visitCurrentPageGObjs(gobj -> {
+				if (found) {
+					return;	// Only select one
+				}
+				if (gobj.isSelected) {
+					gobj.isSelected = false;
+					changed = true;
+				}
+				if (x >= gobj.x && x <= gobj.x + gobj.width &&
+					y >= gobj.y && y <= gobj.y + gobj.height) {
+					System.out.println("HIT: " + gobj);
+					gobj.isSelected = true;
+					changed = true;
+					found = true;
+				} else {
+					System.out.println("MISS: " + gobj);
+				}
+			});
+			if (changed) {
+				currentTab.repaint();
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			mouseClicked(e);
+		}
+
+		// Move the selected object
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			final int mx = e.getX(), my = e.getY();
+			visitCurrentPageGObjs(gobj -> {
+				if (gobj.isSelected) {
+					// XXX Adjust for mousex - x
+					gobj.x = mx; gobj.y = my;
+					currentTab.repaint(); // XXX expensive during drag?
+				}
+			});
+		}
+		
+		@Override
+		public void leaveState() {
+			visitCurrentPageGObjs(gobj->{
+				if (gobj.isSelected) {
+					gobj.isSelected = false;
+					changed = true;
+				}	
+				if (changed) {
+					currentTab.repaint();
+				}
+			});
+		}
+	}
+	final State viewState = new ViewState(selectButton);
+
+	/** State for adding text annotations */
+	class TextDrawState extends State {
+		TextDrawState(JButton button) {
+			super(button);
+		}
+		@Override
+		public void mousePressed(MouseEvent e) {
+			String text = JOptionPane.showInputDialog(frame, "Text?");
+			if (text != null) {
+				currentTab.addIn(new GText(e.getX(), e.getY(), text));
+				currentTab.repaint();
+			}
+		}
+	}
+	final State textDrawState = new TextDrawState(textButton);
+
+	/** Marker: straight line: click start, click end. */
+	class MarkingState extends State {
+		
+		MarkingState(JButton button) {
+			super(button);
+		}
+		
+		int startX = -1, startY = -1, ix;
+		GMarker mark;
+		@Override
+		public void mousePressed(MouseEvent e) {
+			startX = e.getX();
+			startY = e.getY();
+		}
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (mark == null) {
+				mark = 
+					new GMarker(startX, startY, e.getX() - startX, e.getY() - startY);
+				ix = currentTab.addIn(mark);
+			} else {
+				currentTab.setIn(ix, 
+					new GMarker(startX, startY, e.getX() - startX, e.getY() - startY));
+			}
+			currentTab.repaint();
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			mark = null;
+		}
+	}
+	final State markingState = new MarkingState(markerButton);
+
+	/** For now, crude line-drawing: click start, drag to end. */
+	class LineDrawState extends State {
+
+		LineDrawState(JButton button) {
+			super(button);
+		}
+
+		int startX = -1, startY = -1, ix;
+		GLine line;
+		@Override
+		public void mousePressed(MouseEvent e) {
+			startX = e.getX();
+			startY = e.getY();
+		}
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (line == null) {
+				line = new GLine(startX, startY, e.getX() - startX, e.getY() - startY);
+				ix = currentTab.addIn(line);
+			} else {
+				currentTab.setIn(ix, new GLine(startX, startY, e.getX() - startX, e.getY() - startY));
+			}
+			currentTab.repaint();
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			line = null;
+		}
+	}
+	final State lineDrawState = new LineDrawState(lineButton);
+
+	/** A simple multi-straight-line poly-point line. No Bezier &c.
+	 * Unlike most of the other GObject types, the points in a
+	 * polyline are RELATIVE and get absolutized in the GPolyLine
+	 * drawing code.
+	 */
+	class PolyLineDrawState extends State {
+		
+		PolyLineDrawState(JButton button) {
+			super(button);
+		}
+		
+		int n = 0, ix;
+		int lastx, lasty;
+		GPolyLine line;
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// System.out.println("PdfShow.PolyLineDrawState.mousePressed()");
+			n = 0;
+			line = new GPolyLine(lastx = e.getX(), lasty = e.getY());
+			ix = currentTab.addIn(line);
+		}
+		/** We get a stream of events; skip over trivial moves */
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			int newx = e.getX();
+			int newy = e.getY();
+			int dx = newx - lastx;
+//			if (dx > -5 && dx < +5)
+//				return;
+			int dy = newy - lasty;
+//			if (dy > -5 && dy < +5)
+//				return;
+			line.addPoint(dx, dy);
+			currentTab.repaint();
+			lastx = newx; lasty = newy;
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// System.out.println("PdfShow.PolyLineDrawState.mouseReleased()");
+			currentTab.repaint();
+			line = null;	// We are done with it.
+		}
+	}
+	final State polyLineDrawState = new PolyLineDrawState(polyLineButton);
+
+	class RectangleState extends State {
+		
+		RectangleState(JButton button) {
+			super(button);
+		}
+		
+		int ulX = -1, ulY = -1;
+		GRectangle rect;
+		int ix;
+		@Override
+		public void mousePressed(MouseEvent e) {
+			ulX = e.getX();
+			ulY = e.getY();
+			rect = null;
+		}
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (rect == null) {
+				rect = new GRectangle(ulX, ulY, e.getX() - ulX, e.getY() - ulY);
+				ix = currentTab.addIn(rect);
+			} else {
+				currentTab.setIn(ix, new GRectangle(ulX, ulY, e.getX() - ulX, e.getY() - ulY));
+			}
+			currentTab.repaint();
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// currentTab.addIn(new GRectangle(ulX, ulY, e.getX(), e.getY()));
+			currentTab.repaint(); // XXX Should addIn() do repaint() for us?
+		}
+		
+	}
+	final State rectangleState = new RectangleState(rectangleButton);
+	
+	class OvalState extends State {
+		
+		OvalState(JButton button) {
+			super(button);
+		}
+		
+		int ulX = -1, ulY = -1;
+		GOval oval;
+		int ix;
+		@Override
+		public void mousePressed(MouseEvent e) {
+			ulX = e.getX();
+			ulY = e.getY();
+			oval = null;
+		}
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			int x = e.getX(), y = e.getY();
+			if (oval == null) {
+				oval = new GOval(ulX, ulY, x - ulX, y - ulY);
+				ix = currentTab.addIn(oval);
+			} else {
+				currentTab.setIn(ix, new GOval(ulX, ulY, x - ulX, y - ulY));
+			}
+			currentTab.repaint();
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			currentTab.repaint(); // XXX Should addIn() do repaint() for us?
+		}
+	}
+
+	final State ovalState = new OvalState(ovalButton);
+
+	// State Management
+
+	static State currentState;
+
+	static void gotoState(State state) {
+		if (currentState != null)	// At beginning of program
+			currentState.leaveState();
+		currentState = state;
+		currentState.enterState();
+	}
+
+	// Everything Else
+
+	void showFileProps() {
+		final PDDocumentInformation docInfo = currentTab.doc.getDocumentInformation();
+		StringBuilder sb = new StringBuilder();
+		sb.append("Title: ").append(docInfo.getTitle()).append('\n');
+		sb.append("Author: ").append(docInfo.getAuthor()).append('\n');
+		sb.append("Producer: ").append(docInfo.getProducer()).append('\n');
+		sb.append("Subject: ").append(docInfo.getSubject()).append('\n');
+		JOptionPane.showMessageDialog(frame, sb.toString(), 
+			currentTab.file.getName(), JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	// Listeners; these get added to each DocTab in openPdfFile().
+	private MouseListener ml = new MouseAdapter() {
+		@Override
+		public void mousePressed(MouseEvent e) {
+			currentState.mousePressed(e);
+		};
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			currentState.mouseClicked(e);
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			currentState.mouseReleased(e);
+		}
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			currentState.mouseEntered(e);
+			currentTab.requestFocus();
+		}
+		@Override
+		public void mouseExited(MouseEvent e) {
+			currentState.mouseExited(e);
+		};
+	};
+	private MouseMotionListener mml = new MouseMotionListener() {
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			currentState.mouseDragged(e);
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			// Ignore
+		}		
+	};
+ 
+	private KeyListener kl = new KeyAdapter() {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			currentState.keyPressed(e);
+		};
+	};
+
+
+	void pageNumberChanged() {
 		pageNumTF.setText(String.format("%d of %d", currentTab.getPageNumber(), currentTab.pageCount));
 	}
 
@@ -607,49 +799,48 @@ public class PdfShow {
 		System.exit(0);
 	}
 
-	private static JFileChooser fc;
-
-	private static File chooseFile() {
-		String curDir = System.getProperty("user.dir");
-		fc = new JFileChooser(curDir);
+	private File chooseFile() {
+		String prevDir = prefs.get(KEY_FILECHOOSER_DIR, null);
+		System.out.println("PdfShow.chooseFile(): prevDir = " + prevDir);
+		String dir = prevDir != null ? prevDir :
+				System.getProperty("user.home");
+		JFileChooser fc = new JFileChooser(dir);
 		FileFilter filter = new FileFilter() {
 
 			/** Return true if the given file is accepted by this filter. */
 			@Override
 			public boolean accept(File f) {
-				// Little trick: if you don't do this, only directory names
-				// ending in one of the extentions appear in the window.
+				// Little trick: if you don't do this, directory names not
+				// ending in one of the extensions don't show up!
 				if (f.isDirectory()) {
 					return true;
-
-				} else if (f.isFile()) {
-					if (f.getName().endsWith(".pdf"))
-						return true;
-				}
-				return false;
+				};
+				return (f.isFile() && f.getName().endsWith(".pdf"));
 			}
 
 			/** Return the printable description of this filter. */
 			@Override
 			public String getDescription() {
-					return "PDF Files";
+				return "PDF Files";
 			}
 		};
 
 		fc.addChoosableFileFilter(filter);
-		// XXX start in curdir
-		// XXX add pdf-only filter
-		File f = null;
-		do {
-			fc.showOpenDialog(frame);
-			f = fc.getSelectedFile();
-			if (f != null) {
-				return f;
-			} else {
-				JOptionPane.showMessageDialog(frame, "Please choose a file");
+		fc.setAcceptAllFileFilterUsed(false);
+
+		fc.showOpenDialog(frame);
+		final File selectedFile = fc.getSelectedFile();
+		if (selectedFile != null) {
+			System.out.println("PdfShow.chooseFile(): put: " + selectedFile.getParent());
+			prefs.put(KEY_FILECHOOSER_DIR, selectedFile.getParent());
+			try {
+				prefs.flush();
+			} catch (BackingStoreException e) {
+				JOptionPane.showMessageDialog(frame, "Failed to save prefs: " + e);
+				e.printStackTrace();
 			}
-		} while (f != null);
-		return null;
+		}
+		return selectedFile;
 	}
 
 	private void openPdfFile(File file) throws IOException {
@@ -660,16 +851,50 @@ public class PdfShow {
 		t.addMouseMotionListener(mml);
 
 		tabPane.addTab(file.getName(), currentTab = t);
-		tabPane.setSelectedIndex(tabPane.getTabCount() - 1);
+		final int index = tabPane.getTabCount() - 1;
+		tabPane.setSelectedIndex(index);
+		tabPane.setTabComponentAt(index, new ClosableTabHeader(this, t));
 		moveToPage(0);
 	}
 
-	private static void closeFile(DocTab dt) {
+	/** The header for the TabbedPane doctabs */
+	final class ClosableTabHeader extends JPanel {
+		private static final long serialVersionUID = 1L;
+
+		public ClosableTabHeader(PdfShow pdfShow, DocTab docTab) {
+			setLayout(new FlowLayout());
+			add(new JLabel(docTab.file.getName()));
+			JButton xButton = new MyCloseButton();
+			add(xButton);
+			xButton.setPreferredSize(new Dimension(16,16));
+			xButton.addActionListener(e -> pdfShow.closeFile(docTab));
+		}
+
+		// The X button for tabs
+		class MyCloseButton extends JButton {
+			private static final long serialVersionUID = 1L;
+
+			public MyCloseButton() {
+			    super("x");
+			    setBorder(BorderFactory.createEmptyBorder());
+			    setFocusPainted(false);
+			    setBorderPainted(false);
+			    setContentAreaFilled(false);
+			    setRolloverEnabled(false);
+			  }
+			  @Override
+			  public Dimension getPreferredSize() {
+			    return new Dimension(16, 16);
+			  }
+			};
+	}
+
+	private void closeFile(DocTab dt) {
 		dt.close();
 		tabPane.remove(dt);
 	}
 
-	private static void moveToPage(int newPage) {
+	private void moveToPage(int newPage) {
 		int docPages = currentTab.pageCount;
 		if (newPage < 0) {
 			newPage = 0;
@@ -712,7 +937,7 @@ public class PdfShow {
 	}
 
 	// Old format, still needed for JFrame(?)
-	protected Image getImage(String imgName) {
+	private Image getImage(String imgName) {
 		URL imageURL = getClass().getResource(imgName);
 
 		if (imageURL == null) {
