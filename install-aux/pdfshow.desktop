@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=PDFShow
+Comment=PDF Viewer for slideshows
+Exec=pdfshow 
+Terminal=false
+Type=Application
+Encoding=UTF-8
+Icon=xterm-color_48x48
+Categories=Office;
+Keywords=slideshow;pdf viewer;
