@@ -4,6 +4,7 @@ GUI:
 	SHRINK ICONS - make all 48x48
 	Highlight currently-selected Toolbox icon (complicated now due to circular dependency)
 	File opened from argv should be added to recents menu. Unbreak recents in dsapi.
+	Progress meter when opening file.
 
 IMPLEMENT SELECT MODE:
 	Delete selected with delete key or menu (needs change from GObject[] to List<GObject>)
