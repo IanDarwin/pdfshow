@@ -1,17 +1,17 @@
 == ToDo
 
 GUI:
+	Progress meter when opening file.
 	SHRINK ICONS - make all 48x48
 	Highlight currently-selected Toolbox icon (complicated now due to circular dependency)
 	File opened from argv should be added to recents menu. Unbreak recents in dsapi.
-	Progress meter when opening file.
 
 IMPLEMENT SELECT MODE:
 	Delete selected with delete key or menu (needs change from GObject[] to List<GObject>)
 	Bonus: Select TEXT from the PDF for copy-n-paste
 
 Buglets:
-	Page number is too wide for nav box in 3-digit numbers
+	Page number is too wide for nav box in 3-digit numbers (on some platforms)
 	Text items drawn about 50px too high - Happens on macOS, ObSD, but NOT MS-Win
 
 Drawing:
@@ -24,6 +24,7 @@ Show micro-preview of next page below the toolbox
 
 Longer Range Goals:
 	Save annotations with the PDF (either in it or beside it)
+	List chapters, bookmarks
 	User-creatable Bookmarks? (editable text)
 
 "Maybe" ideas:
