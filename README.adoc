@@ -2,6 +2,8 @@
 
 PdfShow is a simple Java Swing-based PDF viewer specifically for running slide shows.
 
+image::samples/SampleShow.png[width="800"]
+
 It has many limitations compared with other tools (see the 
 https://github.com/IanDarwin/pdfshow/issues[TODO list]), due to 
 its relative youth and, more importantly, its design goals.
