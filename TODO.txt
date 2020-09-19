@@ -1,15 +1,6 @@
 == ToDo (Note: Moving from this to using GH issues; please do not add new items here).
 
-GUI:
-	SHRINK ICONS - make all 48x48
-
-SELECT MODE:
-	Delete selected with delete key or menu (needs change from GObject[] to List<GObject>)
-	Bonus: Select TEXT from the PDF for copy-n-paste
-
 Drawing:
-	Replace the "replace and repaint" rubberbanding with DrawingMode.XOR
-		Because it's way too slow (esp. polyline) on some platforms.
 	Implement proper undo stack (then addIn would push a Delete cmd)
 	Properties: at least Font chooser, Color Chooser, LineWidth
 	Lines should be able to have arrowheads.
