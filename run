@@ -4,4 +4,4 @@ set -x
 
 mvn package assembly:single
 
-java -jar target/pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar
+java -jar target/pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar $*

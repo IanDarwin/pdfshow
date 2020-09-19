@@ -32,6 +32,10 @@ Test your change with multiple documents, preferably on two platforms (Mac, Wind
 When you're sure it's right, please create a Pull Request. And if you don't hear back
 within 72 hours, please ping the management.
 
+Sending a pull request constitutes your "irrevocable, world-wide, non-exclusive" agreement 
+to have your code contribution licensed as shown in the LICENSE file. In most countries
+you retain copyright in your contribution. We will never change the license retroactively.
+
 Thank you!
 
 == Code of Conduct
