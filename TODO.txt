@@ -1,21 +1,15 @@
-== ToDo
+== ToDo (Note: Moving from this to using GH issues; please do not add new items here).
 
 GUI:
-	Progress meter when opening file.
 	SHRINK ICONS - make all 48x48
-	Highlight currently-selected Toolbox icon (complicated now due to circular dependency)
-	File opened from argv should be added to recents menu. Unbreak recents in dsapi.
 
-IMPLEMENT SELECT MODE:
+SELECT MODE:
 	Delete selected with delete key or menu (needs change from GObject[] to List<GObject>)
 	Bonus: Select TEXT from the PDF for copy-n-paste
 
-Buglets:
-	Page number is too wide for nav box in 3-digit numbers (on some platforms)
-	Text items drawn about 50px too high - Happens on macOS, ObSD, but NOT MS-Win
-
 Drawing:
-	Be able to edit the text of text objects.
+	Replace the "replace and repaint" rubberbanding with DrawingMode.XOR
+		Because it's way too slow (esp. polyline) on some platforms.
 	Implement proper undo stack (then addIn would push a Delete cmd)
 	Properties: at least Font chooser, Color Chooser, LineWidth
 	Lines should be able to have arrowheads.
@@ -32,8 +26,3 @@ Longer Range Goals:
 	Index tab (first line and page#)
 	A back button for when you scroll past a bunch of pages (Stack of page#s)
 
-Good Tasks for New Contributors (in addition to many of the above):
-	Easy: Change the resizing calculation from scale-both-axes to maxpect
-	Medium: Replace the "replace and repaint" rubberbanding with DrawingMode.XOR
-		Because it's way too slow (esp. polyline) on some platforms.
-	Hard: Make it perfect :-)
