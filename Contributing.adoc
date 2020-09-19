@@ -1,0 +1,43 @@
+= Contributing to 'pdfshow'
+
+== What's needed
+
+Documentation - a good tutorial (text and/or video).
+
+Suggestions - create a New Issue (after checking the existing issues to avoid duplication;
+if there's a similar one just comment on it).
+
+Code - see below.
+
+== Contributing Code
+
+If you're not familiar with git, then git working on git. I mean, get working on it.
+
+Github has workflow stuff beyond plain git - see their
+https://guides.github.com[tutorials] and
+https://labs.github.com[labs] as well as many others on the web.
+
+Fork the repository (button in upper right).
+
+Clone YOUR copy of the repo to your desktop.
+
+We prefer to accept changes that close an outstanding issue. 
+If there's not an issue for the change you want to make, please create an issue.
+And do it before you start coding, so we don't wind up with a conflict
+(either two people working on the same change, or one person working on a change
+that the management disagrees with :-)).
+
+Test your change with multiple documents, preferably on two platforms (Mac, Windows, *Nix).
+
+When you're sure it's right, please create a Pull Request. And if you don't hear back
+within 72 hours, please ping the management.
+
+Thank you!
+
+== Code of Conduct
+
+We don't have one. But if we did, it would be: 
+
+* Act like a grown-up person. A kindly, tolerant person.
+
+* Remember Hanlon's Razor.
