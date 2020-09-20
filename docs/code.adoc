@@ -1,0 +1,14 @@
+= pdfshow code guide
+
+== Components
+
+There are three main files:
+
+* PDFShow.java is the main program, and implements a State Machine pattern; there is a State for each of the buttons
+in the toolbox.
+* DocTab is the Document Tab; there is one for each open file.
+* GObject.java is the graphics objects. They are POJO objects, not Swing JComponents.
+
+== Code Style
+
+We use the Sun coding standard merged with the One True Brace Style. See the existing code for examples.
