@@ -1,10 +1,5 @@
 == ToDo (Note: Moving from this to using GH issues; please do not add new items here).
 
-Drawing:
-	Implement proper undo stack (then addIn would push a Delete cmd)
-	Properties: at least Font chooser, Color Chooser, LineWidth
-	Lines should be able to have arrowheads.
-
 Show micro-preview of next page below the toolbox
 
 Longer Range Goals:
