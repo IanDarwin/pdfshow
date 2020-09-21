@@ -1,14 +1,17 @@
 = PdfShow
 
-PdfShow is a simple Java Swing-based PDF viewer specifically for running slide shows.
+`PdfShow` is a simple Java Swing-based PDF viewer specifically for running slide shows.
+I wrote it because I was tired of general-purpose programs like PDF Annotator and
+Adobe Reader, which have too many modes, controls, etc. and aren't really optimized
+for showing slide decks.
 
 image::samples/SampleShow.png[width="800"]
 
 *Update*:
-The dependency for darwinsys-api on maven central has been updated to 1.5.13,
-so you should not have to build the dependent API.
+The dependency for darwinsys-api on maven central has been updated (to 1.5.13, which is published),
+so you should not have to build the dependent API. You have only one trivial manual task before building (see below).
 
-It has many limitations compared with other tools (see the 
+`PdfShow` has many limitations compared with other tools (see the 
 https://github.com/IanDarwin/pdfshow/issues[TODO list]), due to 
 its relative youth and, more importantly, its design goals.
 These are laid out in the User Guide.
@@ -21,12 +24,13 @@ within the general tone of the program - _minimalist, but functional._
 == Using It
 
 The program is intuitive and easy to use.
-But there is documentation, in the `docs` folder.
+Just run it and use `File->Open` (or `CTRL/CMD O`), or run it with a filename argument.
+There's a recent menu for subsequent days of your course, for example.
+There is more documentation in the `docs` folder.
 
 == Build It
 
 Download the repository from https://github.com/IanDarwin/pdfshow.
-
 
 Copy the file pdfshow.properties.sample to pdfshow.properties, and edit as per the comments.
 *If you miss this step, you will get obscure errors like "Cannot start JVM"!*.
