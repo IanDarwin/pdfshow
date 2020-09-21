@@ -11,29 +11,43 @@ image::samples/SampleShow.png[width="800"]
 The dependency for darwinsys-api on maven central has been updated (to 1.5.13, which is published),
 so you should not have to build the dependent API. You have only one trivial manual task before building (see below).
 
-`PdfShow` has many limitations compared with other tools (see the 
-https://github.com/IanDarwin/pdfshow/issues[TODO list]), due to 
+`PdfShow` has many limitations compared with other tools (see the
+https://github.com/IanDarwin/pdfshow/issues[TODO list]), due to
 its relative youth and, more importantly, its design goals.
 These are laid out in the User Guide.
 
 We will add more bells and whistles as time permits.
 
 Pull requests will be gratefully accepted as long as they fit
-within the general tone of the program - _minimalist, but functional._ 
+within the general tone of the program - _minimalist, but functional._
 
-== Using It
+== Installing PdfShow
+
+There may be an installer for your computing platform; see
+https://github.com/IanDarwin/pdfshow/releases.
+
+If not, see <<building>> below.
+
+== Using PdfShow
 
 The program is intuitive and easy to use.
 Just run it and use `File->Open` (or `CTRL/CMD O`), or run it with a filename argument.
 There's a recent menu for subsequent days of your course, for example.
 There is more documentation in the `docs` folder.
 
-== Build It
+[[building]]
+== Build PdfShow
 
-Download the repository from https://github.com/IanDarwin/pdfshow.
+Download the repository from https://github.com/IanDarwin/pdfshow. Using command-line tools:
+
+	git clone https://github.com/IanDarwin/pdfshow
+	cd pdfshow
 
 Copy the file pdfshow.properties.sample to pdfshow.properties, and edit as per the comments.
 *If you miss this step, you will get obscure errors like "Cannot start JVM"!*.
+
+	cp src/main/resources/pdfshow.properties.sample src/main/resources/pdfshow.properties
+	your_favorite_editor src/main/resources/pdfshow.properties
 
 To test run the program, just open the project in Eclipse (or import into IntelliJ or
 other IDE) and run `PdfShow`, the main-program file.
@@ -41,13 +55,14 @@ other IDE) and run `PdfShow`, the main-program file.
 To package just the program and its images (without the dependencies),
 do `mvn package`.
 
-To make a clickable runnable JAR file, run `mvn package assembly:single`
-and you'll find a jar with dependencies in the target folder.
-It'll be named something like _pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar_
-You can run it with `java -jar` or click on it in Windows, macOS, 
-or most *Nix windowed environments.
+To make a clickable runnable JAR file, run `mvn package assembly:single`.
+You'll then find a `jar` with dependencies in the target folder.
+It'll be named something like `pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar`.
+You can run it with `java -jar target/pdfshow*dependencies.jar` (see `scripts/pdfshow`), or just click on it in an file
+manager window in MS-Windows, macOS, or most *Nix windowed environments.
 
-To make a full-blown, platform-specific installer, try the `mkinstaller` script.
+To make a full-blown, platform-specific installer, we use the `mkinstaller` script.
+You can run that yourself if you need to.
 Note that on Windows this has pre-requisites, which it will let you know about.
 
 == Develop It
@@ -73,7 +88,7 @@ it's gotta be the same amount of work.
 Program written by Ian Darwin of Rejminet Group Inc.
 Contributions by a cast of thousands (someday).
 
-PDF access (i.e., some of the heavy listing!) is done by 
+PDF access (i.e., some of the heavy listing!) is done by
 https://pdfbox.apache.org/[Apache PDFBox] software.
 
 Some icons from feathericons.com; a few simpler ones icons by Ian Darwin.
