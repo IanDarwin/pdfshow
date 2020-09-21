@@ -49,7 +49,7 @@
 		<dependency>
 			<groupId>com.darwinsys</groupId>
 			<artifactId>darwinsys-api</artifactId>
-			<version>1.5.12-SNAPSHOT</version>
+			<version>1.5.13</version>
 		</dependency>
 
 		<dependency>
