@@ -26,7 +26,11 @@ jpackage \
 	--vendor "Rejminet Group Inc." \
 	--type "${inst_format}" \
 	--icon src/main/resources/images/logo.${icon_format} \
-	--file-associations install-aux/pdfassoc.properties \
 	--input target \
 	--main-jar pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar \
 	${OS_SPECIFIC}
+exit
+	# The following are not used in production releases
+	# Omit file-association because most OSes only allow one active program per file type.
+	# See https://github.com/IanDarwin/pdfshow/issues/19 Issue #19
+	--file-associations install-aux/pdfassoc.properties \
