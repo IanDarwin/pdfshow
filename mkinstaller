@@ -2,6 +2,8 @@
 
 set -x
 
+RELEASE_VERSION=0.0.7
+
 mvn package assembly:single
 
 case $(uname) in
@@ -9,10 +11,10 @@ case $(uname) in
 			icon_format=ico
 			OS_SPECIFIC="--win-menu --win-shortcut"
 			;;
-	Darwin)		inst_format=pkg
+	Darwin)		inst_format=pkg,img
 			icon_format=icns
 			;;
-	Linux)		inst_format=rpm
+	Linux)		inst_format=rpm,deb
 			icon_format=png
 			;;
 	*)
@@ -22,6 +24,7 @@ esac
 
 jpackage \
 	--name PDFShow \
+	--app-version ${RELEASE_VERSION} \
 	--license-file LICENSE.txt \
 	--vendor "Rejminet Group Inc." \
 	--type "${inst_format}" \
