@@ -4,6 +4,10 @@ PdfShow is a simple Java Swing-based PDF viewer specifically for running slide s
 
 image::samples/SampleShow.png[width="800"]
 
+*Update*:
+The dependency for darwinsys-api on maven central has been updated to 1.5.13,
+so you should not have to build the dependent API.
+
 It has many limitations compared with other tools (see the 
 https://github.com/IanDarwin/pdfshow/issues[TODO list]), due to 
 its relative youth and, more importantly, its design goals.
@@ -23,18 +27,12 @@ But there is documentation, in the `docs` folder.
 
 Download the repository from https://github.com/IanDarwin/pdfshow.
 
+
 Copy the file pdfshow.properties.sample to pdfshow.properties, and edit as per the comments.
 *If you miss this step, you will get obscure errors like "Cannot start JVM"!*.
 
-There is a Maven dependency on darwinsys-api; if the required version isn't fetched 
-automatically from Maven Central when you run maven, do the following:
-
-	git clone https://github.com/IanDarwin/darwinsys-api
-	cd darwinsys-api
-	mvn package install
-
-To test run it, just open the project in Eclipse (or import into IntelliJ or
-other IDE) and run PdfShow, the main-program file.
+To test run the program, just open the project in Eclipse (or import into IntelliJ or
+other IDE) and run `PdfShow`, the main-program file.
 
 To package just the program and its images (without the dependencies),
 do `mvn package`.
