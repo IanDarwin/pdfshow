@@ -3,7 +3,7 @@
 
 	<groupId>net.rejmi</groupId>
 	<artifactId>pdfshow</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>0.0.7</version>
 	<packaging>jar</packaging>
 	<inceptionYear>2019</inceptionYear>
 
