@@ -27,8 +27,8 @@ There may be an installer for your computing platform; see
 https://github.com/IanDarwin/pdfshow/releases. Check the latest 
 release under the _Assets_ dropdown.
 
-Note that the installers bundle their own Java VM, which they are known
-to work with; they are about 50Mb to download and about 120-140Mb when installed.
+Note that the installers bundle their own Java VM, with which they are known
+to work; they are about 50Mb to download and about 120-140Mb when installed.
 If you use the source or Jar approach, you have to be sure
 you have a JDK that will work with `PdfShow`.
 
@@ -61,7 +61,8 @@ Using Eclipse:
 
 Before building or running, you need to
 copy the file `pdfshow.properties.sample` to `pdfshow.properties`, and edit as per the comments.
-*If you miss this step, you will get obscure errors like "Cannot start JVM"!* if you later use the Installers.
+*If you miss this step, you will get stack traces when running directly and
+obscure errors like "Cannot start JVM"!* if you later use the Installers.
 
 	cp src/main/resources/pdfshow.properties.sample src/main/resources/pdfshow.properties
 	your_favorite_editor src/main/resources/pdfshow.properties
