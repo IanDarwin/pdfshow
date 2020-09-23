@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
@@ -105,11 +107,22 @@ class DocTab extends JPanel {
 			return;
 		setPageNumber(pageNumber + 1);
 	}
+
 	void gotoPrev() {
 		if (pageNumber == 0) {
 			return;
 		}
 		setPageNumber(pageNumber - 1);
+	}
+
+	void insertNewPage() {
+		final PDPageTree pageTree = doc.getPages();
+		PDPage curPage = pageTree.get(pageNumber);
+		PDPage newPage = new PDPage();
+		pageTree.insertAfter(newPage, curPage);
+		pageCount = doc.getNumberOfPages();
+		addIns.add(pageNumber, new ArrayList<GObject>());
+		gotoNext();
 	}
 
 	int addIn(GObject gobj) {

@@ -94,6 +94,7 @@ public class PdfShow {
 	private DocTab currentTab;
 	private JButton upButton, downButton; // Do not move into constr
 	private JTextField pageNumTF;		 // Nor me.
+	private JTextField pageCountTF;
 	// These can't be final due to constructor operation ordering
 	private /*final*/ JButton selectButton, textButton, markerButton,
 		lineButton, polyLineButton, ovalButton, rectangleButton; // Me three
@@ -134,9 +135,6 @@ public class PdfShow {
 		tabPane = new JTabbedPane();
 		tabPane.addChangeListener(evt -> {
 			currentTab = (DocTab)tabPane.getSelectedComponent();
-			// This shouldn't be needed...
-			if (currentTab != null)
-				pageNumTF.setText(Integer.toString(currentTab.getPageNumber()));
 		});
 		frame.add(BorderLayout.CENTER, tabPane);
 
@@ -192,6 +190,9 @@ public class PdfShow {
 
 		final JMenu editMenu = MenuUtils.mkMenu(rb, "edit");
 		menuBar.add(editMenu);
+		JMenuItem newPageMI = MenuUtils.mkMenuItem(rb, "edit","newpage");
+		newPageMI.addActionListener(e -> currentTab.insertNewPage());
+		editMenu.add(newPageMI);
 		final JMenuItem optionsMI = MenuUtils.mkMenuItem(rb, "edit", "options");
 		optionsMI.setEnabled(false);
 		// XXX should launch chooser for font, color, line width, etc.
@@ -248,7 +249,7 @@ public class PdfShow {
 			lastButton = new JButton(getMyImageIcon("Fast-Forward"));
 		firstButton.addActionListener(e -> moveToPage(0));
 		navBox.add(firstButton);
-		pageNumTF = new JTextField(3);
+		pageNumTF = new JTextField("1");
 		pageNumTF.addMouseListener(new MouseAdapter() {
 			// If you click in it, select all so you can overtype
 			@Override
@@ -798,7 +799,7 @@ public class PdfShow {
 
 
 	void pageNumberChanged() {
-		pageNumTF.setText(String.format("%d of %d", currentTab.getPageNumber(), currentTab.pageCount));
+		pageNumTF.setText(String.format("%d of %d", 1 + currentTab.getPageNumber(), currentTab.pageCount));
 	}
 
 	private static void checkAndQuit() {
@@ -912,7 +913,7 @@ public class PdfShow {
 		if (newPage == currentTab.getPageNumber()) {
 			return;
 		}
-		pageNumTF.setText(Integer.toString(newPage) +  " of " + currentTab.pageCount);
+		pageNumTF.setText(1 + Integer.toString(newPage) +  " of " + currentTab.pageCount);
 		currentTab.setPageNumber(newPage);
 		upButton.setEnabled(currentTab.getPageNumber() > 0);
 		downButton.setEnabled(currentTab.getPageNumber() < docPages);
