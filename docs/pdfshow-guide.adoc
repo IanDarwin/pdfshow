@@ -1,12 +1,12 @@
-= PdfShow
+= `PdfShow`
 :author: Ian Darwin
 
-PdfShow is a simple Java Swing-based PDF viewer specifically for running slide shows.
+`PdfShow` is a simple Java Swing-based PDF viewer specifically for running slide shows.
 If you want to pre-draw fancy diagrams, and save them for each time you present your
 slide deck, this is not for you. Use Adobe Reader DC, PDF Annotator, or some other
 fancier tool.
 It you like to scribble all over your slides each time you run your course,
-to make the slides come alive, then you find that PdfShow may be right for you.
+to make the slides come alive, then `PdfShow` may be right for you.
 
 This program is free software and may be copied for use without fee.
 The source code is https://github.com/IanDarwin/pdfshow[available on my GitHub repository] 
@@ -14,16 +14,16 @@ if you are a developer and would like to improve it.
 
 == Installing it
 
-Downloads are occasionally released on my https://github.com/IanDarwin/pdfshow[GitHub page].
+Downloads are occasionally released on my https://github.com/IanDarwin/pdfshow/releases[GitHub page].
 
-If you're already a heavy Java user with a JDK installed, 
+If you already have a Java JDK installed, 
 and either have `java` on your path or want to click on a Jar file to run it
 or invoke the program with a batch file / shell script, 
-pick the pdfshow-1.x.x-with-dependencies.jar.
+pick the `pdfshow`-x.x.x-with-dependencies.jar.
 
-If you'd rather a full installer, pick the pdfshow-1.x.x.dmg file for your macOS system
-or the pdfshow-1.x.x.msi for your Windows box.
-I might build an RPM or DEB for Linux later.
+If you'd rather a full installer, pick the `pdfshow`-x.x.x.dmg file for your macOS system
+or the `pdfshow`-x.x.x.msi for your Windows box.
+I plan to build an RPM and/or DEB for Linux later.
 
 == Using It
 
@@ -31,9 +31,10 @@ This is intended for slide shows, which are almost always in "landscape mode"
 (oriented like a laptop or computer monitor, not upright like a smartphone).
 Slide decks will be scaled to fit your monitor, so book-style documents
 (portrait mode documents) will appear unusually wide, though still readable.
+There is a code issue (https://github.com/IanDarwin/pdfshow/issues/7[Issue#7]) that will improve the scaling.
 
-Like most GUI tools, you can open a file either by passing it on the command line 
-or via the File->Open menu.
+Like most GUI tools, you can open a file either by passing it on the command line,
+via the `File->Open` menu, or via `CTRL`/`CMD`-O.
 You can have multiple files open, using the tab selecter at the top.
 
 === Navigation

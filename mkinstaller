@@ -1,26 +1,45 @@
 #!/bin/sh
 
-set -x
-
 RELEASE_VERSION=0.0.7
 
-mvn package assembly:single
+USAGE="$0 [-t installer-type] [-v]"
+
+function usage {		# give usage message, and exit
+	echo "Usage: ${USAGE}" 2>&1
+	exit 1
+}
 
 case $(uname) in
 	MSYS_NT-10*)	inst_format=msi
 			icon_format=ico
 			OS_SPECIFIC="--win-menu --win-shortcut"
 			;;
-	Darwin)		inst_format=pkg,img
+	Darwin)		inst_format=dmg
 			icon_format=icns
 			;;
-	Linux)		inst_format=rpm,deb
+	Linux)		inst_format=rpm
 			icon_format=png
 			;;
 	*)
 			echo "Don't know how to package for this OS, sorry.";
 			exit 1;
 esac
+
+while getopts "t:v" opt
+do
+	case "$opt" in
+		v)	VERBOSE=true;;
+		t)	icon_format=$OPTARG;;
+		*)	usage;;
+	esac
+done
+shift `expr $OPTIND - 1`		 # leave just filenames
+
+if $VERBOSE; then
+	set -x
+fi
+
+mvn package assembly:single
 
 jpackage \
 	--name PDFShow \

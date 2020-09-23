@@ -11,10 +11,10 @@ image::samples/SampleShow.png[width="800"]
 The dependency for darwinsys-api on maven central has been updated (to 1.5.13, which is published),
 so you should not have to build the dependent API. You have only one trivial manual task before building (see below).
 
-`PdfShow` has many limitations compared with other tools (see the
+`PdfShow` has limitations compared with other tools (see the
 https://github.com/IanDarwin/pdfshow/issues[TODO list]), due to
 its relative youth and, more importantly, its design goals.
-These are laid out in the User Guide.
+These are (or will be) laid out in the User Guide.
 
 We will add more bells and whistles as time permits.
 
@@ -24,36 +24,53 @@ within the general tone of the program - _minimalist, but functional._
 == Installing PdfShow
 
 There may be an installer for your computing platform; see
-https://github.com/IanDarwin/pdfshow/releases.
+https://github.com/IanDarwin/pdfshow/releases. Check the latest 
+release under the _Assets_ dropdown.
 
-If not, see <<building>> below.
+Note that the installers bundle their own Java VM, with which they are known
+to work; they are about 50Mb to download and about 120-140Mb when installed.
+If you use the source or Jar approach, you have to be sure
+you have a JDK that will work with `PdfShow`.
+
+If there's no installer, or you'd rather build from source, see <<building>> below.
 
 == Using PdfShow
 
-The program is intuitive and easy to use.
+The program is intuitive and easy to use. Of course they all say that.
 Just run it and use `File->Open` (or `CTRL/CMD O`), or run it with a filename argument.
-There's a recent menu for subsequent days of your course, for example.
+There's a "recent files" menu for subsequent days of your course, for example.
 There is more documentation in the `docs` folder.
 
 [[building]]
-== Build PdfShow
+== Build PdfShow From Source
 
-Download the repository from https://github.com/IanDarwin/pdfshow. Using command-line tools:
+Download the repository from https://github.com/IanDarwin/pdfshow. 
+
+Using command-line tools:
 
 	git clone https://github.com/IanDarwin/pdfshow
 	cd pdfshow
 
-Copy the file pdfshow.properties.sample to pdfshow.properties, and edit as per the comments.
-*If you miss this step, you will get obscure errors like "Cannot start JVM"!*.
+Using Eclipse:
+
+	Window->Show View->Git->Git Repositories.
+	In the Repos window, Clone (the third icon at the right side of this window).
+	Enter the URL https://github.com/IanDarwin/pdfshow and click Next
+	On the next dialog, be sure to check Import Existing Projects before Next.
+	PdfShow should show up in the Package Explorer
+
+Before building or running, you need to
+copy the file `pdfshow.properties.sample` to `pdfshow.properties`, and edit as per the comments.
+*If you miss this step, you will get stack traces when running directly and
+obscure errors like "Cannot start JVM"!* if you later use the Installers.
 
 	cp src/main/resources/pdfshow.properties.sample src/main/resources/pdfshow.properties
-	your_favorite_editor src/main/resources/pdfshow.properties
+	your_favorite_plaintext_editor src/main/resources/pdfshow.properties
 
-The git repository includes Eclipse project files.
-To test run the program, you can just open the project in Eclipse.
-and run `PdfShow`, the main-program file.
+To test run the program in Eclipse, you can just open 
+and run `PdfShow.java`, the main-program file.
 If you use IntelliJ, NetBeans, or some other IDE, you can import and run it.
-You can even submit a pull request for that, as long as it doesn't require changing
+You can even submit a pull request with that IDE's config files, as long as it doesn't require changing
 the directory structure.
 
 To package just the program and its images (without the dependencies),
@@ -61,15 +78,27 @@ do `mvn package`.
 
 To make a clickable runnable JAR file, run `mvn package assembly:single`.
 You'll then find a `jar` with dependencies in the target folder.
-It'll be named something like `pdfshow-1.0.0-SNAPSHOT-jar-with-dependencies.jar`.
+It'll be named something like `pdfshow-x.y.z-SNAPSHOT-jar-with-dependencies.jar`.
 You can run it with `java -jar target/pdfshow*dependencies.jar` (see `scripts/pdfshow`), or just click on it in an file
 manager window in MS-Windows, macOS, or most *Nix windowed environments.
 
 To make a full-blown, platform-specific installer, we use the `mkinstaller` script.
 You can run that yourself if you need to.
-Note that on Windows this has pre-requisites, which it will let you know about.
+Note that on Windows `jpackager` has a couple of pre-requisites, which it will let you know about if they're not already installed.
 
-== Develop It
+The install formats are:
+
+[[table-name]]
+.The Installer Formats
+[options="header",cols="2,4,3"]
+|====
+|OS|Current Format|Other formats with `mkinstaller -t`
+|macOS|DMG, with copy-to-Applications iconage.|pkg
+|Linux|rpm - Redhat/Yum/dnf/Zypher|deb
+|Windows|MSI installer|exe
+|====
+
+== Development
 
 Fork the repo, clone your forked copy, make changes, test changes, send a pull request.
 
