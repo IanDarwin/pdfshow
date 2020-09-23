@@ -44,6 +44,8 @@ There is more documentation in the `docs` folder.
 [[building]]
 == Build PdfShow From Source
 
+=== Getting Source
+
 Download the repository from https://github.com/IanDarwin/pdfshow. 
 
 Using command-line tools:
@@ -59,6 +61,11 @@ Using Eclipse:
 	On the next dialog, be sure to check Import Existing Projects before Next.
 	PdfShow should show up in the Package Explorer
 
+=== Prerequisites
+
+You need to have Java 11+ and Maven installed. 
+You need Java 14+ if you want to build any of the full platform-specific installers.
+
 Before building or running, you need to
 copy the file `pdfshow.properties.sample` to `pdfshow.properties`, and edit as per the comments.
 *If you miss this step, you will get stack traces when running directly and
@@ -67,11 +74,19 @@ obscure errors like "Cannot start JVM"!* if you later use the Installers.
 	cp src/main/resources/pdfshow.properties.sample src/main/resources/pdfshow.properties
 	your_favorite_plaintext_editor src/main/resources/pdfshow.properties
 
-To test run the program in Eclipse, you can just open 
+=== Test Runs
+
+To run the program in Eclipse, you can just open 
 and run `PdfShow.java`, the main-program file.
 If you use IntelliJ, NetBeans, or some other IDE, you can import and run it.
 You can even submit a pull request with that IDE's config files, as long as it doesn't require changing
 the directory structure.
+
+To run the program in Eclipse, use `mvn integration-test`.
+I chose that since Maven doesn't offer a "run" phase, and I didn't want to pollute
+the "test" phase with interactivity.
+
+=== Packaging
 
 To package just the program and its images (without the dependencies),
 do `mvn package`.
