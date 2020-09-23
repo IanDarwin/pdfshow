@@ -1,22 +1,19 @@
 = PdfShow
 
-`PdfShow` is a simple Java Swing-based PDF viewer specifically for running slide shows.
-I wrote it because I was tired of general-purpose programs like PDF Annotator and
+Sometimes you have to present a talk and you only have the PDF of the slides,
+not the ODP or PPT files. In that case, `PdfShow` is for you.
+`PdfShow` is a Java Swing-based PDF viewer specifically for running slide shows.
+I wrote it because I have to teach from PDFs and was tired of general-purpose programs like PDF Annotator and
 Adobe Reader, which have too many modes, controls, etc. and aren't really optimized
 for showing slide decks.
 
 image::samples/SampleShow.png[width="800"]
 
-*Update*:
-The dependency for darwinsys-api on maven central has been updated (to 1.5.13, which is published),
-so you should not have to build the dependent API. You have only one trivial manual task before building (see below).
-
 `PdfShow` has limitations compared with other tools (see the
 https://github.com/IanDarwin/pdfshow/issues[TODO list]), due to
 its relative youth and, more importantly, its design goals.
-These are (or will be) laid out in the User Guide.
 
-We will add more bells and whistles as time permits.
+Some bells and whistles will be added as time permits, but let's keep it relatively simple.
 
 Pull requests will be gratefully accepted as long as they fit
 within the general tone of the program - _minimalist, but functional._
@@ -24,7 +21,7 @@ within the general tone of the program - _minimalist, but functional._
 == Installing PdfShow
 
 There may be an installer for your computing platform; see
-https://github.com/IanDarwin/pdfshow/releases. Check the latest 
+https://github.com/IanDarwin/pdfshow/releases. Check the latest
 release under the _Assets_ dropdown.
 
 Note that the installers bundle their own Java VM, with which they are known
@@ -46,7 +43,7 @@ There is more documentation in the `docs` folder.
 
 === Getting Source
 
-Download the repository from https://github.com/IanDarwin/pdfshow. 
+Download the repository from https://github.com/IanDarwin/pdfshow.
 
 Using command-line tools:
 
@@ -63,7 +60,7 @@ Using Eclipse:
 
 === Prerequisites
 
-You need to have Java 11+ and Maven installed. 
+You need to have Java 11+ and Maven installed.
 You need Java 14+ if you want to build any of the full platform-specific installers.
 
 Before building or running, you need to
@@ -76,11 +73,11 @@ obscure errors like "Cannot start JVM"!* if you later use the Installers.
 
 === Test Runs
 
-To run the program in Eclipse, you can just open 
+To test run the program in Eclipse, you can just open
 and run `PdfShow.java`, the main-program file.
 If you use IntelliJ, NetBeans, or some other IDE, you can import and run it.
-You can even submit a pull request with that IDE's config files, as long as it doesn't require changing
-the directory structure.
+You can even submit a pull request with that IDE's config files, as long as
+it doesn't require changing the directory structure.
 
 To run the program in Eclipse, use `mvn integration-test`.
 I chose that since Maven doesn't offer a "run" phase, and I didn't want to pollute
