@@ -124,8 +124,9 @@ A: The problem is that it would be much harder (if not impossible) to implement 
 when using that approach. Perhaps a later Save PDF function could
 insert the GObjects into the PDF using this technique.
 
-Q: Why not use the built-in contains for hit detection?
-A: The GObject hierarchy is intentionally light-weight, not JComponent, and
+Q: Why not use the built-in `contains()` method for hit detection?
+
+A: The `GObject` hierarchy is intentionally light-weight, not JComponent, and
 it's gotta be the same amount of work.
 
 == Credits
