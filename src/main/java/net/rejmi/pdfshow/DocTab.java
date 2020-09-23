@@ -39,7 +39,7 @@ class DocTab extends JPanel {
 	/** Scaling to make the document fit */
 	float scaleX, scaleY;
 	/** Our user's annotations for this doc, indexed by page# */
-	List<GObject>[] addIns;
+	List<List<GObject>> addIns;
 	
 	/** Construct one Document Tab */
 	DocTab(File file) throws IOException {
@@ -51,7 +51,10 @@ class DocTab extends JPanel {
 
 		pageCount = doc.getNumberOfPages();
 		renderer = new PDFRenderer(doc);
-		addIns = new List[pageCount];
+		addIns = new ArrayList<>(pageCount);
+		for (int i = 0; i < pageCount; i++) {
+			addIns.add(new ArrayList<>());
+		}
 
 		// GUI stuff
 		setDoubleBuffered(true);
@@ -94,8 +97,7 @@ class DocTab extends JPanel {
 	}
 	
 	List<GObject> getCurrentAddIns() {
-		ensurePageHasAddinsArray();
-		return addIns[pageNumber];
+		return addIns.get(pageNumber);
 	}
 	
 	void gotoNext() {
@@ -111,37 +113,30 @@ class DocTab extends JPanel {
 	}
 
 	int addIn(GObject gobj) {
-		ensurePageHasAddinsArray();
-		int ix = addIns[pageNumber].size();
-		addIns[pageNumber].add(gobj);
+		int ix = addIns.get(pageNumber).size();
+		addIns.get(pageNumber).add(gobj);
 		return ix;
-	}
-
-	protected void ensurePageHasAddinsArray() {
-		if (addIns[pageNumber] == null) {
-			addIns[pageNumber] = new ArrayList<GObject>();
-		}
 	}
 
 	/** Replace an object (for rubber-banding) */
 	void setIn(int ix, GObject gobj) {
-		if (addIns[pageNumber] == null)
+		if (addIns.get(pageNumber) == null)
 			throw new IllegalStateException("setIn with no list!");
-		addIns[pageNumber].set(ix, gobj);
+		addIns.get(pageNumber).set(ix, gobj);
 	}
 
 	void removeLastIn() {
-		List<GObject> l = addIns[pageNumber];
+		List<GObject> l = addIns.get(pageNumber);
 		if (l != null && !l.isEmpty())
 			l.remove(l.size() - 1);
 	}
 
 	void removeIn(int ix) {
-		addIns[pageNumber].remove(ix);
+		addIns.get(pageNumber).remove(ix);
 	}
 
 	void deleteAll() {
-		addIns[pageNumber] = null;
+		addIns.get(pageNumber).clear();
 		repaint();
 	}
 
@@ -169,8 +164,8 @@ class DocTab extends JPanel {
 			}
 			renderer.renderPageToGraphics(pageNumber, (Graphics2D) g, scaleX, scaleY);
 			// 3) Our annotations, if any
-			if (addIns[pageNumber] != null) {
-				for (GObject obj : addIns[pageNumber]) {
+			if (!addIns.get(pageNumber).isEmpty()) {
+				for (GObject obj : addIns.get(pageNumber)) {
 					obj.draw(g);
 				}
 			}
