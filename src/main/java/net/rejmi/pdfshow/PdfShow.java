@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -138,6 +139,7 @@ public class PdfShow {
 				pageNumTF.setText(Integer.toString(currentTab.getPageNumber()));
 		});
 		frame.add(BorderLayout.CENTER, tabPane);
+
 		// MENUS
 
 		JMenuBar menuBar = new JMenuBar();
@@ -221,6 +223,9 @@ public class PdfShow {
 			}
 		});
 		helpMenu.add(sourceButton);
+		final JMenuItem feedbackMI = new JMenuItem("Feedback");
+		feedbackMI.addActionListener(feedbackAction);
+		helpMenu.add(feedbackMI);
 
 		// NAV BOX
 		// System.out.println("PdfShow.PdfShow(): Building Nav Box");
@@ -325,32 +330,7 @@ public class PdfShow {
 		toolBox.add(undoButton);
 
 		final JButton feedbackButton = new JButton(getMyImageIcon("Feedback"));
-		feedbackButton.addActionListener(e -> {
-			String[] choices = { "Web", "Email", "Cancel" };
-			int n = JOptionPane.showOptionDialog(frame, "How to send feedback?", "Send Feedback", 
-						JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, 
-						choices, 0);
-			try {
-				switch(n) {
-				case 0: // Web
-					String webStr = programProps.getProperty(KEY_FEEDBACK_URL);
-					URI weburl = new URI(webStr);
-					desktop.browse(weburl); 
-					return;
-				case 1: // Email
-					String mailStr = programProps.getProperty(KEY_FEEDBACK_EMAIL);
-					URI mailurl = new URI(
-							String.format(EMAIL_TEMPLATE, mailStr).replaceAll(" ", "%20"));
-					desktop.mail(mailurl);
-					return;
-				case 2:
-					return;
-				}
-			} catch (Exception ex) {
-				JOptionPane.showMessageDialog(frame, "Unable to contact feedback form\n" + ex,
-						"Feedback Fail!", JOptionPane.ERROR_MESSAGE);
-			}
-		});
+		feedbackButton.addActionListener(feedbackAction);
 		toolBox.add(feedbackButton);
 		
 		sidePanel.add(toolBox);
@@ -359,6 +339,33 @@ public class PdfShow {
 
 		// END TOOL BOX
 	}
+
+	ActionListener feedbackAction = e -> {
+		String[] choices = { "Web", "Email", "Cancel" };
+		int n = JOptionPane.showOptionDialog(frame, "How to send feedback?", "Send Feedback", 
+					JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, 
+					choices, 0);
+		try {
+			switch(n) {
+			case 0: // Web
+				String webStr = programProps.getProperty(KEY_FEEDBACK_URL);
+				URI weburl = new URI(webStr);
+				desktop.browse(weburl); 
+				return;
+			case 1: // Email
+				String mailStr = programProps.getProperty(KEY_FEEDBACK_EMAIL);
+				URI mailurl = new URI(
+						String.format(EMAIL_TEMPLATE, mailStr).replaceAll(" ", "%20"));
+				desktop.mail(mailurl);
+				return;
+			case 2:
+				return;
+			}
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(frame, "Unable to contact feedback form\n" + ex,
+					"Feedback Fail!", JOptionPane.ERROR_MESSAGE);
+		}
+	};
 
 	void setVisible(boolean vis) {
 		frame.setVisible(vis);
