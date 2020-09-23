@@ -60,9 +60,25 @@
 		</dependency>
 	</dependencies>
 
-	<!-- Uber-jar: use 'mvn package assembly:single' to get the runnable jar created in 'target' -->
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.1.1</version>
+				<executions>
+					<execution>
+						<phase>integration-test</phase>
+						<goals>
+						<goal>java</goal>
+						</goals>
+						<configuration>
+							<mainClass>net.rejmi.pdfshow.PdfShow</mainClass>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Use 'mvn package assembly:single' for runnable jar-with-depends created in 'target' -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
