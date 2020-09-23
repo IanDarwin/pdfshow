@@ -29,7 +29,7 @@ while getopts "t:v" opt
 do
 	case "$opt" in
 		v)	VERBOSE=true;;
-		t)	icon_format=$OPTARG;;
+		t)	inst_format=$OPTARG;;
 		*)	usage;;
 	esac
 done
