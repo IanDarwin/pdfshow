@@ -3,9 +3,9 @@
 Sometimes you have to present a talk and you only have the PDF of the slides,
 not the ODP or PPT files. In that case, `PdfShow` is for you.
 `PdfShow` is a Java Swing-based PDF viewer specifically for running slide shows.
-I wrote it because I have to teach from PDFs and was tired of general-purpose programs like PDF Annotator and
-Adobe Reader, which have too many modes, controls, etc. and aren't really optimized
-for showing slide decks.
+I wrote it because I have to teach from PDFs and was tired of general-purpose programs 
+like PDF Annotator and Adobe Reader, which have too many modes,
+controls, etc. and aren't really optimized for showing slide decks.
 
 image::samples/SampleShow.png[width="800"]
 
@@ -62,14 +62,6 @@ Using Eclipse:
 
 You need to have Java 11+ and Maven installed.
 You need Java 14+ if you want to build any of the full platform-specific installers.
-
-Before building or running, you need to
-copy the file `pdfshow.properties.sample` to `pdfshow.properties`, and edit as per the comments.
-*If you miss this step, you will get stack traces when running directly and
-obscure errors like "Cannot start JVM"!* if you later use the Installers.
-
-	cp src/main/resources/pdfshow.properties.sample src/main/resources/pdfshow.properties
-	your_favorite_plaintext_editor src/main/resources/pdfshow.properties
 
 === Test Runs
 
