@@ -118,7 +118,7 @@ class GMarker extends GLine {
 
 /** Multi-straight-line-segment polyline, no bezier or anything */
 class GPolyLine extends GObject {
-	final int MAX_POINTS = 250;
+	final int MAX_POINTS = 375;
 	private int[] xPoints = new int[MAX_POINTS], yPoints = new int[MAX_POINTS];
 	private int nPoints = 0;
 	GPolyLine(int x, int y) {
