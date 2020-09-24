@@ -94,8 +94,8 @@ public class PdfShow {
 	private DocTab currentTab;
 	private JButton upButton, downButton; // Do not move into constr
 	private JTextField pageNumTF;		 // Nor me.
-	private JTextField pageCountTF;
-	// These can't be final due to constructor operation ordering
+	private JTextField pageCountTF;		// XXX
+	// These can't be final due to constructor operation ordering:
 	private /*final*/ JButton selectButton, textButton, markerButton,
 		lineButton, polyLineButton, ovalButton, rectangleButton; // Me three
 	final RecentMenu recents;
@@ -193,10 +193,6 @@ public class PdfShow {
 		JMenuItem newPageMI = MenuUtils.mkMenuItem(rb, "edit","newpage");
 		newPageMI.addActionListener(e -> currentTab.insertNewPage());
 		editMenu.add(newPageMI);
-		final JMenuItem optionsMI = MenuUtils.mkMenuItem(rb, "edit", "options");
-		optionsMI.setEnabled(false);
-		// XXX should launch chooser for font, color, line width, etc.
-		editMenu.add(optionsMI);
 
 		final JMenu helpMenu = MenuUtils.mkMenu(rb, "help");
 		menuBar.add(helpMenu);
@@ -335,6 +331,13 @@ public class PdfShow {
 		toolBox.add(feedbackButton);
 		
 		sidePanel.add(toolBox);
+		
+		// Finally the font/color/etc settings
+		sidePanel.add(new Settings(
+				frame,
+				GObject::setFont,
+				GObject::setColor,
+				GObject::setLineThickness));
 
 		frame.add(BorderLayout.WEST, sidePanel);
 
