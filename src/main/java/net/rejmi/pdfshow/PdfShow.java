@@ -191,7 +191,11 @@ public class PdfShow {
 		final JMenu editMenu = MenuUtils.mkMenu(rb, "edit");
 		menuBar.add(editMenu);
 		JMenuItem newPageMI = MenuUtils.mkMenuItem(rb, "edit","newpage");
-		newPageMI.addActionListener(e -> currentTab.insertNewPage());
+		newPageMI.addActionListener(e -> {
+			if (currentTab == null)
+				return;
+			currentTab.insertNewPage();
+		});
 		editMenu.add(newPageMI);
 
 		final JMenu helpMenu = MenuUtils.mkMenu(rb, "help");
@@ -457,6 +461,9 @@ public class PdfShow {
 	}
 	
 	void visitCurrentPageGObjs(Consumer<GObject> consumer) {
+		if (currentTab == null) {
+			return;	// Try to draw before opening a file?
+		}
 		final List<GObject> currentPageAddIns = currentTab.getCurrentAddIns();
 		if (currentPageAddIns.isEmpty()) {
 			// System.out.println("No annotations");
@@ -646,11 +653,12 @@ public class PdfShow {
 			int newx = e.getX();
 			int newy = e.getY();
 			int dx = newx - lastx;
-//			if (dx > -5 && dx < +5)
-//				return;
+			int thresh = 2;
+			if (dx > -thresh && dx < +thresh)
+				return;
 			int dy = newy - lasty;
-//			if (dy > -5 && dy < +5)
-//				return;
+			if (dy > -thresh && dy < +thresh)
+				return;
 			line.addPoint(dx, dy);
 			currentTab.repaint();
 			lastx = newx; lasty = newy;
