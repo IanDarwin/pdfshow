@@ -1,3 +1,47 @@
-Test Plan for PdfShow
+= UI Test Plan for PdfShow
 
-This will be the test plan for UI testing.
+Please run all tests in order. Many of them depend on earlier actions.
+While running these tests, keep the console open so that you can see
+if any stack traces are issued.
+Ignore any debug outputs.
+In Eclipse, stack traces and errors are in red while debug outputs are in black.
+
+== Open/Close/Recent
+
+* Run the program with no arguments.
+* In the File menu, clear the Recents menu.
+* Open the file samples/SampleShow.pdf
+* Verify that page number starts at 1.
+* Verify that there are 5 pages and that you can move to all of them.
+* Close the application
+* Run the program again
+* Ensure that SampleShow.pdf is the only entry in the Recents menu.
+* Open this file by selecting its menu item.
+
+== Drawing
+
+* On page 1 of the document, click the T (text) box in the Toolbox,
+then click somewhere on the page, and enter the string "Hello World."
+* Verify that it appears in red monospaced font.
+* Select the Font button at the bottom of the Toolbox.
+* Select some distinctive font (depends on what fonts you have installed). Click Apply.
+* Select the Color button.
+* Pick a dark color such as blue or green. Click Apply.
+* Click the T again, click somewhere on the page, and enter the string "Colored and Styled."
+* Ensure that the string appears in the font and color you selected.
+* Ensure that the original text "Hello world" still appears in the default font and color.
+
+== Adding (and deleting) pages
+
+* Still on page 1, select Add Page from the Edit menu.
+* Ensure that you see a blank page with no annotations, and that it is numbered 2.
+* Use the Up button to go back to page 1. Ensure that the strings and lines still appear
+in the correct styling.
+* Use the Down button to go to page 2 (should be blank), then Page 3 (should have no annoations).
+* Ensure that each page has the correct page numbering.
+
+== Navigation
+
+* Still on page 3, click the "<<" button, and ensure you wind up on Page 1.
+* Click the ">>" button, and ensure you wind up on the last page
+(as of today you will wind up on the 2nd last page - known issue).
