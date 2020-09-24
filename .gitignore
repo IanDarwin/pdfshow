@@ -1,7 +1,11 @@
 target
+.idea
 .settings
 *.pdf
 *.dmg
+*.pkg
 *.msi
+*.exe
+*.rpm
+*.deb
 *.html
-.idea
