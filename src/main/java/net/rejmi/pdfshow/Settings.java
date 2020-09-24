@@ -62,7 +62,10 @@ public class Settings extends JPanel {
 			try {
 				setLineThickness.accept(Integer.parseInt(ret.trim()));
 			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(this, "Not a valid number", "Oops", 
+				JOptionPane.showMessageDialog(this, 
+					String.format(
+						"Could not interpret '%s' as a number, alas.", ret), 
+					"Oops", 
 					JOptionPane.ERROR_MESSAGE);
 			}
 		});
