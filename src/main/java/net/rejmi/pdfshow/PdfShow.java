@@ -256,7 +256,7 @@ public class PdfShow {
 		pageNumTF.addActionListener(e -> {
 			String text = pageNumTF.getText();
 			try {
-				final int pgNum = Integer.parseInt(text);
+				final int pgNum = Integer.parseInt(text.trim());
 				moveToPage(pgNum);
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(frame,
