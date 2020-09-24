@@ -121,7 +121,7 @@ class DocTab extends JPanel {
 		PDPage newPage = new PDPage();
 		pageTree.insertAfter(newPage, curPage);
 		pageCount = doc.getNumberOfPages();
-		addIns.add(pageNumber, new ArrayList<GObject>());
+		addIns.add(pageNumber + 1, new ArrayList<GObject>());
 		gotoNext();
 	}
 
