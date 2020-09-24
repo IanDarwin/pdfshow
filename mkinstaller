@@ -1,6 +1,6 @@
 #!/bin/sh
 
-RELEASE_VERSION=0.0.8	# Keep in sync with pom file
+RELEASE_VERSION=0.0.9	# DRY? Keep in sync with pom file
 
 USAGE="$0 [-t installer-type] [-v]"
 
