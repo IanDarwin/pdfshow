@@ -39,7 +39,7 @@ if $VERBOSE; then
 	set -x
 fi
 
-mvn package assembly:single
+mvn clean package assembly:single
 
 jpackage \
 	--name PDFShow \
