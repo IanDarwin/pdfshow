@@ -52,6 +52,7 @@ import com.darwinsys.swingui.RecentMenu;
 /** 
  * A simpler PDF viewer.
  * Zero or one? In this class, all page numbers are one-origin.
+ * DocTab's API is also one-based; it must subtract 1 internally.
  * @author Ian Darwin
  */
 public class PdfShow {
@@ -67,7 +68,7 @@ public class PdfShow {
 		PdfShow.instance = new PdfShow();
 		PdfShow.instance.setVisible(true);
 
-		// Open files form command line, if any
+		// Open files from command line, if any
 		for (String arg : args) {
 			final File file = new File(arg);
 			if (!file.canRead()) {
@@ -247,9 +248,8 @@ public class PdfShow {
 		navBox.add(new JLabel());	// Ditto
 
 		// Row 2 - first page, # page, last page
-		JButton firstButton = new JButton(getMyImageIcon("Rewind")), 
-			lastButton = new JButton(getMyImageIcon("Fast-Forward"));
-		firstButton.addActionListener(e -> moveToPage(0));
+		JButton firstButton = new JButton(getMyImageIcon("Rewind")); 
+		firstButton.addActionListener(e -> moveToPage(1));
 		navBox.add(firstButton);
 		pageNumTF = new JTextField("1");
 		pageNumTF.addMouseListener(new MouseAdapter() {
@@ -279,7 +279,8 @@ public class PdfShow {
 		pageNumsPanel.add(new JLabel("of"));
 		pageNumsPanel.add(pageCountTF);
 		navBox.add(pageNumsPanel);
-		lastButton.addActionListener(e -> moveToPage(Integer.MAX_VALUE));
+		JButton lastButton = new JButton(getMyImageIcon("Fast-Forward"));
+		lastButton.addActionListener(e -> moveToPage(currentTab.getPageCount()));
 		navBox.add(lastButton);
 		
 		// Row 3 - just down button
@@ -917,25 +918,25 @@ public class PdfShow {
 	}
 
 	private void moveToPage(int newPage) {
-		int pageCount = currentTab.getPageCount();
-		if (newPage < 0) {
-			newPage = 0;
-		}
-		if (newPage > pageCount) {
-			newPage = pageCount;
-		}
-		if (newPage == 1 + currentTab.getPageNumber()) {
+		int currentPageCount = currentTab.getPageCount();
+		if (newPage == currentTab.getPageNumber()) {
 			return;
 		}
-		currentTab.setPageNumber(newPage);
+		if (newPage <= 0) {
+			newPage = 1;
+		}
+		if (newPage > currentPageCount) {
+			newPage = currentPageCount;
+		}
+		currentTab.gotoPage(newPage);
 		updatePageNumbersDisplay();
-		upButton.setEnabled(currentTab.getPageNumber() > 0);
-		downButton.setEnabled(currentTab.getPageNumber() < pageCount);
+		upButton.setEnabled(currentTab.getPageNumber() > 1);
+		downButton.setEnabled(currentTab.getPageNumber() < currentPageCount);
 		currentTab.repaint();
 	}
 
 	void updatePageNumbersDisplay() {
-		pageNumTF.setText(Integer.toString(1 + currentTab.getPageNumber()));
+		pageNumTF.setText(Integer.toString(currentTab.getPageNumber()));
 		pageCountTF.setText(Integer.toString(currentTab.getPageCount()));
 	}
 

@@ -22,14 +22,15 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 
 /**
  * A visual rep of one PDF document, for placing within a TabView
+ * Page numbers in methods are one-based, so subtract 1 for PDTree
  */
 @SuppressWarnings("serial")
 class DocTab extends JPanel {
 
 	private JScrollBar sbar;
 	private JComponent pdfComponent;
-	/** zero-origin pageNumber, not from document's page numbering */
-	private int pageNumber = 0;
+	/** one--based pageNumber, same as from document's page numbering */
+	private int pageNumber = 1;
 	/** The current PDF */
 	PDDocument doc;
 	/** The disk file we got it from */
@@ -38,7 +39,7 @@ class DocTab extends JPanel {
 	PDFRenderer renderer;
 	/** Scaling to make the document fit */
 	float scaleX, scaleY;
-	/** Our user's annotations for this doc, indexed by page# */
+	/** Our user's annotations for this doc, indexed by page#-1 to get list */
 	List<List<GObject>> addIns;
 	
 	/** Construct one Document Tab */
@@ -64,7 +65,7 @@ class DocTab extends JPanel {
 		sbar.addAdjustmentListener(e -> {
 			if (e.getValueIsAdjusting())
 				return;
-			setPageNumber(e.getValue());
+			gotoPage(e.getValue());
 		});
 		add(sbar, BorderLayout.EAST);
 	}
@@ -84,7 +85,7 @@ class DocTab extends JPanel {
 		// System.out.println("Computed scaling as " + scaleX + "," + scaleY);
 	}
 
-	void setPageNumber(int page) {
+	void gotoPage(int page) {
 		pageNumber = page;
 		sbar.setValue(pageNumber);
 		pdfComponent.repaint();
@@ -101,56 +102,56 @@ class DocTab extends JPanel {
 	}
 	
 	List<GObject> getCurrentAddIns() {
-		return addIns.get(pageNumber);
+		return addIns.get(pageNumber - 1);
 	}
 	
 	void gotoNext() {
 		if (pageNumber == getPageCount())
 			return;
-		setPageNumber(pageNumber + 1);
+		gotoPage(pageNumber + 1);
 	}
 
 	void gotoPrev() {
-		if (pageNumber == 0) {
+		if (pageNumber == 1) {
 			return;
 		}
-		setPageNumber(pageNumber - 1);
+		gotoPage(pageNumber - 1);
 	}
 
 	void insertNewPage() {
 		final PDPageTree pageTree = doc.getPages();
-		PDPage curPage = pageTree.get(pageNumber);
+		PDPage curPage = pageTree.get(pageNumber - 1);
 		PDPage newPage = new PDPage();
 		pageTree.insertAfter(newPage, curPage);
-		addIns.add(pageNumber + 1, new ArrayList<GObject>());
+		addIns.add(pageNumber, new ArrayList<GObject>());
 		gotoNext();
 	}
 
 	int addIn(GObject gobj) {
-		int ix = addIns.get(pageNumber).size();
-		addIns.get(pageNumber).add(gobj);
+		int ix = getCurrentAddIns().size();
+		getCurrentAddIns().add(gobj);
 		return ix;
 	}
 
 	/** Replace an object (for rubber-banding) */
 	void setIn(int ix, GObject gobj) {
-		if (addIns.get(pageNumber) == null)
+		if (getCurrentAddIns() == null)
 			throw new IllegalStateException("setIn with no list!");
-		addIns.get(pageNumber).set(ix, gobj);
+		getCurrentAddIns().set(ix, gobj);
 	}
 
 	void removeLastIn() {
-		List<GObject> l = addIns.get(pageNumber);
+		List<GObject> l = getCurrentAddIns();
 		if (l != null && !l.isEmpty())
 			l.remove(l.size() - 1);
 	}
 
 	void removeIn(int ix) {
-		addIns.get(pageNumber).remove(ix);
+		getCurrentAddIns().remove(ix);
 	}
 
 	void deleteAll() {
-		addIns.get(pageNumber).clear();
+		getCurrentAddIns().clear();
 		repaint();
 	}
 
@@ -176,12 +177,10 @@ class DocTab extends JPanel {
 			if (scaleX == 0) {
 				computeScaling();
 			}
-			renderer.renderPageToGraphics(pageNumber, (Graphics2D) g, scaleX, scaleY);
+			renderer.renderPageToGraphics(pageNumber - 1, (Graphics2D) g, scaleX, scaleY);
 			// 3) Our annotations, if any
-			if (!addIns.get(pageNumber).isEmpty()) {
-				for (GObject obj : addIns.get(pageNumber)) {
-					obj.draw(g);
-				}
+			for (GObject obj : getCurrentAddIns()) {
+				obj.draw(g);
 			}
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(PdfShow.frame, "Failure: " + e);
