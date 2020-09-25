@@ -165,26 +165,26 @@ class DocTab extends JPanel {
 	}
 
 	class MainComponent extends JComponent {
-	/**
-	 * Draw the stuff on this page, in the correct 1-2-3 order
-	 */
-	@Override
-	protected void paintComponent(Graphics g) {
-		// 1) Super
-		super.paintComponent(g);
-		try {
-			// 2) PdfBox - whole page
-			if (scaleX == 0) {
-				computeScaling();
+		/**
+		 * Draw the stuff on this page, in the correct 1-2-3 order
+		 */
+		@Override
+		protected void paintComponent(Graphics g) {
+			// 1) Super
+			super.paintComponent(g);
+			try {
+				// 2) PdfBox - whole page
+				if (scaleX == 0) {
+					computeScaling();
+				}
+				renderer.renderPageToGraphics(pageNumber - 1, (Graphics2D) g, scaleX, scaleY);
+				// 3) Our annotations, if any
+				for (GObject obj : getCurrentAddIns()) {
+					obj.draw(g);
+				}
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(PdfShow.frame, "Failure: " + e);
 			}
-			renderer.renderPageToGraphics(pageNumber - 1, (Graphics2D) g, scaleX, scaleY);
-			// 3) Our annotations, if any
-			for (GObject obj : getCurrentAddIns()) {
-				obj.draw(g);
-			}
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(PdfShow.frame, "Failure: " + e);
 		}
-	}
 	}
 }
