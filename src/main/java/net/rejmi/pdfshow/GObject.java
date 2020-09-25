@@ -12,7 +12,18 @@ import java.awt.geom.AffineTransform;
  */
 abstract class GObject {
 	/** pdfbox leaves the Graphics object in upside down mode */
-	static final AffineTransform UPRIGHT_TRANSLATE_INSTANCE = AffineTransform.getTranslateInstance(1, -1);
+	// Special care needed so we can run on high-res displays like Retina
+	static final AffineTransform UPRIGHT_TRANSLATE_INSTANCE;
+	static {
+		AffineTransform defaultTransform= 
+			GraphicsEnvironment
+				.getLocalGraphicsEnvironment()
+				.getDefaultScreenDevice()
+				.getDefaultConfiguration()
+				.getDefaultTransform();
+		UPRIGHT_TRANSLATE_INSTANCE = 
+			new AffineTransform(defaultTransform);
+	}
 
 	int x, y, width, height;
 	boolean isSelected = false;
