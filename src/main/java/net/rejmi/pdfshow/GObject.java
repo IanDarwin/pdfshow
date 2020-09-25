@@ -155,8 +155,8 @@ class GPolyLine extends GObject {
 		int lastX = x, lastY = y;
 		for (int i = 0; i < nPoints; i++) {
 			g.drawLine(lastX, lastY, lastX + xPoints[i], lastY + yPoints[i]);
-			lastX += xPoints[i+1];
-			lastY += yPoints[i+1];
+			lastX += xPoints[i];
+			lastY += yPoints[i];
 		}
 	}
 

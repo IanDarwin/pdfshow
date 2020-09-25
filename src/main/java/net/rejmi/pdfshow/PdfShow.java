@@ -664,9 +664,8 @@ public class PdfShow {
 			int dx = newx - lastx;
 			int dy = newy - lasty;
 			int thresh = 2;
-			if (dx > -thresh && dx < +thresh)
-				return;
-			if (dy > -thresh && dy < +thresh)
+			if (dx > -thresh && dx < +thresh &&
+					dy > -thresh && dy < +thresh)
 				return;
 			line.addPoint(dx, dy);
 			currentTab.repaint();
