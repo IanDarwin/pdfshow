@@ -30,8 +30,6 @@ class DocTab extends JPanel {
 	private JComponent pdfComponent;
 	/** zero-origin pageNumber, not from document's page numbering */
 	private int pageNumber = 0;
-	/** Total size of this document */
-	int pageCount = 0;
 	/** The current PDF */
 	PDDocument doc;
 	/** The disk file we got it from */
@@ -51,10 +49,9 @@ class DocTab extends JPanel {
 		this.file = file;
 		this.doc = PDDocument.load(file);
 
-		pageCount = doc.getNumberOfPages();
 		renderer = new PDFRenderer(doc);
-		addIns = new ArrayList<>(pageCount);
-		for (int i = 0; i < pageCount; i++) {
+		addIns = new ArrayList<>(getPageCount());
+		for (int i = 0; i < getPageCount(); i++) {
 			addIns.add(new ArrayList<>());
 		}
 
@@ -63,7 +60,7 @@ class DocTab extends JPanel {
 		setLayout(new BorderLayout());
 		pdfComponent = new MainComponent();
 		add(pdfComponent, BorderLayout.CENTER);
-		sbar = new JScrollBar(JScrollBar.VERTICAL, 0, 1, 0, pageCount);
+		sbar = new JScrollBar(JScrollBar.VERTICAL, 0, 1, 0, getPageCount());
 		sbar.addAdjustmentListener(e -> {
 			if (e.getValueIsAdjusting())
 				return;
@@ -91,11 +88,16 @@ class DocTab extends JPanel {
 		pageNumber = page;
 		sbar.setValue(pageNumber);
 		pdfComponent.repaint();
-		PdfShow.instance.pageNumberChanged();
+		PdfShow.instance.updatePageNumbersDisplay();
 	}
 
 	int getPageNumber() {
 		return pageNumber;
+	}
+	
+	/** @return Total size of this document */
+	int getPageCount() {
+		return doc.getNumberOfPages();
 	}
 	
 	List<GObject> getCurrentAddIns() {
@@ -103,7 +105,7 @@ class DocTab extends JPanel {
 	}
 	
 	void gotoNext() {
-		if (pageNumber == pageCount)
+		if (pageNumber == getPageCount())
 			return;
 		setPageNumber(pageNumber + 1);
 	}
@@ -120,7 +122,6 @@ class DocTab extends JPanel {
 		PDPage curPage = pageTree.get(pageNumber);
 		PDPage newPage = new PDPage();
 		pageTree.insertAfter(newPage, curPage);
-		pageCount = doc.getNumberOfPages();
 		addIns.add(pageNumber + 1, new ArrayList<GObject>());
 		gotoNext();
 	}
