@@ -28,6 +28,7 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -49,7 +50,8 @@ import com.darwinsys.swingui.MenuUtils;
 import com.darwinsys.swingui.RecentMenu;
 
 /** 
- * A simpler PDF viewer
+ * A simpler PDF viewer.
+ * Zero or one? In this class, all page numbers are one-origin.
  * @author Ian Darwin
  */
 public class PdfShow {
@@ -94,7 +96,7 @@ public class PdfShow {
 	private DocTab currentTab;
 	private JButton upButton, downButton; // Do not move into constr
 	private JTextField pageNumTF;		 // Nor me.
-	private JTextField pageCountTF;		// XXX
+	private JLabel pageCountTF;		// Me neither.
 	// These can't be final due to constructor operation ordering:
 	private /*final*/ JButton selectButton, textButton, markerButton,
 		lineButton, polyLineButton, ovalButton, rectangleButton; // Me three
@@ -270,7 +272,13 @@ public class PdfShow {
 					JOptionPane.ERROR_MESSAGE);
 			}
 		});
-		navBox.add(pageNumTF);
+		pageCountTF = new JLabel("1");
+		JPanel pageNumsPanel = new JPanel();
+		pageNumsPanel.setLayout(new BoxLayout(pageNumsPanel, BoxLayout.PAGE_AXIS));
+		pageNumsPanel.add(pageNumTF);
+		pageNumsPanel.add(new JLabel("of"));
+		pageNumsPanel.add(pageCountTF);
+		navBox.add(pageNumsPanel);
 		lastButton.addActionListener(e -> moveToPage(Integer.MAX_VALUE));
 		navBox.add(lastButton);
 		
@@ -808,11 +816,6 @@ public class PdfShow {
 		};
 	};
 
-
-	void pageNumberChanged() {
-		pageNumTF.setText(String.format("%d of %d", 1 + currentTab.getPageNumber(), currentTab.pageCount));
-	}
-
 	private static void checkAndQuit() {
 		// TODO Once we add saving, check for unsaved changes
 		System.exit(0);
@@ -914,21 +917,26 @@ public class PdfShow {
 	}
 
 	private void moveToPage(int newPage) {
-		int docPages = currentTab.pageCount;
+		int pageCount = currentTab.getPageCount();
 		if (newPage < 0) {
 			newPage = 0;
 		}
-		if (newPage >= docPages) {
-			newPage = docPages - 1;
+		if (newPage > pageCount) {
+			newPage = pageCount;
 		}
-		if (newPage == currentTab.getPageNumber()) {
+		if (newPage == 1 + currentTab.getPageNumber()) {
 			return;
 		}
-		pageNumTF.setText(1 + Integer.toString(newPage) +  " of " + currentTab.pageCount);
 		currentTab.setPageNumber(newPage);
+		updatePageNumbersDisplay();
 		upButton.setEnabled(currentTab.getPageNumber() > 0);
-		downButton.setEnabled(currentTab.getPageNumber() < docPages);
+		downButton.setEnabled(currentTab.getPageNumber() < pageCount);
 		currentTab.repaint();
+	}
+
+	void updatePageNumbersDisplay() {
+		pageNumTF.setText(Integer.toString(1 + currentTab.getPageNumber()));
+		pageCountTF.setText(Integer.toString(currentTab.getPageCount()));
 	}
 
 	// Graphics helpers
