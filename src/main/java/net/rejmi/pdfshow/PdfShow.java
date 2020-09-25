@@ -72,7 +72,7 @@ public class PdfShow {
 				JOptionPane.showMessageDialog(PdfShow.frame, "Can't open file " + file);
 				continue;
 			}
-			PdfShow.instance.openPdfFile(file);
+			PdfShow.instance.recents.openFile(arg); // Include in Recents dropdown
 		}
 	}
 	
@@ -653,10 +653,10 @@ public class PdfShow {
 			int newx = e.getX();
 			int newy = e.getY();
 			int dx = newx - lastx;
+			int dy = newy - lasty;
 			int thresh = 2;
 			if (dx > -thresh && dx < +thresh)
 				return;
-			int dy = newy - lasty;
 			if (dy > -thresh && dy < +thresh)
 				return;
 			line.addPoint(dx, dy);
