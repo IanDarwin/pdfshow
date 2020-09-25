@@ -43,5 +43,7 @@ in the correct styling.
 == Navigation
 
 * Still on page 3, click the "<<" button, and ensure you wind up on Page 1.
+* Click the page number text field, type "3", and press Enter.
+* Ensure you are on the third page. The number shall be 3; 4 is too many, and 5 is right out.
 * Click the ">>" button, and ensure you wind up on the last page
 (as of today you will wind up on the 2nd last page - known issue).
