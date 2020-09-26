@@ -492,9 +492,9 @@ public class PdfShow {
 		// Select an object
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			int x = e.getX(), y = e.getY();
+			int mx = e.getX(), my = e.getY();
 			System.out.printf(
-					"PdfShow.ViewState.mouseClicked() x %d y %d\n", x, y);
+					"PdfShow.ViewState.mouseClicked() x %d y %d\n", mx, my);
 			changed = found = false;
 			visitCurrentPageGObjs(gobj -> {
 				if (found) {
@@ -504,8 +504,9 @@ public class PdfShow {
 					gobj.isSelected = false;
 					changed = true;
 				}
-				if (x >= gobj.x && x <= gobj.x + gobj.width &&
-					y >= gobj.y && y <= gobj.y + gobj.height) {
+				// gobj.contains(mx, my)
+				if (mx >= gobj.x && mx <= gobj.x + gobj.width &&
+					my >= gobj.y && my <= gobj.y + gobj.height) {
 					System.out.println("HIT: " + gobj);
 					gobj.isSelected = true;
 					changed = true;
