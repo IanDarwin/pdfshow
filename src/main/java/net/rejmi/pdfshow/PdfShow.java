@@ -477,9 +477,7 @@ public class PdfShow {
 			// System.out.println("No annotations");
 			return;
 		}
-		for (GObject gobj : currentPageAddIns) {
-			consumer.accept(gobj);
-		}
+		currentPageAddIns.forEach(gobj -> consumer.accept(gobj));
 	}
 
 	boolean changed = false, found = false;
