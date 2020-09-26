@@ -41,6 +41,7 @@ class DocTab extends JPanel {
 	float scaleX, scaleY;
 	/** Our user's annotations for this doc, indexed by page#-1 to get list */
 	List<List<GObject>> addIns;
+	private PDPage deletedPage;
 	
 	/** Construct one Document Tab */
 	DocTab(File file) throws IOException {
@@ -61,7 +62,7 @@ class DocTab extends JPanel {
 		setLayout(new BorderLayout());
 		pdfComponent = new MainComponent();
 		add(pdfComponent, BorderLayout.CENTER);
-		sbar = new JScrollBar(JScrollBar.VERTICAL, 0, 1, 0, getPageCount());
+		sbar = new JScrollBar(JScrollBar.VERTICAL, 1, 1, 1, getPageCount() + 1);
 		sbar.addAdjustmentListener(e -> {
 			if (e.getValueIsAdjusting())
 				return;
@@ -118,13 +119,27 @@ class DocTab extends JPanel {
 		gotoPage(pageNumber - 1);
 	}
 
+	/** Insert a new, blank page after the current page */
 	void insertNewPage() {
 		final PDPageTree pageTree = doc.getPages();
 		PDPage curPage = pageTree.get(pageNumber - 1);
 		PDPage newPage = new PDPage();
 		pageTree.insertAfter(newPage, curPage);
+		sbar.setMaximum(getPageCount() + 1);
 		addIns.add(pageNumber, new ArrayList<GObject>());
 		gotoNext();
+	}
+	
+	/** Delete the given page
+	 * @param index the one-origin page number
+	 */
+	void deletePage(int index) {
+		final PDPageTree pageTree = doc.getPages();
+		PDPage curPage = pageTree.get(pageNumber - 1);
+		deletedPage = curPage;	// for undo
+		pageTree.remove(curPage);
+		sbar.setMaximum(getPageCount() + 1);
+		gotoPrev();
 	}
 
 	int addIn(GObject gobj) {

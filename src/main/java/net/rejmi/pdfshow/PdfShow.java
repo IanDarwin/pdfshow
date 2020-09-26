@@ -232,7 +232,6 @@ public class PdfShow {
 		helpMenu.add(feedbackMI);
 
 		// NAV BOX
-		// System.out.println("PdfShow.PdfShow(): Building Nav Box");
 
 		JPanel sidePanel = new JPanel();
 		sidePanel.setPreferredSize(new Dimension(200, 800));
@@ -917,11 +916,12 @@ public class PdfShow {
 	}
 
 	private void moveToPage(int newPage) {
-		int currentPageCount = currentTab.getPageCount();
-		if (newPage == currentTab.getPageNumber()) {
+		int currentPageNumber = currentTab.getPageNumber();
+		final int currentPageCount = currentTab.getPageCount();
+		if (newPage == currentPageNumber) {
 			return;
 		}
-		if (newPage <= 0) {
+		if (newPage < 1) {
 			newPage = 1;
 		}
 		if (newPage > currentPageCount) {
@@ -929,8 +929,9 @@ public class PdfShow {
 		}
 		currentTab.gotoPage(newPage);
 		updatePageNumbersDisplay();
-		upButton.setEnabled(currentTab.getPageNumber() > 1);
-		downButton.setEnabled(currentTab.getPageNumber() < currentPageCount);
+		currentPageNumber = currentTab.getPageNumber();
+		upButton.setEnabled(currentPageNumber > 1);
+		downButton.setEnabled(currentPageNumber < currentPageCount);
 		currentTab.repaint();
 	}
 
