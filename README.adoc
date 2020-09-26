@@ -1,7 +1,7 @@
 = PdfShow
 
 Sometimes you have to present a talk and you only have the PDF of the slides,
-not the ODP or PPT files. In that case, `PdfShow` is for you.
+not the ODP, Keynote or PPT files. In that case, `PdfShow` is for you.
 `PdfShow` is a Java Swing-based PDF viewer specifically for running slide shows.
 I wrote it because I have to teach from PDFs and was tired of general-purpose programs 
 like PDF Annotator and Adobe Reader, which have too many modes,
@@ -86,9 +86,11 @@ It'll be named something like `pdfshow-x.y.z-SNAPSHOT-jar-with-dependencies.jar`
 You can run it with `java -jar target/pdfshow*dependencies.jar` (see `scripts/pdfshow`), or just click on it in an file
 manager window in MS-Windows, macOS, or most *Nix windowed environments.
 
-To make a full-blown, platform-specific installer, we use the `mkinstaller` script.
+To make a full-blown, platform-specific installer like those in PdfShow releass, we use the `mkinstaller` script, which makes a clickable runnable JAR file
+and then runs the Java 14+ https://docs.oracle.com/en/java/javase/14/docs/specs/man/jpackage.html[jpackage] tool.
 You can run that yourself if you need to.
-Note that on Windows `jpackager` has a couple of pre-requisites, which it will let you know about if they're not already installed.
+Note that on Windows `jpackage` has a couple of pre-requisites,
+which it will let you know about if they're not already installed.
 
 The install formats are:
 
@@ -96,7 +98,7 @@ The install formats are:
 .The Installer Formats
 [options="header",cols="2,4,3"]
 |====
-|OS|Current Format|Other formats with `mkinstaller -t`
+|OS|Default Format|Other formats with `mkinstaller -t`
 |macOS|DMG, with copy-to-Applications iconage.|pkg
 |Linux|rpm - Redhat/Yum/dnf/Zypher|deb
 |Windows|MSI installer|exe
