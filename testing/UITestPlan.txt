@@ -45,5 +45,13 @@ in the correct styling.
 * Still on page 3, click the "<<" button, and ensure you wind up on Page 1.
 * Click the page number text field, type "3", and press Enter.
 * Ensure you are on the third page. The number shall be 3; 4 is too many, and 5 is right out.
-* Click the ">>" button, and ensure you wind up on the last page
-(as of today you will wind up on the 2nd last page - known issue).
+* Click the ">>" button, and ensure you wind up on the last page.
+* Click in the current page number textarea, enter a number like "3", press Enter, and ensure you arrive on that page
+
+== Scollbar
+
+* Use the << button to go to the first page, and ensure that the scrollbar moves to the very top and that the page# displays as 1.
+* Use the >> button to move to the last page, and ensure that the scrollbar moves to the very bottom and that the pages display shows e.g. "63 of 63".
+* Drag the scrollbar to the top and ensure that the title page is now showing.
+* Drag the scrollbar to the bottom and ensure that the last page is now showing.
+* Drag the scrollbar to the middle and ensure that it displays a page from the middle with the correct page number.
