@@ -29,13 +29,13 @@ public class Containment {
 		}
 		if (g.width < g.x && g.height > g.y) {
 			// LL lower left quadrant: width negative, height positive
-			ulx = g.x + g.width;
+			ulx = -g.x - -g.width;
 			uly = g.y;
 			lrx = g.x;
 			lry = g.y + g.height;
 		}
 		if (g.width >= g.x && g.height > g.y) {
-			// LR lower right quadrant: width, height both positive
+			// LR lower right quadrant: width positive, height positive
 			ulx = g.x;
 			ulx = g.y;
 			lrx = g.x + g.width;
