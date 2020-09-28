@@ -1,12 +1,21 @@
 package net.rejmi.pdfshow;
 
+/** Class to contain the contains() method.
+ * In descriptions, UL, UR, LL, LR refer to an object whose bbox
+ * is in one of the four directions relative to its x,y, NOT to 0,0
+ * The coordinate frame throughout this app has (0,0) in the upper left
+ * (as per Java, X Windows, and PostScript). 
+ */
 public class Containment {
 	
 	static boolean contains(GObject g, int mx, int my) {
 		int ulx = 0, uly = 0, lrx = 0, lry = 0;
+		if (g.width == 0 && g.height == 0) {
+			return false; // Too small to contain anything
+		}
 		if (g.width < g.x && g.height < g.y) {
-			// UL upper left quadrant: width, height both negative
-			ulx = g.x + g.width; // g.width is negative
+			// UL upper left quadrant: width negative, height negative
+			ulx = g.x + g.width;
 			uly = g.y + g.height;
 			lrx = g.x;
 			lry = g.y;
@@ -20,7 +29,7 @@ public class Containment {
 		}
 		if (g.width < g.x && g.height > g.y) {
 			// LL lower left quadrant: width negative, height positive
-			ulx = -g.x - -g.width;
+			ulx = g.x + g.width;
 			uly = g.y;
 			lrx = g.x;
 			lry = g.y + g.height;

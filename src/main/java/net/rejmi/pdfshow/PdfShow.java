@@ -504,7 +504,7 @@ public class PdfShow {
 					gobj.isSelected = false;
 					changed = true;
 				}
-				// gobj.contains(mx, my)
+				// if (Containment.contains(gobj, mx, my)) {
 				if (mx >= gobj.x && mx <= gobj.x + gobj.width &&
 					my >= gobj.y && my <= gobj.y + gobj.height) {
 					System.out.println("HIT: " + gobj);
