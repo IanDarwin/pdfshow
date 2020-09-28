@@ -39,7 +39,12 @@ abstract class GObject {
 	int lineThickness;
 
 	GObject(int x, int y) {
+		this(x, y, 0, 0);
+	}
+
+	GObject(int x, int y, int width, int height) {
 		this.x = x; this.y = y;
+		this.width = width; this.height = height;
 		color = curColor;
 		lineThickness = curLineThickness;
 	}
@@ -75,7 +80,7 @@ abstract class GObject {
 	}
 	
 	public String toString() {
-		return String.format("%s at %d,%x size %d,%d\n", 
+		return String.format("%s at %d,%x size %d,%d", 
 			getClass().getSimpleName(), x, y, width, height);
 	};
 }
