@@ -119,7 +119,7 @@ class GLine extends GObject {
 	}
 	@Override
 	public String toString() {
-		return String.format("%s from %d, %d to %d %d", 
+		return String.format("%s from %d, %d size %d %d", 
 			getClass().getSimpleName(), x, y, width, height);
 	}
 }
