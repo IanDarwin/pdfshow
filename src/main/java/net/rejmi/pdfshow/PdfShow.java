@@ -424,6 +424,9 @@ public class PdfShow {
 			case KeyEvent.VK_DOWN:
 				currentTab.gotoPrev();
 				return;
+			case KeyEvent.VK_DELETE:
+				currentTab.deleteSelected();
+				return;
 			
 			default:
 				switch(e.getKeyCode()) {
