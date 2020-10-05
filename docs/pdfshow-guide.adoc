@@ -68,7 +68,10 @@ But I am open to well-reasoned arguments in favor of saving them into the PDF,
 especially if accompanied by a "pull request" containing working code.
 
 The Undo button removes the most-recently added graphic each time it's pressed.
-The Trash icon removes *all* graphics from the current page.
+To delete an arbitrary graphic, click the `Select` icon then select the item
+you want to get rid of, then either use the `Delete` key (if it's not mapped to
+VK_UP as it is on some systems) or use the `Edit->Delete Selected` menu item.
+The Trash Can icon is the most drastic: it removes *all* graphics from the current page.
 
 == Credits
 
