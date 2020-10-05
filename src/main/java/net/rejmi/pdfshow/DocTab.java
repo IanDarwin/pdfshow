@@ -171,8 +171,8 @@ class DocTab extends JPanel {
 	}
 
 	void deleteSelected() {
-		for(GObject obj : getCurrentAddIns()) {
-			if(obj.isSelected) {
+		for (GObject obj : getCurrentAddIns()) {
+			if (obj.isSelected) {
 				getCurrentAddIns().remove(obj);
 				repaint();
 				break;
