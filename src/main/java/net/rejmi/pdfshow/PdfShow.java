@@ -200,6 +200,13 @@ public class PdfShow {
 			currentTab.insertNewPage();
 		});
 		editMenu.add(newPageMI);
+		JMenuItem deleteItemMI = MenuUtils.mkMenuItem(rb, "edit","delete");
+		deleteItemMI.addActionListener(e -> {
+			if (currentTab == null)
+				return;
+			currentTab.deleteSelected();
+		});
+		editMenu.add(deleteItemMI);
 
 		final JMenu helpMenu = MenuUtils.mkMenu(rb, "help");
 		menuBar.add(helpMenu);
@@ -423,6 +430,9 @@ public class PdfShow {
 			case '\b':
 			case KeyEvent.VK_DOWN:
 				currentTab.gotoPrev();
+				return;
+			case KeyEvent.VK_DELETE:
+				currentTab.deleteSelected();
 				return;
 			
 			default:
