@@ -241,22 +241,27 @@ public class PdfShow {
 		// NAV BOX
 
 		JPanel sidePanel = new JPanel();
-		sidePanel.setPreferredSize(new Dimension(200, 800));
+		sidePanel.setPreferredSize(new Dimension(150, 800));
 		
 		JPanel navBox = new JPanel();
-		navBox.setLayout(new GridLayout(3,3));
+		navBox.setLayout(new GridLayout(0,2));
 		
 		// Row 1 - just Up button
 		upButton = new JButton(getMyImageIcon("Chevron-Up"));
 		upButton.addActionListener(e -> moveToPage(currentTab.getPageNumber() - 1));
-		navBox.add(new JLabel());	// Placeholder for grid
-		navBox.add(upButton); 
-		navBox.add(new JLabel());	// Ditto
+		navBox.add(upButton);
+		downButton = new JButton(getMyImageIcon("Chevron-Down"));
+		downButton.addActionListener(e -> moveToPage(currentTab.getPageNumber() + 1));
+		navBox.add(downButton);
 
-		// Row 2 - first page, # page, last page
-		JButton firstButton = new JButton(getMyImageIcon("Rewind")); 
+		JButton firstButton = new JButton(getMyImageIcon("Rewind"));
 		firstButton.addActionListener(e -> moveToPage(1));
 		navBox.add(firstButton);
+		JButton lastButton = new JButton(getMyImageIcon("Fast-Forward"));
+		lastButton.addActionListener(e -> moveToPage(currentTab.getPageCount()));
+		navBox.add(lastButton);
+
+		// Row 2 - first page, # page, last page
 		pageNumTF = new JTextField("1");
 		pageNumTF.addMouseListener(new MouseAdapter() {
 			// If you click in it, select all so you can overtype
@@ -280,22 +285,12 @@ public class PdfShow {
 		});
 		pageCountTF = new JLabel("1");
 		JPanel pageNumsPanel = new JPanel();
-		pageNumsPanel.setLayout(new BoxLayout(pageNumsPanel, BoxLayout.PAGE_AXIS));
+		pageNumsPanel.setLayout(new BoxLayout(pageNumsPanel, BoxLayout.LINE_AXIS));
 		pageNumsPanel.add(pageNumTF);
-		pageNumsPanel.add(new JLabel("of"));
+		pageNumsPanel.add(new JLabel(" of "));
 		pageNumsPanel.add(pageCountTF);
 		navBox.add(pageNumsPanel);
-		JButton lastButton = new JButton(getMyImageIcon("Fast-Forward"));
-		lastButton.addActionListener(e -> moveToPage(currentTab.getPageCount()));
-		navBox.add(lastButton);
-		
-		// Row 3 - just down button
-		navBox.add(new JLabel());
-		downButton = new JButton(getMyImageIcon("Chevron-Down"));
-		downButton.addActionListener(e -> moveToPage(currentTab.getPageNumber() + 1));
-		navBox.add(downButton);
-		navBox.add(new JLabel());
-		navBox.setPreferredSize(new Dimension(200, 200));
+
 		sidePanel.add(navBox);
 
 		// END NAV BOX
@@ -314,39 +309,48 @@ public class PdfShow {
 
 		textButton = new JButton(getMyImageIcon("Text"));
 		textButton.addActionListener(e -> gotoState(textDrawState));
+		textButton.setToolTipText("Add text object");
 		toolBox.add(textButton);
 
 		markerButton = new JButton(getMyImageIcon("Marker"));
 		markerButton.addActionListener(e -> gotoState(markingState));
+		markerButton.setToolTipText("Add marker");
 		toolBox.add(markerButton);
 
 		lineButton = new JButton(getMyImageIcon("Line"));
 		lineButton.addActionListener(e -> gotoState(lineDrawState));
+		lineButton.setToolTipText("Add straight line");
 		toolBox.add(lineButton);
 		
 		polyLineButton = new JButton(getMyImageIcon("PolyLine"));
 		polyLineButton.addActionListener(e -> gotoState(polyLineDrawState));
+		polyLineButton.setToolTipText("Add a polyline");
 		toolBox.add(polyLineButton);
 		
 		ovalButton = new JButton(getMyImageIcon("Oval"));
 		ovalButton.addActionListener(e -> gotoState(ovalState));
+		ovalButton.setToolTipText("Add oval");
 		toolBox.add(ovalButton);
 		
 		rectangleButton = new JButton(getMyImageIcon("Rectangle"));
 		rectangleButton.addActionListener(e -> gotoState(rectangleState));
+		rectangleButton.setToolTipText("Add rectangle");
 		toolBox.add(rectangleButton);
 		
 		// Other buttons
 		final JButton clearButton = new JButton(getMyImageIcon("Trash"));
 		clearButton.addActionListener(e -> currentTab.deleteAll());
+		clearButton.setToolTipText("Delete an object");
 		toolBox.add(clearButton);
 		
 		final JButton undoButton = new JButton(getMyImageIcon("Undo"));
 		undoButton.addActionListener(e -> { currentTab.removeLastIn(); currentTab.repaint(); });
+		undoButton.setToolTipText("Undo last object");
 		toolBox.add(undoButton);
 
 		final JButton feedbackButton = new JButton(getMyImageIcon("Feedback"));
 		feedbackButton.addActionListener(feedbackAction);
+		feedbackButton.setToolTipText("Send feedback");
 		toolBox.add(feedbackButton);
 		
 		sidePanel.add(toolBox);
