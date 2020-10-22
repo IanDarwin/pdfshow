@@ -1,7 +1,6 @@
 package net.rejmi.pdfshow;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 import java.util.function.Consumer;
 
 import javax.swing.BoxLayout;
@@ -29,8 +28,10 @@ public class Settings extends JPanel {
 		this.setColor = setColor;
 		this.setLineThickness = setLineThickness;
 
+		setPreferredSize(new Dimension(130, 100));
+
 		// GUI & Actions
-		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		setLayout(new GridLayout(3, 1));
 		JButton fontButton = new JButton("Font");
 		fontButton.addActionListener(e -> {
 			FontChooser fontChooser = new FontChooser(jf);
