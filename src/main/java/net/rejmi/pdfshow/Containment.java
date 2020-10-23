@@ -1,6 +1,6 @@
 package net.rejmi.pdfshow;
 
-/** Class to contain the contains() method.
+/** Class to implement the contains() method.
  * In descriptions, UL, UR, LL, LR refer to an object whose bbox
  * is in one of the four directions relative to its x,y, NOT to 0,0
  * The coordinate frame throughout this app has (0,0) in the upper left
@@ -8,6 +8,14 @@ package net.rejmi.pdfshow;
  */
 public class Containment {
 	
+	/**
+	 * Determine if the given object contains the given point
+	 * (which is usually a mouse click location).
+	 * @param g The GObject that may contain the point
+	 * @param mx The point's X coordinate
+	 * @param my The point's Y coordinate
+	 * @return True if the point is contained within the given GObject's bbox
+	 */
 	static boolean contains(GObject g, int mx, int my) {
 		int ulx = 0, uly = 0, lrx = 0, lry = 0;
 		if (g.width == 0 && g.height == 0) {
@@ -19,22 +27,19 @@ public class Containment {
 			uly = g.y + g.height;
 			lrx = g.x;
 			lry = g.y;
-		}
-		if (g.width > g.x && g.height < g.y) {
+		} else if (g.width > g.x && g.height < g.y) {
 			// UR upper right quadrant: width positive, height negative
 			ulx = g.x;
 			uly = g.y + g.height;
 			lrx = g.x + g.width;
 			lry = g.y;
-		}
-		if (g.width < g.x && g.height > g.y) {
+		} else if (g.width < g.x && g.height > g.y) {
 			// LL lower left quadrant: width negative, height positive
 			ulx = -g.x - -g.width;
 			uly = g.y;
 			lrx = g.x;
 			lry = g.y + g.height;
-		}
-		if (g.width >= g.x && g.height > g.y) {
+		} else if (g.width >= g.x && g.height > g.y) {
 			// LR lower right quadrant: width positive, height positive
 			ulx = g.x;
 			ulx = g.y;
