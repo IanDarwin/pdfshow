@@ -3,8 +3,22 @@ package net.rejmi.pdfshow;
 /** Class to implement the contains() method.
  * In descriptions, UL, UR, LL, LR refer to an object whose bbox
  * is in one of the four directions relative to its x,y, NOT to 0,0
- * The coordinate frame throughout this app has (0,0) in the upper left
- * (as per Java, X Windows, and PostScript). 
+ * The coordinate frame throughout this app has (0,0) in the upper left,
+ * as per Java, X Windows, and PostScript.  See the following map:
+ *
+ ***************************************************
+ * (0,0)                                  (maxx, 0) *
+ *                                                 *
+ *     llx                               ury       *
+ *      |                                 |        *
+ *      +----> *********************      |        *
+ *      |      *    1    *    2    *      |        *
+ *      +----> ********************* <----+        *
+ *             *    3    *    4    *      |        *
+ *             ********************* <----+        *
+ *                                                 *
+ * (0, maxy)                           (maxX,maxY) *
+ ***************************************************
  */
 public class Containment {
 	
@@ -21,25 +35,25 @@ public class Containment {
 		if (g.width == 0 && g.height == 0) {
 			return false; // Too small to contain anything
 		}
-		if (g.width < g.x && g.height < g.y) {
+		if (g.width < g.x && g.height < g.y) {	// 1
 			// UL upper left quadrant: width negative, height negative
 			ulx = g.x + g.width;
 			uly = g.y + g.height;
 			lrx = g.x;
 			lry = g.y;
-		} else if (g.width > g.x && g.height < g.y) {
+		} else if (g.width > g.x && g.height < g.y) { // 2
 			// UR upper right quadrant: width positive, height negative
 			ulx = g.x;
 			uly = g.y + g.height;
 			lrx = g.x + g.width;
 			lry = g.y;
-		} else if (g.width < g.x && g.height > g.y) {
+		} else if (g.width < g.x && g.height > g.y) { // 3
 			// LL lower left quadrant: width negative, height positive
 			ulx = -g.x - -g.width;
 			uly = g.y;
 			lrx = g.x;
 			lry = g.y + g.height;
-		} else if (g.width >= g.x && g.height > g.y) {
+		} else if (g.width >= g.x && g.height > g.y) { // 3
 			// LR lower right quadrant: width positive, height positive
 			ulx = g.x;
 			ulx = g.y;
