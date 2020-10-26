@@ -7,9 +7,9 @@ package net.rejmi.pdfshow;
  * as per Java, X Windows, and PostScript.  See the following map:
  *
  ***************************************************
- * (0,0)                                  (maxx, 0) *
+ * (0,0)                                  (maxx,0) *
  *                                                 *
- *     llx                               ury       *
+ *     llxy                              urxy      *
  *      |                                 |        *
  *      +----> *********************      |        *
  *      |      *    1    *    2    *      |        *
@@ -17,7 +17,7 @@ package net.rejmi.pdfshow;
  *             *    3    *    4    *      |        *
  *             ********************* <----+        *
  *                                                 *
- * (0, maxy)                           (maxX,maxY) *
+ * (0,maxy)                            (maxX,maxY) *
  ***************************************************
  */
 public class Containment {
