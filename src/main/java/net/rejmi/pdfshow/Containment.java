@@ -31,42 +31,47 @@ public class Containment {
 	 * @return True if the point is contained within the given GObject's bbox
 	 */
 	static boolean contains(GObject g, int mx, int my) {
-		int ulx = 0, uly = 0, lrx = 0, lry = 0;
+		int urx = 0, ury = 0, llx = 0, lly = 0;
 		if (g.width == 0 && g.height == 0) {
 			return false; // Too small to contain anything
 		}
-		if (g.width < g.x && g.height < g.y) {	// 1
+		int quad = 0;
+		if (g.width < 0 && g.height < 0) {	// 1
 			// UL upper left quadrant: width negative, height negative
-			ulx = g.x + g.width;
-			uly = g.y + g.height;
-			lrx = g.x;
-			lry = g.y;
-		} else if (g.width > g.x && g.height < g.y) { // 2
+			quad = 1;
+			urx = g.x + g.width;
+			ury = g.y + g.height;
+			llx = g.x;
+			lly = g.y;
+		} else if (g.width > 0 && g.height < 0) { // 2
 			// UR upper right quadrant: width positive, height negative
-			ulx = g.x;
-			uly = g.y + g.height;
-			lrx = g.x + g.width;
-			lry = g.y;
-		} else if (g.width < g.x && g.height > g.y) { // 3
+			quad = 2;
+			llx = g.x;
+			lly = g.y + g.height;
+			urx = g.x + g.width;
+			ury = g.y;
+		} else if (g.width < 0 && g.height > 0) { // 3
 			// LL lower left quadrant: width negative, height positive
-			ulx = -g.x - -g.width;
-			uly = g.y;
-			lrx = g.x;
-			lry = g.y + g.height;
-		} else if (g.width >= g.x && g.height > g.y) { // 3
+			quad = 3;
+			urx = -g.x - -g.width;
+			ury = g.y;
+			llx = g.x;
+			lly = g.y + g.height;
+		} else if (g.width >= 0 && g.height > 0) { // 3
 			// LR lower right quadrant: width positive, height positive
-			ulx = g.x;
-			ulx = g.y;
-			lrx = g.x + g.width;
-			lry = g.y + g.height;
+			quad = 4;
+			llx = g.x;
+			lly = g.y;
+			urx = g.x + g.width;
+			ury = g.y + g.height;
 		}
-		// System.out.printf("Contains.contains(%s, mx %d, my %d) n", g, mx, my);
-		// System.out.printf("BBOX ulx %d uly %d; lrx %d lry %d\n", ulx, uly, lrx, lry);
-		if (ulx > lrx)
-			throw new IllegalArgumentException("ulx > lrx for " + g);
-		if (uly > lry)
-			throw new IllegalArgumentException("uly > lry for " + g);
-		return mx > ulx && my > uly && mx < lrx && my < lry;
+		System.out.printf("contains(%s, mx %d, my %d) quad %d\n", g, mx, my, quad);
+		System.out.printf("BBOX llx %d lly %d; urx %d ury %d;\n", llx, lly, urx, ury);
+		if (urx < llx)
+			throw new IllegalArgumentException("urx < llx for " + g);
+		if (ury < lly)
+			throw new IllegalArgumentException("ury < lly for " + g);
+		return mx > llx && my > lly && mx < urx && my < ury;
 	}
 
 }
