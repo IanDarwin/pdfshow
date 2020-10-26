@@ -1,9 +1,11 @@
 package net.rejmi.pdfshow;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.util.function.Consumer;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
@@ -14,19 +16,11 @@ import com.darwinsys.swingui.FontChooser;
 
 public class Settings extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private Consumer<Font> setFont;
-	private Consumer<Color> setColor;
-	private Consumer<Integer> setLineThickness;
 
 	public Settings(JFrame jf, 
 			Consumer<Font> setFont,
 			Consumer<Color> setColor,
 			Consumer<Integer> setLineThickness) {
-
-		// Callbacks
-		this.setFont = setFont;
-		this.setColor = setColor;
-		this.setLineThickness = setLineThickness;
 
 		setPreferredSize(new Dimension(130, 100));
 
