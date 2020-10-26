@@ -91,7 +91,7 @@ class GText extends GObject {
 	GText(int x, int y, String text) {
 		super(x, y);
 		width = 200;	// XXX Use FontMetrics
-		height = 50;	// Should negate, as x,y is baseline loc(?)
+		height = -50;	// Should negate, as x,y is baseline loc(?)
 		this.text = text;
 		font = curFont;
 	}
@@ -102,7 +102,7 @@ class GText extends GObject {
 	}
 	@Override
 	public String toString() {
-		return String.format("GText: %d, %d, %s", x, y, text);
+		return String.format("GText: x %d, y %d, w %d, h %d %s", x, y, width, height, text);
 	}
 }
 
