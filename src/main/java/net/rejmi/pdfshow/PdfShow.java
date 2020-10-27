@@ -31,6 +31,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -572,11 +573,18 @@ public class PdfShow {
 		}
 		@Override
 		public void mousePressed(MouseEvent e) {
-			String text = JOptionPane.showInputDialog(frame, "Text?");
-			if (text != null) {
-				currentTab.addIn(new GText(e.getX(), e.getY(), text));
-				currentTab.repaint();
-			}
+			JOptionPane pane = new JOptionPane("Text?",
+				JOptionPane.QUESTION_MESSAGE,
+				JOptionPane.DEFAULT_OPTION);
+			pane.setWantsInput(true);
+			JDialog dialog = pane.createDialog(frame, "Text?");
+			dialog.setLocation(e.getX(), e.getY());
+			dialog.show();
+			String text = pane.getInputValue().toString();
+			if(text == null)
+				return;
+			currentTab.addIn(new GText(e.getX(), e.getY(), text));
+			currentTab.repaint();
 		}
 	}
 	final State textDrawState = new TextDrawState(textButton);
