@@ -1,9 +1,10 @@
 = PdfShow
 
-Sometimes you have to present a talk and you only have the PDF of the slides,
-not the ODP, Keynote or PPT files. In that case, `PdfShow` is for you.
-`PdfShow` is a Java Swing-based PDF viewer specifically for running slide shows.
-I wrote it because I have to teach from PDFs and was tired of general-purpose programs 
+Some training companies just distribute their courses as PDFs, not presentation-software files.
+For whatever reason you need to present with just have the PDF of the slides,
+not the ODP, Keynote or PPT files, `PdfShow` is for you!
+`PdfShow` is a PDF viewer specifically for running slide shows.
+I wrote it (using Java Swing) because I do sometimes teach from PDFs and was tired of general-purpose programs 
 like PDF Annotator and Adobe Reader, which have too many modes,
 controls, etc. and aren't really optimized for showing slide decks.
 
@@ -13,7 +14,7 @@ image::samples/SampleShow.png[width="800"]
 https://github.com/IanDarwin/pdfshow/issues[TODO list]), due to
 its relative youth and, more importantly, its design goals.
 
-Some bells and whistles will be added as time permits, but let's keep it relatively simple.
+more bells and whistles will be added as time permits, but let's keep it relatively simple.
 
 Pull requests will be gratefully accepted as long as they fit
 within the general tone of the program - _minimalist, but functional._
@@ -24,9 +25,9 @@ There may be an installer for your computing platform; see
 https://github.com/IanDarwin/pdfshow/releases. Check the latest
 release under the _Assets_ dropdown.
 
-Note that the installers bundle their own Java VM, with which they are known
+Note that these installers bundle their own Java VM, with which they are known
 to work; they are about 50Mb to download and about 120-140Mb when installed.
-If you use the source or Jar approach, you have to be sure
+If you use the source or JAR approach, you have to be sure
 you have a JDK that will work with `PdfShow`.
 
 If there's no installer, or you'd rather build from source, see <<building>> below.
@@ -57,6 +58,13 @@ Using Eclipse:
 	Enter the URL https://github.com/IanDarwin/pdfshow and click Next
 	On the next dialog, be sure to check Import Existing Projects before Next.
 	PdfShow should show up in the Package Explorer
+	
+Using IntelliJ IDEA
+
+	From the startup screen, "Get from Version Control
+	Enter the URL https://github.com/IanDarwin/pdfshow and click Clone
+	Accept or choose the directory and click Clone
+	On "Open or Import" popup (with choice of how to open), select "Maven Project"
 
 === Prerequisites
 
