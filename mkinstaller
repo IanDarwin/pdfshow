@@ -28,8 +28,9 @@ esac
 while getopts "t:v" opt
 do
 	case "$opt" in
-		v)	VERBOSE=true;;
+		s)	SKIPTTESTS=-DskipTests;;
 		t)	inst_format=$OPTARG;;
+		v)	VERBOSE=true;;
 		*)	usage;;
 	esac
 done
@@ -39,7 +40,7 @@ if $VERBOSE; then
 	set -x
 fi
 
-mvn clean package assembly:single
+mvn ${SKIPTESTS} clean package assembly:single
 
 jpackage \
 	--name PDFShow \
