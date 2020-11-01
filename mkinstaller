@@ -25,10 +25,10 @@ case $(uname) in
 			exit 1;
 esac
 
-while getopts "t:v" opt
+while getopts "st:v" opt
 do
 	case "$opt" in
-		s)	SKIPTTESTS=-DskipTests;;
+		s)	SKIP_TESTS=-DskipTests;;
 		t)	inst_format=$OPTARG;;
 		v)	VERBOSE=true;;
 		*)	usage;;
@@ -40,7 +40,7 @@ if $VERBOSE; then
 	set -x
 fi
 
-mvn ${SKIPTESTS} clean package assembly:single
+mvn ${SKIP_TESTS} clean package assembly:single
 
 jpackage \
 	--name PDFShow \
