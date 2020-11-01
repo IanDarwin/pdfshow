@@ -77,18 +77,17 @@ the "test" phase with interactivity.
 
 === Packaging
 
-To package just the program and its images (without the dependencies),
-do `mvn package`.
+To make a JAR file with just the program and its images (without the dependencies), do `mvn package`.
 
 To make a clickable runnable JAR file, run `mvn package assembly:single`.
 You'll then find a `jar` with dependencies in the target folder.
 It'll be named something like `pdfshow-x.y.z-SNAPSHOT-jar-with-dependencies.jar`.
-You can run it with `java -jar target/pdfshow*dependencies.jar` (see `scripts/pdfshow`), or just click on it in an file
+You can run it with `java -jar target/pdfshow*dependencies.jar` (see `scripts/pdfshow`), or just click on it in a file
 manager window in MS-Windows, macOS, or most *Nix windowed environments.
 
-To make a full-blown, platform-specific installer like those in PdfShow releass, we use the `mkinstaller` script, which makes a clickable runnable JAR file
+The full-blown, platform-specific installers we release are built by the `mkinstaller` script, which makes a clickable runnable JAR file
 and then runs the Java 14+ https://docs.oracle.com/en/java/javase/14/docs/specs/man/jpackage.html[jpackage] tool.
-You can run that yourself if you need to.
+You can run that script yourself if you want.
 Note that on Windows `jpackage` has a couple of pre-requisites,
 which it will let you know about if they're not already installed.
 
@@ -126,7 +125,7 @@ it's gotta be the same amount of work.
 == Credits
 
 Program written by Ian Darwin of Rejminet Group Inc.
-Contributions by a cast of thousands (someday).
+Contributions by a cast of thousands (we hope).
 
 PDF access (i.e., some of the heavy listing!) is done by
 https://pdfbox.apache.org/[Apache PDFBox] software.
