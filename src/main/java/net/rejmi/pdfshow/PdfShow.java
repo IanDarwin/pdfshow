@@ -511,6 +511,8 @@ public class PdfShow {
 			System.out.printf(
 					"PdfShow.ViewState.mouseClicked() x %d y %d\n", mx, my);
 			changed = found = false;
+			// Avoid old selection
+			visitCurrentPageGObjs(gobj -> gobj.isSelected = false);
 			visitCurrentPageGObjs(gobj -> {
 				if (found) {
 					return;	// Only select one
