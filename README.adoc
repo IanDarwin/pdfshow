@@ -73,11 +73,11 @@ You need Java 14+ if you want to build any of the full platform-specific install
 
 === Test Runs
 
-To test run the program in Eclipse, you can just open
+To test run the program in Eclipse or IntelliJ IDEA, you can just open
 and run `PdfShow.java`, the main-program file.
-If you use IntelliJ, NetBeans, or some other IDE, you can import and run it.
-You can even submit a pull request with that IDE's config files, as long as
-it doesn't require changing the directory structure.
+If you use another IDE, you can import and run it.
+You can even submit a pull request with that IDE's config files, __as long as
+it doesn't require changing the directory structure__ (i.e., moving existing files around).
 
 To run the program in Maven, use `mvn integration-test`.
 I chose that since Maven doesn't offer a "run" phase, and I didn't want to pollute
