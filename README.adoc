@@ -138,4 +138,4 @@ Contributions by a cast of thousands (we hope).
 PDF access (i.e., some of the heavy listing!) is done by
 https://pdfbox.apache.org/[Apache PDFBox] software.
 
-Some icons from feathericons.com; a few simpler ones icons by Ian Darwin.
+Some icons from feathericons.com; the rest by Ian Darwin.
