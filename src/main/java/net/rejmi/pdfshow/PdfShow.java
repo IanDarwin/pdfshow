@@ -86,7 +86,8 @@ public class PdfShow {
 	Properties programProps = new Properties();
 	Preferences prefs = Preferences.userNodeForPackage(PdfShow.class);
 	final static String PROPS_FILE_NAME = "/pdfshow.properties";
-	final static String KEY_FEEDBACK_URL = "feedback_url",
+	final static String KEY_FEEDBACK_URL = "feedback_general",
+			KEY_BUG_ENHANCE = "feedback_bug_enhance",
 			KEY_FEEDBACK_EMAIL = "feedback_email",
 			KEY_SOURCE_URL = "github_url";
 	final static String KEY_FILECHOOSER_DIR = "file_chooser_dir";
@@ -369,24 +370,29 @@ public class PdfShow {
 	}
 
 	ActionListener feedbackAction = e -> {
-		String[] choices = { "Web", "Email", "Cancel" };
+		String[] choices = { "Web-Comment", "Bug Report/Feature Req", "Email Team", "Cancel" };
 		int n = JOptionPane.showOptionDialog(frame, "How to send feedback?", "Send Feedback", 
 					JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, 
 					choices, 0);
 		try {
 			switch(n) {
-			case 0: // Web
-				String webStr = programProps.getProperty(KEY_FEEDBACK_URL);
-				URI weburl = new URI(webStr);
-				desktop.browse(weburl); 
+			case 0: // Web - general
+				String webStr0 = programProps.getProperty(KEY_FEEDBACK_URL);
+				URI weburl0 = new URI(webStr0);
+				desktop.browse(weburl0); 
 				return;
-			case 1: // Email
+			case 1: // Web - file bug report/enhancement request
+				String webStr1 = programProps.getProperty(KEY_BUG_ENHANCE);
+				URI weburl1 = new URI(webStr1);
+				desktop.browse(weburl1); 
+				return;
+			case 2: // Email
 				String mailStr = programProps.getProperty(KEY_FEEDBACK_EMAIL);
 				URI mailurl = new URI(
 						String.format(EMAIL_TEMPLATE, mailStr).replaceAll(" ", "%20"));
 				desktop.mail(mailurl);
 				return;
-			case 2:
+			case 3:
 				return;
 			}
 		} catch (Exception ex) {
@@ -885,6 +891,10 @@ public class PdfShow {
 		return selectedFile;
 	}
 
+	/**
+	 * Opens one file.
+	 * @parameter file A File descriptor for the file to be opened.
+	 */
 	private void openPdfFile(File file) throws IOException {
 		DocTab t = new DocTab(file);
 		t.setFocusable(true);
