@@ -49,6 +49,7 @@ class DocTab extends JPanel {
 
 		// PDF stuff
 		this.file = file;
+		// Start of Should be done in a background thread
 		this.doc = PDDocument.load(file);
 
 		renderer = new PDFRenderer(doc);
@@ -56,6 +57,7 @@ class DocTab extends JPanel {
 		for (int i = 0; i < getPageCount(); i++) {
 			addIns.add(new ArrayList<>());
 		}
+		// End of Should be done in a background thread
 
 		// GUI stuff
 		setDoubleBuffered(true);
