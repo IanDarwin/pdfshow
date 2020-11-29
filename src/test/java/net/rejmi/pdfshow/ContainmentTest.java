@@ -23,34 +23,42 @@ public class ContainmentTest {
 
 	@Test
 	public void testContainsULT() {
-		assertTrue ("ULT", Containment.contains(new MockGObject(100, 100, -160, -200), -50, -50));
+		System.out.println("ContainmentTest.testContainsULT()");
+		assertTrue("ULT", Containment.contains(new MockGObject(100, 100, -160, -200), -50, -50));
 	}
 	@Test
 	public void testContainsULF() {
+		System.out.println("ContainmentTest.testContainsULF()");
 		assertFalse("ULF", Containment.contains(new MockGObject(100, 100, -160, -200), -150, -150));
 	}
 	@Test
 	public void testContainsURT() {
+		System.out.println("ContainmentTest.testContainsURT()");
 		assertTrue("URT", Containment.contains(new MockGObject(100, 100, +160, -200), +150, -50));
 	}
 	@Test
 	public void testContainsURF() {
+		System.out.println("ContainmentTest.testContainsURF()");
 		assertFalse("URF", Containment.contains(new MockGObject(100, 100, +160, -200), +300, -150));
 	}
 	@Test
 	public void testContainsLLT() {
-		assertTrue("LLT", Containment.contains(new MockGObject(100, 100, -160, +200), -150, 150));
+		System.out.println("ContainmentTest.testContainsLLT()");
+		assertTrue("LLT", Containment.contains(new MockGObject(100, 100, -160, +200), 50, 150));
 	}
 	@Test
 	public void testContainsLLF() {
+		System.out.println("ContainmentTest.testContainsLLF()");
 		assertFalse("LLF", Containment.contains(new MockGObject(100, 100, -160, +200), -300, 150));
 	}
 	@Test
 	public void testContainsLRT() {
+		System.out.println("ContainmentTest.testContainsLRT()");
 		assertTrue("LRT", Containment.contains(new MockGObject(100, 100, +160, +200), 150, 150));
 	}
 	@Test
 	public void testContainsLRF() {
+		System.out.println("ContainmentTest.testContainsLRF()");
 		assertFalse("LRF", Containment.contains(new MockGObject(100, 100, +160, +200), 300, 150));
 	}
 }

@@ -80,7 +80,7 @@ abstract class GObject {
 	}
 	
 	public String toString() {
-		return String.format("%s at %d,%d size %d,%d",
+		return String.format("%s(loc = %d,%d size = %d,%d)",
 			getClass().getSimpleName(), x, y, width, height);
 	};
 }
