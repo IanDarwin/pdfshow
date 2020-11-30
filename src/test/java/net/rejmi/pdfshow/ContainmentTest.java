@@ -33,41 +33,41 @@ public class ContainmentTest {
 	@Test
 	public void testContainsULT() {
 		logger.fine("ContainmentTest.testContainsULT()");
-		assertTrue("ULT", Containment.contains(new MockGObject(100, 100, -160, -200), -50, -50));
+		assertTrue("ULT", new MockGObject(100, 100, -160, -200).contains(-50, -50));
 	}
 	@Test
 	public void testContainsULF() {
 		logger.fine("ContainmentTest.testContainsULF()");
-		assertFalse("ULF", Containment.contains(new MockGObject(100, 100, -160, -200), -150, -150));
+		assertFalse("ULF", new MockGObject(100, 100, -160, -200).contains(-150, -150));
 	}
 	@Test
 	public void testContainsURT() {
 		logger.fine("ContainmentTest.testContainsURT()");
-		assertTrue("URT", Containment.contains(new MockGObject(100, 100, +160, -200), +150, -50));
+		assertTrue("URT", new MockGObject(100, 100, +160, -200).contains(+150, -50));
 	}
 	@Test
 	public void testContainsURF() {
 		logger.fine("ContainmentTest.testContainsURF()");
-		assertFalse("URF", Containment.contains(new MockGObject(100, 100, +160, -200), +300, -150));
+		assertFalse("URF", new MockGObject(100, 100, +160, -200).contains(+300, -150));
 	}
 	@Test
 	public void testContainsLLT() {
 		logger.fine("ContainmentTest.testContainsLLT()");
-		assertTrue("LLT", Containment.contains(new MockGObject(100, 100, -160, +200), 50, 150));
+		assertTrue("LLT", new MockGObject(100, 100, -160, +200).contains(50, 150));
 	}
 	@Test
 	public void testContainsLLF() {
 		logger.fine("ContainmentTest.testContainsLLF()");
-		assertFalse("LLF", Containment.contains(new MockGObject(100, 100, -160, +200), -300, 150));
+		assertFalse("LLF", new MockGObject(100, 100, -160, +200).contains(-300, 150));
 	}
 	@Test
 	public void testContainsLRT() {
 		logger.fine("ContainmentTest.testContainsLRT()");
-		assertTrue("LRT", Containment.contains(new MockGObject(100, 100, +160, +200), 150, 150));
+		assertTrue("LRT", new MockGObject(100, 100, +160, +200).contains(150, 150));
 	}
 	@Test
 	public void testContainsLRF() {
 		logger.fine("ContainmentTest.testContainsLRF()");
-		assertFalse("LRF", Containment.contains(new MockGObject(100, 100, +160, +200), 300, 150));
+		assertFalse("LRF", new MockGObject(100, 100, +160, +200).contains(300, 150));
 	}
 }

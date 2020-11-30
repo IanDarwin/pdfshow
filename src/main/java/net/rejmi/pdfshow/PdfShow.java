@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -57,11 +58,14 @@ import com.darwinsys.swingui.RecentMenu;
  * @author Ian Darwin
  */
 public class PdfShow {
+	
+	static Logger logger;
 
 	public static void main(String[] args) throws Exception {
 
 		// Configure logging
 		LoggerSetup.init();
+		logger = Logger.getLogger("pdfshow");
 
 		// Configure for macOS if possible/applicable
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
@@ -530,7 +534,7 @@ public class PdfShow {
 					gobj.isSelected = false;
 					changed = true;
 				}
-				if (Containment.contains(gobj, mx, my)) {
+				if (gobj.contains(mx, my)) {
 					System.out.println("HIT: " + gobj);
 					gobj.isSelected = true;
 					changed = true;
