@@ -45,8 +45,7 @@ You can move around within a file using:
 * The `Up` and `Down` buttons in the nav box;
 * The `Begin` and `End` buttons in the nav box (first and last page).
 * Typing a given page number in the page number box in the middle of the nav box;
-_Note that this is a programmer's tool so pages number from 0 to n-1_.
-* Ensuring the mouse is in the window, and using:
+* Ensuring the mouse is in the window, and using these shortcuts (not all work on all platforms):
 ** `DownArrow`, `j`, `SPACE`, or `RETURN` to move to the next page;
 ** `UpArrow`, `k`, `DELETE`, or `BACKSPACE` to move to the previous page.
 
