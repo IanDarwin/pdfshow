@@ -1,5 +1,7 @@
 package net.rejmi.pdfshow;
 
+import java.util.logging.Logger;
+
 /** Class to implement the contains() method.
  * In descriptions, ULX, ULY, LRX, LRY refer to an object whose bbox
  * is in one of the four directions--relative to its x,y, NOT to 0,0
@@ -22,6 +24,8 @@ package net.rejmi.pdfshow;
  */
 public class Containment {
 	
+	static Logger logger = Logger.getLogger("pdfshow.gobject");
+	
 	/**
 	 * Determine if the given object contains the given point
 	 * (which is usually a mouse click location).
@@ -36,7 +40,7 @@ public class Containment {
 		if (g.width == 0 && g.height == 0) {
 			return false; // Too small to contain anything
 		}
-		System.out.printf("contains(%s, mx %d, my %d)\n", g, mx, my);
+		logger.info(String.format("contains(%s, mx %d, my %d)\n", g, mx, my));
 		int quad = 0;
 		if (g.width < 0 && g.height < 0) {	// 1
 			// UL upper left quadrant: width negative, height negative
@@ -67,7 +71,7 @@ public class Containment {
 			lrx = g.x + g.width;
 			lry = g.y + g.height;
 		}
-		System.out.printf("BBOX ulx %d uly %d; lrx %d lry %d; Quadrant %d\n", ulx, uly, lrx, lry, quad);
+		logger.info(String.format("BBOX ulx %d uly %d; lrx %d lry %d; Quadrant %d\n", ulx, uly, lrx, lry, quad));
 		if (ulx > lrx)
 			throw new IllegalArgumentException("ulx > lrx for " + g);
 		if (uly > lry)

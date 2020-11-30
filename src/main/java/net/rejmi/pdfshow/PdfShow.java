@@ -60,6 +60,9 @@ public class PdfShow {
 
 	public static void main(String[] args) throws Exception {
 
+		// Configure logging
+		LoggerSetup.init();
+
 		// Configure for macOS if possible/applicable
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
