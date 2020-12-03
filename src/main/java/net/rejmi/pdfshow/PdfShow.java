@@ -923,6 +923,7 @@ public class PdfShow {
 		public ClosableTabHeader(PdfShow pdfShow, DocTab docTab) {
 			setLayout(new FlowLayout());
 			add(new JLabel(docTab.file.getName()));
+			setToolTipText(docTab.file.getAbsolutePath());
 			JButton xButton = new MyCloseButton();
 			add(xButton);
 			xButton.setPreferredSize(new Dimension(16,16));

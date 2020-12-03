@@ -108,6 +108,10 @@ class DocTab extends JPanel {
 		return addIns.get(pageNumber - 1);
 	}
 	
+	public File getFile() {
+		return file;
+	}
+
 	void gotoNext() {
 		if (pageNumber == getPageCount())
 			return;
