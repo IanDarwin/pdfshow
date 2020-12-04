@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
@@ -26,6 +27,8 @@ import org.apache.pdfbox.rendering.PDFRenderer;
  */
 @SuppressWarnings("serial")
 class DocTab extends JPanel {
+
+	static Logger logger = Logger.getLogger("pdfshow.doctab");
 
 	private JScrollBar sbar;
 	private JComponent pdfComponent;
@@ -80,12 +83,12 @@ class DocTab extends JPanel {
 	 */
 	void computeScaling() {
 		final PDRectangle pdfBBox = doc.getPage(0).getBBox();
-		// System.out.println("BBox: " + pdfBBox);
+		logger.fine("BBox: " + pdfBBox);
 		final Dimension compSize = pdfComponent.getSize();
-		// System.out.println("Component size = " + compSize);
+		logger.fine("Component size = " + compSize);
 		scaleX = (float)(compSize.getWidth() / pdfBBox.getWidth());
 		scaleY = (float)(compSize.getHeight() / pdfBBox.getHeight());
-		// System.out.println("Computed scaling as " + scaleX + "," + scaleY);
+		logger.fine("Computed scaling as " + scaleX + "," + scaleY);
 	}
 
 	void gotoPage(int page) {

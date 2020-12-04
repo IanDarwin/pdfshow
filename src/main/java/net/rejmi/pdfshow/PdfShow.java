@@ -64,8 +64,9 @@ public class PdfShow {
 		// Configure logging
 		LoggerSetup.init();
 		logger = Logger.getLogger("pdfshow");
+		logger.info("PdfShow Starting.");
 
-		// Configure for macOS if possible/applicable
+		// Configure for macOS if possible/applicable - ignored on other platforms
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
 			PdfShow.class.getSimpleName());
@@ -128,7 +129,7 @@ public class PdfShow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setFocusable(true);
 		final Image iconImage = getImage("/images/logo.png");
-		// System.out.println("PdfShow.PdfShow(): " + iconImage);
+		logger.fine("PdfShow.PdfShow(): " + iconImage);
 		frame.setIconImage(iconImage);
 
 		programProps = new Properties();
@@ -138,7 +139,7 @@ public class PdfShow {
 		}
 		programProps.load(propwash);
 		propwash.close();
-		// System.out.println("PdfShow.PdfShow(): Properties " + programProps);
+		logger.info("PdfShow(): Properties " + programProps);
 
 		// TABBEDPANE (main window for viewing PDFs)
 
@@ -222,7 +223,7 @@ public class PdfShow {
 			JOptionPane.showMessageDialog(frame, "PdfShow v0.0\n" +
 			"c 2020 Ian Darwin\n" +
 			"https://darwinsys.com/freeware\n" +
-			"Most icons from feathericons.com; a few by the author.",
+			"Some icons from feathericons.com; rest by the author.",
 			"About PdfShow(tm)",
 			JOptionPane.INFORMATION_MESSAGE));
 		helpMenu.add(aboutButton);
@@ -303,7 +304,7 @@ public class PdfShow {
 		// END NAV BOX
 
 		// TOOL BOX
-		// System.out.println("PdfShow.PdfShow(): Building Toolbox");
+		logger.info("PdfShow(): Building Toolbox");
 
 		JPanel toolBox = new JPanel();
 		toolBox.setLayout(new GridLayout(0, 2));
@@ -433,7 +434,7 @@ public class PdfShow {
 		}
 
 		public void keyPressed(KeyEvent e) {
-			// System.out.println("PdfShow.State.keyPressed(" + e + ")");
+			logger.fine("PdfShow.State.keyPressed(" + e + ")");
 			switch(e.getKeyChar()) {
 			case 'j':
 			case '\r':
@@ -466,7 +467,7 @@ public class PdfShow {
 				}
 					
 			}
-			System.out.println("Unhandled key event: " + e);
+			logger.warning("Unhandled key event: " + e);
 		}
 
 		public void mouseClicked(MouseEvent e) {
@@ -500,7 +501,7 @@ public class PdfShow {
 		}
 		final List<GObject> currentPageAddIns = currentTab.getCurrentAddIns();
 		if (currentPageAddIns.isEmpty()) {
-			// System.out.println("No annotations");
+			logger.fine("No annotations");
 			return;
 		}
 		currentPageAddIns.forEach(gobj -> consumer.accept(gobj));
@@ -519,8 +520,8 @@ public class PdfShow {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			int mx = e.getX(), my = e.getY();
-			System.out.printf(
-					"PdfShow.ViewState.mouseClicked() x %d y %d\n", mx, my);
+			logger.info(String.format(
+					"PdfShow.ViewState.mouseClicked() x %d y %d\n", mx, my));
 			changed = found = false;
 			// Avoid old selection
 			visitCurrentPageGObjs(gobj -> gobj.isSelected = false);
@@ -533,12 +534,12 @@ public class PdfShow {
 					changed = true;
 				}
 				if (gobj.contains(mx, my)) {
-					System.out.println("HIT: " + gobj);
+					logger.fine("HIT: " + gobj);
 					gobj.isSelected = true;
 					changed = true;
 					found = true;
 				} else {
-					System.out.println("MISS: " + gobj);
+					logger.fine("MISS: " + gobj);
 				}
 			});
 			if (changed) {
@@ -682,7 +683,7 @@ public class PdfShow {
 		GPolyLine line;
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// System.out.println("PdfShow.PolyLineDrawState.mousePressed()");
+			logger.fine("PdfShow.PolyLineDrawState.mousePressed()");
 			n = 0;
 			line = new GPolyLine(lastx = e.getX(), lasty = e.getY());
 			ix = currentTab.addIn(line);
@@ -704,7 +705,7 @@ public class PdfShow {
 		}
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// System.out.println("PdfShow.PolyLineDrawState.mouseReleased()");
+			logger.fine("PdfShow.PolyLineDrawState.mouseReleased()");
 			currentTab.repaint();
 			line = null;	// We are done with it.
 		}
@@ -854,7 +855,7 @@ public class PdfShow {
 
 	private File chooseFile() {
 		String prevDir = prefs.get(KEY_FILECHOOSER_DIR, null);
-		System.out.println("PdfShow.chooseFile(): prevDir = " + prevDir);
+		logger.fine("PdfShow.chooseFile(): prevDir = " + prevDir);
 		String dir = prevDir != null ? prevDir :
 				System.getProperty("user.home");
 		JFileChooser fc = new JFileChooser(dir);
@@ -884,7 +885,7 @@ public class PdfShow {
 		fc.showOpenDialog(frame);
 		final File selectedFile = fc.getSelectedFile();
 		if (selectedFile != null) {
-			System.out.println("PdfShow.chooseFile(): put: " + selectedFile.getParent());
+			logger.fine("PdfShow.chooseFile(): put: " + selectedFile.getParent());
 			prefs.put(KEY_FILECHOOSER_DIR, selectedFile.getParent());
 			try {
 				prefs.flush();
