@@ -3,7 +3,6 @@ package net.rejmi.pdfshow;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -28,7 +27,6 @@ import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -916,40 +914,7 @@ public class PdfShow {
 		moveToPage(0);
 	}
 
-	/** The header for the TabbedPane doctabs */
-	final class ClosableTabHeader extends JPanel {
-		private static final long serialVersionUID = 1L;
-
-		public ClosableTabHeader(PdfShow pdfShow, DocTab docTab) {
-			setLayout(new FlowLayout());
-			add(new JLabel(docTab.file.getName()));
-			setToolTipText(docTab.file.getAbsolutePath());
-			JButton xButton = new MyCloseButton();
-			add(xButton);
-			xButton.setPreferredSize(new Dimension(16,16));
-			xButton.addActionListener(e -> pdfShow.closeFile(docTab));
-		}
-
-		// The X button for tabs
-		class MyCloseButton extends JButton {
-			private static final long serialVersionUID = 1L;
-
-			public MyCloseButton() {
-			    super("x");
-			    setBorder(BorderFactory.createEmptyBorder());
-			    setFocusPainted(false);
-			    setBorderPainted(false);
-			    setContentAreaFilled(false);
-			    setRolloverEnabled(false);
-			  }
-			  @Override
-			  public Dimension getPreferredSize() {
-			    return new Dimension(16, 16);
-			  }
-			};
-	}
-
-	private void closeFile(DocTab dt) {
+	void closeFile(DocTab dt) {
 		dt.close();
 		tabPane.remove(dt);
 	}
