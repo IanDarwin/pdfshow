@@ -14,6 +14,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -585,6 +587,7 @@ public class PdfShow {
 		TextDrawState(JButton button) {
 			super(button);
 		}
+		boolean dialogClosed = false;
 		@Override
 		public void mousePressed(MouseEvent e) {
 			JOptionPane pane = new JOptionPane("Text?",
@@ -593,9 +596,18 @@ public class PdfShow {
 			pane.setWantsInput(true);
 			JDialog dialog = pane.createDialog(frame, "Text?");
 			dialog.setLocation(e.getX(), e.getY());
-			dialog.show();
+			dialogClosed = false;
+			dialog.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosing(WindowEvent e) {
+					dialogClosed = true;
+				}
+			});
+			dialog.setVisible(true); // BLOCKING WAIT
+			if (dialogClosed)
+				return;
 			String text = pane.getInputValue().toString();
-			if(text == null)
+			if (text == null)
 				return;
 			currentTab.addIn(new GText(e.getX(), e.getY(), text));
 			currentTab.repaint();
