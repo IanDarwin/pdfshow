@@ -218,6 +218,15 @@ public class PdfShow {
 		});
 		editMenu.add(deleteItemMI);
 
+        final JMenu slideshowMenu = MenuUtils.mkMenu(rb, "slideshow");
+        menuBar.add(slideshowMenu);
+        final JMenuItem ssThisTab1Button = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_start");
+        slideshowMenu.add(ssThisTab1Button);
+        final JMenuItem ssThisTabCurButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_current");
+        slideshowMenu.add(ssThisTabCurButton);
+        final JMenuItem ssAcrossTabsButton = MenuUtils.mkMenuItem(rb, "slideshow", "across_tabs");
+        slideshowMenu.add(ssAcrossTabsButton);
+
 		final JMenu helpMenu = MenuUtils.mkMenu(rb, "help");
 		menuBar.add(helpMenu);
 		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
