@@ -1,10 +1,13 @@
 = PdfShow
 
-Some training companies just distribute their courses as PDFs, not presentation-software files.
+Maybe you have to present a talk and you only have the PDF, not the ODP, KeyNote or PPT file(s).
+Some training companies just distribute their courses to instructors as PDFs, 
+not presentation-software files.
+Or maybe you want to re-give somebody else's preso from the PDF-only version they published online.
 For whatever reason you need to present with just have the PDF of the slides,
-not the ODP, Keynote or PPT files, `PdfShow` is for you!
+`PdfShow` is for you!
 `PdfShow` is a PDF viewer specifically for running slide shows.
-I wrote it (using Java Swing) because I do sometimes teach from PDFs and was tired of general-purpose programs 
+I wrote it because I do sometimes teach from PDFs and was tired of general-purpose programs 
 like PDF Annotator and Adobe Reader, which have too many modes,
 controls, etc. and aren't really optimized for showing slide decks.
 
@@ -14,8 +17,8 @@ image::samples/SampleShow.png[width="800"]
 https://github.com/IanDarwin/pdfshow/issues[TODO list]), due to
 its relative youth and, more importantly, its design goals.
 
-more bells and whistles will be added as time permits, but let's keep it relatively simple.
-
+More bells and whistles will be added as time permits, but let's keep it relatively simple.
+There is still some basic functionality that is imperfect or incomplete.
 Pull requests will be gratefully accepted as long as they fit
 within the general tone of the program - _minimalist, but functional._
 
@@ -24,8 +27,9 @@ within the general tone of the program - _minimalist, but functional._
 There may be an installer for your computing platform; see
 https://github.com/IanDarwin/pdfshow/releases. Check the latest
 release under the _Assets_ dropdown.
+If not, there's a Jar file that you can run with `java -jar`.
 
-Note that these installers bundle their own Java VM, with which they are known
+Note that the installers bundle their own Java VM, with which they are known
 to work; they are about 50Mb to download and about 120-140Mb when installed.
 If you use the source or JAR approach, you have to be sure
 you have a JDK that will work with `PdfShow`.
@@ -61,7 +65,7 @@ Using Eclipse:
 	
 Using IntelliJ IDEA
 
-	From the startup screen, "Get from Version Control
+	From the startup screen, "Get from Version Control"
 	Enter the URL https://github.com/IanDarwin/pdfshow and click Clone
 	Accept or choose the directory and click Clone
 	On "Open or Import" popup (with choice of how to open), select "Maven Project"
@@ -73,9 +77,9 @@ You need Java 14+ if you want to build any of the full platform-specific install
 
 === Test Runs
 
-To test run the program in Eclipse or IntelliJ IDEA, you can just open
-and run `PdfShow.java`, the main-program file.
-If you use another IDE, you can import and run it.
+To test run the program in a supported Java IDE (Eclipse and IntelliJ IDEa),
+you just open and run `PdfShow.java`, the main-program file.
+If you use another IDE, the same goes.
 You can even submit a pull request with that IDE's config files, __as long as
 it doesn't require changing the directory structure__ (i.e., moving existing files around).
 
@@ -93,9 +97,12 @@ It'll be named something like `pdfshow-x.y.z-SNAPSHOT-jar-with-dependencies.jar`
 You can run it with `java -jar target/pdfshow*dependencies.jar` (see `scripts/pdfshow`), or just click on it in a file
 manager window in MS-Windows, macOS, or most *Nix windowed environments.
 
-The full-blown, platform-specific installers we release are built by the `mkinstaller` script, which makes a clickable runnable JAR file
-and then runs the Java 14+ https://docs.oracle.com/en/java/javase/14/docs/specs/man/jpackage.html[jpackage] tool.
+The full-blown, platform-specific installers we release are built by the `mkinstaller` script. 
+This makes a clickable runnable JAR file as above
+and then runs the Java 14+ 
+https://docs.oracle.com/en/java/javase/14/docs/specs/man/jpackage.html[jpackage] tool.
 You can run that script yourself if you want.
+You can only build the Mac installer on macOS, the Windows installer on Windows, etc.
 Note that on Windows `jpackage` has a couple of pre-requisites,
 which it will let you know about if they're not already installed.
 
