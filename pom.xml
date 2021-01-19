@@ -70,10 +70,15 @@
 					<execution>
 						<phase>integration-test</phase>
 						<goals>
-						<goal>java</goal>
+							<goal>java</goal>
 						</goals>
 						<configuration>
 							<mainClass>net.rejmi.pdfshow.PdfShow</mainClass>
+							<arguments>
+								<!-- Twice, so we can test tabbing easily -->
+								<argument>samples/SampleShow.pdf</argument>
+								<argument>samples/SampleShow.pdf</argument>
+							</arguments>
 						</configuration>
 					</execution>
 				</executions>
