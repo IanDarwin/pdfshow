@@ -24,6 +24,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
@@ -112,6 +114,12 @@ public class PdfShow {
 	private /*final*/ JButton selectButton, textButton, markerButton,
 		lineButton, polyLineButton, ovalButton, rectangleButton; // Me three
 	final RecentMenu recents;
+
+	// For slideshow
+    ExecutorService pool = Executors.newSingleThreadExecutor();
+    Thread slideshowThread;
+    int slideTime = 10;
+    boolean done = false;
 	
 	// MAIN CONSTRUCTOR
 
@@ -220,11 +228,18 @@ public class PdfShow {
 
         final JMenu slideshowMenu = MenuUtils.mkMenu(rb, "slideshow");
         menuBar.add(slideshowMenu);
-        final JMenuItem ssThisTab1Button = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_start");
-        slideshowMenu.add(ssThisTab1Button);
+        final JMenuItem ssThisTabFromStartButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_start");
+        slideshowMenu.add(ssThisTabFromStartButton);
+        ssThisTabFromStartButton.addActionListener(e -> {
+            runSlideShow(1);
+        });
         final JMenuItem ssThisTabCurButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_current");
         slideshowMenu.add(ssThisTabCurButton);
+        ssThisTabCurButton.addActionListener((e) -> {
+            runSlideShow(currentTab.getPageNumber());
+        });
         final JMenuItem ssAcrossTabsButton = MenuUtils.mkMenuItem(rb, "slideshow", "across_tabs");
+        ssAcrossTabsButton.addActionListener(slideshowAcrossTabsAction);
         slideshowMenu.add(ssAcrossTabsButton);
 
 		final JMenu helpMenu = MenuUtils.mkMenu(rb, "help");
@@ -379,15 +394,77 @@ public class PdfShow {
 				frame,
 				GObject::setFont,
 				GObject::setColor,
-				GObject::setLineThickness));
+				GObject::setLineThickness,
+                this::setSlideTime));
+
+        JButton stop_show = new JButton("Stop show");
+        sidePanel.add(stop_show);
+        stop_show.addActionListener((e -> {
+            done = true;
+            // slideshowThread.interrupt();
+        }));
+
 
 		frame.add(BorderLayout.WEST, sidePanel);
 
 		// END TOOL BOX
 	}
 
-	ActionListener feedbackAction = e -> {
-		String[] choices = { "Web-Comment", "Bug Report/Feature Req", "Email Team", "Cancel" };
+	/** Adjusts the slide show time interval */
+	void setSlideTime(int n) {
+	    slideTime = n;
+    }
+
+    /** Runs a show "across tabs" */
+	ActionListener slideshowAcrossTabsAction = e -> {
+        done = false;
+        final DocTab tab = currentTab;
+        pool.submit(() -> {
+            slideshowThread = Thread.currentThread();
+            if (tab != currentTab) {
+                // user is assuming control
+                return;
+            }
+            int n = tabPane.getSelectedIndex();
+            while (!done) {
+                try {
+                    Thread.sleep(slideTime * 1000);
+                } catch (InterruptedException ex) {
+                    done = true;
+                    return;
+                }
+                n = (n + 1) % tabPane.getTabCount();
+                tabPane.setSelectedIndex(n);
+            }
+        });
+    };
+
+    /** Runs a show within the current tab, starting at page 'n' */
+	void runSlideShow(int n) {
+        done = false;
+        pool.submit(() -> {
+            slideshowThread = Thread.currentThread();
+            int slideShowPageNumber = n;
+            DocTab tab = currentTab;
+            while (!done) {
+                if (tab != currentTab) {
+                    // User manually changed it, so "the show must go off"!
+                    return;
+                }
+                try {
+                    Thread.sleep(slideTime * 1000);
+                } catch (InterruptedException ex) {
+                    done = true;
+                    return;
+                }
+                slideShowPageNumber = (slideShowPageNumber % tab.getPageCount()) + 1;
+                tab.gotoPage(slideShowPageNumber);
+            }
+        });
+    };
+
+    ActionListener feedbackAction = e -> {
+		String[] choices = { "Web-Comment", "Bug Report/Feature Req", "Email Team", "Cancel" }; // XXX  I18N this!
 		int n = JOptionPane.showOptionDialog(frame, "How to send feedback?", "Send Feedback", 
 					JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, 
 					choices, 0);
@@ -430,7 +507,7 @@ public class PdfShow {
 	 */
 	private abstract class State {
 
-		protected JButton button;
+		private JButton button;
 
 		public State(JButton button) {
 			this.button = button;

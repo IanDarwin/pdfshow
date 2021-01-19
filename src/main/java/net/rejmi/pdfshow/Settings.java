@@ -17,15 +17,16 @@ import com.darwinsys.swingui.FontChooser;
 public class Settings extends JPanel {
 	private static final long serialVersionUID = 1L;
 
-	public Settings(JFrame jf, 
-			Consumer<Font> setFont,
-			Consumer<Color> setColor,
-			Consumer<Integer> setLineThickness) {
+    public Settings(JFrame jf,
+                    Consumer<Font> setFont,
+                    Consumer<Color> setColor,
+                    Consumer<Integer> setLineThickness,
+                    Consumer<Integer> setSlideTime) {
 
 		setPreferredSize(new Dimension(130, 100));
 
 		// GUI & Actions
-		setLayout(new GridLayout(3, 1));
+		setLayout(new GridLayout(4, 1));
 		JButton fontButton = new JButton("Font");
 		fontButton.addActionListener(e -> {
 			FontChooser fontChooser = new FontChooser(jf);
@@ -48,6 +49,7 @@ public class Settings extends JPanel {
 			}
 		});
 		add(colorButton);
+
 		JButton linewidthButton = new JButton("Line");
 		// XXX This could be much better - a slider with a live line preview
 		linewidthButton.addActionListener(e -> {
@@ -57,14 +59,32 @@ public class Settings extends JPanel {
 			try {
 				setLineThickness.accept(Integer.parseInt(ret.trim()));
 			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(this, 
+				JOptionPane.showMessageDialog(this,
 					String.format(
-						"Could not interpret '%s' as a number, alas.", ret), 
-					"Oops", 
+						"Could not interpret '%s' as a number, alas.", ret),
+					"Oops",
 					JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		add(linewidthButton);
+
+        JButton slideDelayButton = new JButton("Interval");
+        // XXX This could be much better - a slider with a live line preview
+        slideDelayButton.addActionListener(e -> {
+            String ret = JOptionPane.showInputDialog("Slide Show Interval");
+            if (ret == null)
+                return;
+            try {
+                setSlideTime.accept(Integer.parseInt(ret.trim()));
+            } catch (NumberFormatException nfe) {
+                JOptionPane.showMessageDialog(this,
+                        String.format(
+                                "Could not interpret '%s' as a number, alas.", ret),
+                        "Oops",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        add(slideDelayButton);
 	}
 
 }

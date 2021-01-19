@@ -3,14 +3,13 @@
 
 `PdfShow` is a simple Java Swing-based PDF viewer specifically for running slide shows.
 If you want to pre-draw fancy diagrams, and save them for each time you present your
-slide deck, this is not for you. Use Adobe Reader DC, PDF Annotator, or some other
-fancier tool.
+slide deck, this is not for you. Use Adobe Reader DC, PDF Annotator, or some other fancier tool.
 It you like to scribble all over your slides each time you run your course,
 to make the slides come alive, then `PdfShow` may be right for you.
 
 This program is free software and may be copied for use without fee.
-The source code is https://github.com/IanDarwin/pdfshow[available on my GitHub repository] 
-if you are a developer and would like to improve it.
+The source code is https://github.com/IanDarwin/pdfshow[available on my GitHub repository];
+if you are a developer and would like to improve it, Github pull requests are welcome.
 
 == Installing it
 
@@ -72,6 +71,27 @@ you want to get rid of, then either use the `Delete` key (if it's not mapped to
 VK_UP as it is on some systems) or use the `Edit->Delete Selected` menu item.
 The Trash Can icon is the most drastic: it removes *all* graphics from the current page.
 
+=== Slide Show Mode
+
+There are two modes for auto-presenting, which I call "across" and "down".
+Across mode goes across all the tabs, showing the current slide from each.
+This might be useful when, for example, the training company provides a standard
+slide deck that you have to use, but you want a show alternating between their opening slide
+and your own informational slide during the pre-class period.
+That's the use case I designed it for, but your mileage may vary.
+
+"Down" mode is normal slide show mode - run through all the slides in one tab.
+
+For both modes, there is a single "Interval time" setting, which controls the speed
+of both modes, and takes effect on the next slide if changed during a show.
+The "Stop slide" button is at the bottom left, below the Settings.
+
+=== Settings
+
+There are controls in the lower part of the left-hand pane to control
+various settings, such as the font and color for drawing,
+the speed of slide shows, etc.
+
 == Credits
 
 Program by Ian Darwin of Rejminet Group Inc.
@@ -79,4 +99,4 @@ Program by Ian Darwin of Rejminet Group Inc.
 PDF access (i.e., some of the heavy listing!) is done by 
 https://pdfbox.apache.org/[Apache PDFBox] software.
 
-Most icons from feathericons.com, and a simpler ones icons by Ian Darwin.
+Some icons from feathericons.com, and a simpler ones icons by Ian Darwin.
