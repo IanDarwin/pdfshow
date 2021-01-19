@@ -330,7 +330,7 @@ public class PdfShow {
 		// END NAV BOX
 
 		// TOOL BOX
-		logger.info("PdfShow(): Building Toolbox");
+		logger.info("PdfShow(): Building Toolbox\n");
 
 		JPanel toolBox = new JPanel();
 		toolBox.setLayout(new GridLayout(0, 2));
