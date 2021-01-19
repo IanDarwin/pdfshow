@@ -140,7 +140,9 @@ it's gotta be the same amount of work.
 == Credits
 
 Program written by Ian Darwin of Rejminet Group Inc.
-Contributions by a cast of thousands (we hope).
+Contributions by a cast of thousands (we hope);
+their names are listed on the main github page.
+Thanks folks!
 
 PDF access (i.e., some of the heavy listing!) is done by
 https://pdfbox.apache.org/[Apache PDFBox] software.

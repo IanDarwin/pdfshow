@@ -2,7 +2,7 @@
 
 == What's needed
 
-Documentation - a good tutorial (text and/or video).
+Documentation - a good tutorial (text and/or video). Or just build out the user guide in `docs/`.
 
 Suggestions - create a New Issue (after checking the existing issues to avoid duplication;
 if there's a similar one just comment on it).
@@ -32,7 +32,7 @@ Test your change with multiple documents, preferably on two platforms (Mac, Wind
 When you're sure it's right, please create a Pull Request. And if you don't hear back
 within 72 hours, please ping the management.
 
-Sending a pull request constitutes your "irrevocable, world-wide, non-exclusive" agreement 
+*Legal notice*: Sending a pull request constitutes your "irrevocable, world-wide, non-exclusive" agreement 
 to have your code contribution licensed as shown in the LICENSE file. In most countries
 you retain copyright in your contribution. We will never change the license retroactively.
 
@@ -42,6 +42,6 @@ Thank you!
 
 We don't have one. But if we did, it would be: 
 
-* Act like a grown-up person. A kindly, tolerant person.
+* Act like a grown-up person. A kindly, tolerant, grown-up person.
 
 * Remember Hanlon's Razor.
