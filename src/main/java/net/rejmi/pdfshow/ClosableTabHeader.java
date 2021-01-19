@@ -2,6 +2,7 @@ package net.rejmi.pdfshow;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.function.Consumer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -12,14 +13,16 @@ import javax.swing.JPanel;
 final class ClosableTabHeader extends JPanel {
 	private static final long serialVersionUID = 1L;
 
-	public ClosableTabHeader(PdfShow pdfShow, DocTab docTab) {
+	public ClosableTabHeader(Consumer<DocTab> tabCloser, DocTab docTab) {
 		setLayout(new FlowLayout());
 		add(new JLabel(docTab.file.getName()));
-		setToolTipText(docTab.file.getAbsolutePath());
+		// Leave comment out - tooltip eats mouse event so switching fails
+		// See https://stackoverflow.com/questions/19910739 but applying that didn't work(?)
+		// setToolTipText(docTab.file.getAbsolutePath());
 		JButton xButton = new MyCloseButton();
 		add(xButton);
 		xButton.setPreferredSize(new Dimension(16,16));
-		xButton.addActionListener(e -> pdfShow.closeFile(docTab));
+		xButton.addActionListener(e -> tabCloser.accept(docTab));
 	}
 
 	// The X button for tabs
