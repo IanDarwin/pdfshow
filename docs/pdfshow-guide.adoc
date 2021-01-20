@@ -53,10 +53,12 @@ You can move around within a file using:
 
 === Drawing
 
-There are multiple draw tool icons in the toolbox. Each of these
-only has effect once, that is, you have to click the Line button
-a second time to draw a second line.
-I may add an option later to remove this behaviour.
+There are multiple draw tool icons in the toolbox. 
+// Each of these
+// only has effect once, that is, you have to click the Line button
+// a second time to draw a second line.
+These buttons are sticky, that is, to draw two lines, click the line icon, draw one line, then you can draw another without re-clicking the line icon.
+I may add an option later to control this behaviour.
 
 The toolbox has icons for straight line, polyline and rectangle.
 Each of these will rubber-band as you draw it, like most draw programs.
