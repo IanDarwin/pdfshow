@@ -50,6 +50,8 @@ There is more documentation in the `docs` folder.
 
 Download the repository from https://github.com/IanDarwin/pdfshow.
 
+Install Apache-Maven if not already installed.
+
 Using command-line tools:
 
 	git clone https://github.com/IanDarwin/pdfshow
