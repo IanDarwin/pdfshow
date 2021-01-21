@@ -1009,7 +1009,7 @@ public class PdfShow {
 		tabPane.addTab(file.getName(), currentTab = t);
 		final int index = tabPane.getTabCount() - 1;
 		tabPane.setSelectedIndex(index);
-		tabPane.setTabComponentAt(index, new ClosableTabHeader(this::closeFile, t));
+		tabPane.setTabComponentAt(index, new ClosableTabHeader(this::closeFile, tabPane, t));
 		moveToPage(0);
 	}
 

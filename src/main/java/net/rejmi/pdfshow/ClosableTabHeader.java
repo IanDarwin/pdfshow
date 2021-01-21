@@ -1,25 +1,32 @@
 package net.rejmi.pdfshow;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 /** The header for the TabbedPane doctabs */
 final class ClosableTabHeader extends JPanel {
 	private static final long serialVersionUID = 1L;
 
-	public ClosableTabHeader(Consumer<DocTab> tabCloser, DocTab docTab) {
+	public ClosableTabHeader(Consumer<DocTab> tabCloser, final JTabbedPane panel, DocTab docTab) {
 		setLayout(new FlowLayout());
         JLabel label = new JLabel(docTab.file.getName());
         add(label);
-		// Leave commented out - tooltip eats mouse event so switching fails
-		// See https://stackoverflow.com/questions/19910739 but applying that didn't work(?)
-		// setToolTipText(docTab.file.getAbsolutePath());
+		label.setToolTipText(docTab.file.getAbsolutePath());
+        // ToolTip eats mouse event; switching fails without this; see https://stackoverflow.com/questions/19910739
+        label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                panel.setSelectedComponent(docTab);
+            }
+            // This will be used when handling dragging tabs
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                super.mouseDragged(e);
+            }
+        });
 		JButton xButton = new MyCloseButton();
 		add(xButton);
 		xButton.setPreferredSize(new Dimension(16,16));
