@@ -105,8 +105,12 @@ and then runs the Java 14+
 https://docs.oracle.com/en/java/javase/14/docs/specs/man/jpackage.html[jpackage] tool.
 You can run that script yourself if you want.
 You can only build the Mac installer on macOS, the Windows installer on Windows, etc.
-Note that on Windows `jpackage` has a couple of pre-requisites,
+
+==== Pre-requisites
+On Windows `jpackage` has a couple of pre-requisites,
 which it will let you know about if they're not already installed.
+
+On Linux, for RPMs, you need `rpm-build` or you will get told that 'rpm' is an invalid type.
 
 The install formats are:
 
