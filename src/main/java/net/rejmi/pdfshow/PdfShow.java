@@ -92,7 +92,7 @@ public class PdfShow {
 	
 	static PdfShow instance;
 
-	Desktop desktop=Desktop.getDesktop();
+	Desktop desktop;
 	Properties programProps = new Properties();
 	Preferences prefs = Preferences.userNodeForPackage(PdfShow.class);
 	final static String PROPS_FILE_NAME = "/pdfshow.properties";
@@ -128,8 +128,15 @@ public class PdfShow {
 		gotoState(viewState);
 
 		// GUI SETUP
-
 		frame = new JFrame("PDFShow");
+
+		try {
+			desktop=Desktop.getDesktop();
+		} catch (UnsupportedOperationException ex) {
+			JOptionPane.showMessageDialog(frame, "Java Desktop unsupported, help &c will not work.");
+			// Leave it null; check before use
+		}
+
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		final Dimension screenSize = tk.getScreenSize();
 		final Dimension windowSize = 
@@ -261,10 +268,15 @@ public class PdfShow {
 		sourceButton.setIcon(getMyImageIcon("octocat"));
 		sourceButton.addActionListener(e -> {
 			String url = programProps.getProperty(KEY_SOURCE_URL);
-			try {
-				desktop.browse(new URI(url));
-			} catch (Exception e1) {
-				JOptionPane.showMessageDialog(frame, "Failed to open browser to " + url);
+			if (desktop == null) {
+				JOptionPane.showMessageDialog(frame, 
+					"Java Desktop unsupported, visit " + url + " on your own.");
+			} else {
+				try {
+					desktop.browse(new URI(url));
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(frame, "Failed to open browser to " + url);
+				}
 			}
 		});
 		helpMenu.add(sourceButton);
@@ -473,18 +485,30 @@ public class PdfShow {
 			case 0: // Web - general
 				String webStr0 = programProps.getProperty(KEY_FEEDBACK_URL);
 				URI weburl0 = new URI(webStr0);
-				desktop.browse(weburl0); 
+				if (desktop == null) {
+					JOptionPane.showMessageDialog(frame, "Java Desktop unsupported, help unavailable.");
+				} else {
+					desktop.browse(weburl0); 
+				}
 				return;
 			case 1: // Web - file bug report/enhancement request
 				String webStr1 = programProps.getProperty(KEY_BUG_ENHANCE);
 				URI weburl1 = new URI(webStr1);
-				desktop.browse(weburl1); 
+				if (desktop == null) {
+					JOptionPane.showMessageDialog(frame, "Java Desktop unsupported, help unavailable.");
+				} else {
+					desktop.browse(weburl1); 
+				}
 				return;
 			case 2: // Email
 				String mailStr = programProps.getProperty(KEY_FEEDBACK_EMAIL);
 				URI mailurl = new URI(
 						String.format(EMAIL_TEMPLATE, mailStr).replaceAll(" ", "%20"));
-				desktop.mail(mailurl);
+				if (desktop == null) {
+					JOptionPane.showMessageDialog(frame, "Java Desktop unsupported, sending unavailable.");
+				} else {
+					desktop.mail(mailurl);
+				}
 				return;
 			case 3:
 				return;
