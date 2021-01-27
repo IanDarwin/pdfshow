@@ -55,6 +55,6 @@ jpackage \
 	${OS_SPECIFIC}
 exit
 	# The following are not used in production releases
-	# Omit file-association because most OSes only allow one active program per file type.
+	# Omit file-association for OSes that only allow one program per filetype.
 	# See https://github.com/IanDarwin/pdfshow/issues/19 Issue #19
 	--file-associations install-aux/pdfassoc.properties \
