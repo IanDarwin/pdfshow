@@ -1,1 +1,1 @@
-cp target/pdfshow-0.1.0-jar-with-dependencies.jar ~/lib
+cp target/pdfshow-0.?.?-jar-with-dependencies.jar ~/lib
