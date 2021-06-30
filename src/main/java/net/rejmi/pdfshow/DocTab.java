@@ -81,14 +81,15 @@ class DocTab extends JPanel {
 	 * Scaling is quick & dirty: works for slide decks, not for books(!).
 	 * XXX Must either constrain ratio or allow to manually adjust.
 	 */
-	void computeScaling() {
+	public void computeScaling() {
 		final PDRectangle pdfBBox = doc.getPage(0).getBBox();
 		logger.fine("BBox: " + pdfBBox);
 		final Dimension compSize = pdfComponent.getSize();
 		logger.fine("Component size = " + compSize);
 		scaleX = (float)(compSize.getWidth() / pdfBBox.getWidth());
 		scaleY = (float)(compSize.getHeight() / pdfBBox.getHeight());
-		logger.fine("Computed scaling as " + scaleX + "," + scaleY);
+		logger.fine(String.format("Computed scaling %s as %f x %f",
+				file.getName(), scaleX, scaleY));
 	}
 
 	void gotoPage(int page) {

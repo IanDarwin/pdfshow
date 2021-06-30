@@ -7,6 +7,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -148,6 +150,16 @@ public class PdfShow {
 		final Image iconImage = getImage("/images/logo.png");
 		logger.fine("PdfShow.PdfShow(): " + iconImage);
 		frame.setIconImage(iconImage);
+		
+		frame.addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent e) {
+				int nt = tabPane.getTabCount();
+				for (int i = 0; i < nt; i++) {
+					DocTab dt = (DocTab)tabPane.getComponent(nt);
+					dt.computeScaling();
+				}
+			};
+		});
 
 		programProps = new Properties();
 		InputStream propwash = getClass().getResourceAsStream(PROPS_FILE_NAME);
