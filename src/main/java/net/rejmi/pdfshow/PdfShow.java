@@ -177,6 +177,7 @@ public class PdfShow {
 		tabPane = new JTabbedPane();
 		tabPane.addChangeListener(evt -> {
 			currentTab = (DocTab)tabPane.getSelectedComponent();
+			updatePageNumbersDisplay();
 		});
 		frame.add(BorderLayout.CENTER, tabPane);
 
