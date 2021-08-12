@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.util.function.Consumer;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -14,6 +15,10 @@ import javax.swing.JPanel;
 
 import com.darwinsys.swingui.FontChooser;
 
+/**
+ * The Settings panel 
+ * XXX should be in a JDialog
+ */
 public class Settings extends JPanel {
 	private static final long serialVersionUID = 1L;
 
@@ -85,6 +90,12 @@ public class Settings extends JPanel {
             }
         });
         add(slideDelayButton);
+
+		JCheckBox memoryBox = new JCheckBox("Restart where left off");
+		memoryBox.addItemListener(e ->  {
+			System.out.println("Changing setting");
+		});
+		add(memoryBox);
 	}
 
 }
