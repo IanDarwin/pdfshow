@@ -1,0 +1,9 @@
+= Release Notes
+
+== Version 1.3, 2021-09
+
+Moves the Settings into a dialog, invoke from Edit->Preferences.
+
+Remembers where you were if you run a presentation over multiple days (default is on; disable in Settings if not wanted).
+
+Various bug fixes.
