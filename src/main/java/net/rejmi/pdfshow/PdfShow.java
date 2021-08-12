@@ -105,6 +105,8 @@ public class PdfShow {
 	final static String KEY_FILECHOOSER_DIR = "file_chooser_dir";
 	final static String EMAIL_TEMPLATE = "mailto:%s?subject=PdfShow Feedback";
 	
+	boolean savePageNumbers = true;
+
 	// GUI Controls - defined here since referenced throughout
 	static JFrame frame;
 	private JTabbedPane tabPane;
@@ -244,6 +246,19 @@ public class PdfShow {
 			currentTab.deleteSelected();
 		});
 		editMenu.add(deleteItemMI);
+		JMenuItem prefsMI = MenuUtils.mkMenuItem(rb, "edit", "preferences");
+		prefsMI.addActionListener(e -> {
+			// XXX need to pass all current params as well!
+			JOptionPane.showMessageDialog(frame, new Settings(
+				frame,
+				GObject.getFont(), GObject::setFont,
+				GObject.getColor(), GObject::setColor,
+				GObject.getLineThickness(), GObject::setLineThickness,
+                slideTime, this::setSlideTime,
+				savePageNumbers, this::setSavePageNumbers
+			));
+		});
+		editMenu.add(prefsMI);
 
         final JMenu slideshowMenu = MenuUtils.mkMenu(rb, "slideshow");
         menuBar.add(slideshowMenu);
@@ -412,14 +427,6 @@ public class PdfShow {
 		toolBox.add(feedbackButton);
 		
 		sidePanel.add(toolBox);
-		
-		// Finally the font/color/etc settings
-		sidePanel.add(new Settings(
-				frame,
-				GObject::setFont,
-				GObject::setColor,
-				GObject::setLineThickness,
-                this::setSlideTime));
 
         JButton stop_show = new JButton("Stop show");
         sidePanel.add(stop_show);
@@ -438,6 +445,11 @@ public class PdfShow {
 	void setSlideTime(int n) {
 	    slideTime = n;
     }
+
+	/** Controls saving page numbers when closing file / exiting app */
+	void setSavePageNumbers(boolean b) {
+		savePageNumbers = b;
+	}
 
     /** Runs a show "across tabs" */
 	ActionListener slideshowAcrossTabsAction = e -> {
@@ -982,7 +994,18 @@ public class PdfShow {
 		};
 	};
 
-	private static void checkAndQuit() {
+	/*
+	 * Should be the only place we exit from.
+	 * XXX Need a WindowListener on Frame to get in here!
+	 */
+	private void checkAndQuit() {
+		if (savePageNumbers) {
+			int nt = tabPane.getTabCount();
+			for (int i = 0; i < nt; i++) {
+				DocTab dt = (DocTab)tabPane.getComponent(nt);
+				prefs.putInt("PAGE#" + dt.getName(), dt.getPageNumber());
+			}
+		}
 		// TODO Once we add saving, check for unsaved changes
 		System.exit(0);
 	}
@@ -1046,7 +1069,8 @@ public class PdfShow {
 		final int index = tabPane.getTabCount() - 1;
 		tabPane.setSelectedIndex(index);
 		tabPane.setTabComponentAt(index, new ClosableTabHeader(this::closeFile, tabPane, t));
-		moveToPage(0);
+		int pageNum = prefs.getInt("PAGE#" + file.getName(), -1);
+		moveToPage(pageNum == -1 ? 0 : pageNum);
 	}
 
 	void closeFile(DocTab dt) {

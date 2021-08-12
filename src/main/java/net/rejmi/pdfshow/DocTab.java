@@ -76,6 +76,11 @@ class DocTab extends JPanel {
 		add(sbar, BorderLayout.EAST);
 	}
 
+	/** Get the filename (without a care for the directory) */
+	public String getName() {
+		return file.getName();
+	}
+
 	/**
 	 * Scale PDF to fit - after main window is fully sized.
 	 * Scaling is quick & dirty: works for slide decks, not for books(!).

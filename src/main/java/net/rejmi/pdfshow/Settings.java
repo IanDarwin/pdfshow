@@ -17,24 +17,23 @@ import com.darwinsys.swingui.FontChooser;
 
 /**
  * The Settings panel 
- * XXX should be in a JDialog
  */
 public class Settings extends JPanel {
 	private static final long serialVersionUID = 1L;
 
     public Settings(JFrame jf,
-                    Consumer<Font> setFont,
-                    Consumer<Color> setColor,
-                    Consumer<Integer> setLineThickness,
-                    Consumer<Integer> setSlideTime) {
-
-		setPreferredSize(new Dimension(130, 100));
+                    Font curFont, Consumer<Font> setFont,
+                    Color curColor, Consumer<Color> setColor,
+                    int curThickness, Consumer<Integer> setLineThickness,
+                    int curSlideTime, Consumer<Integer> setSlideTime,
+					boolean curSavePageNumbers, Consumer<Boolean> setSavePageNumbers) {
 
 		// GUI & Actions
 		setLayout(new GridLayout(4, 1));
 		JButton fontButton = new JButton("Font");
 		fontButton.addActionListener(e -> {
 			FontChooser fontChooser = new FontChooser(jf);
+			fontChooser.setSelectedFont(curFont);
 			fontChooser.setVisible(true);
 			Font myNewFont = fontChooser.getSelectedFont();
 			if (myNewFont != null) {
@@ -91,11 +90,11 @@ public class Settings extends JPanel {
         });
         add(slideDelayButton);
 
-		JCheckBox memoryBox = new JCheckBox("Restart where left off");
+		final JCheckBox memoryBox = new JCheckBox("Restart where left off");
+		memoryBox.setSelected(curSavePageNumbers);
 		memoryBox.addItemListener(e ->  {
-			System.out.println("Changing setting");
+			setSavePageNumbers.accept(memoryBox.isSelected());
 		});
 		add(memoryBox);
 	}
-
 }
