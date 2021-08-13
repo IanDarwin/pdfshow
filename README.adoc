@@ -13,9 +13,11 @@ controls, etc. and aren't really optimized for showing slide decks.
 
 image::samples/SampleShow.png[width="800"]
 
-`PdfShow` has limitations compared with other tools (see the
-https://github.com/IanDarwin/pdfshow/issues[TODO list]), due to
+`PdfShow` has limitations compared with other tools, due to
 its relative youth and, more importantly, its design goals.
+_please_ see the https://github.com/IanDarwin/pdfshow/issues[TODO list];
+read through it before condemning the app as incomplete and again before
+adding to it - anyone can create a free github account and add issues there!
 
 More bells and whistles will be added as time permits, but let's keep it relatively simple.
 There is still some basic functionality that is imperfect or incomplete.
@@ -33,6 +35,7 @@ Note that the installers bundle their own Java VM, with which they are known
 to work; they are about 50Mb to download and about 120-140Mb when installed.
 If you use the source or JAR approach, you have to be sure
 you have a JDK that will work with `PdfShow`.
+The jar is currentl build with Java 16.
 
 If there's no installer, or you'd rather build from source, see <<building>> below.
 
@@ -45,6 +48,13 @@ There is more documentation in the `docs` folder.
 
 [[building]]
 == Build PdfShow From Source
+
+=== Prerequisites
+
+You need to have Java 11+ and Maven installed.
+You need Java 14+ if you want to build any of the full platform-specific installers.
+The installers and the public Jar file are built with {current-release}.
+
 
 === Getting Source
 
@@ -71,11 +81,6 @@ Using IntelliJ IDEA
 	Enter the URL https://github.com/IanDarwin/pdfshow and click Clone
 	Accept or choose the directory and click Clone
 	On "Open or Import" popup (with choice of how to open), select "Maven Project"
-
-=== Prerequisites
-
-You need to have Java 11+ and Maven installed.
-You need Java 14+ if you want to build any of the full platform-specific installers.
 
 === Test Runs
 
