@@ -40,12 +40,12 @@ do
 done
 shift `expr $OPTIND - 1`		 # leave just filenames
 
-if $VERBOSE; then
-	set -x
-fi
-
 if [ "${BUILT}" = "NO" ]; then
 	mvn ${SKIP_TESTS} clean package assembly:single
+fi
+
+if $VERBOSE; then
+	set -x
 fi
 
 jpackage \
