@@ -4,7 +4,7 @@
 
 Documentation - a good tutorial (text and/or video). Or just build out the user guide in `docs/`.
 
-Suggestions - create a New Issue (after checking the existing issues to avoid duplication;
+If you have Suggestions - create a New Issue (after checking the existing issues to avoid duplication;
 if there's a similar one just comment on it).
 
 Code - see below.
@@ -16,6 +16,7 @@ If you're not familiar with git, then git working on git. I mean, get working on
 Github has workflow stuff beyond plain git - see their
 https://guides.github.com[tutorials] and
 https://labs.github.com[labs] as well as many others on the web.
+But we're not using that stuff yet.
 
 Fork the repository (button in upper right).
 
