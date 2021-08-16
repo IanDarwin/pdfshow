@@ -29,7 +29,7 @@ public class Settings extends JPanel {
 					boolean curSavePageNumbers, Consumer<Boolean> setSavePageNumbers) {
 
 		// GUI & Actions
-		setLayout(new GridLayout(4, 1));
+		setLayout(new GridLayout(0, 1));
 		JButton fontButton = new JButton("Font");
 		fontButton.addActionListener(e -> {
 			FontChooser fontChooser = new FontChooser(jf);
@@ -54,10 +54,10 @@ public class Settings extends JPanel {
 		});
 		add(colorButton);
 
-		JButton linewidthButton = new JButton("Line");
+		JButton linewidthButton = new JButton("Line Thickness");
 		// XXX This could be much better - a slider with a live line preview
 		linewidthButton.addActionListener(e -> {
-			String ret = JOptionPane.showInputDialog("Line Width");
+			String ret = JOptionPane.showInputDialog("Line Thickness");
 			if (ret == null)
 				return;
 			try {
@@ -72,7 +72,7 @@ public class Settings extends JPanel {
 		});
 		add(linewidthButton);
 
-        JButton slideDelayButton = new JButton("Interval");
+        JButton slideDelayButton = new JButton("Slide Show Interval");
         // XXX This could be much better - a slider with a live line preview
         slideDelayButton.addActionListener(e -> {
             String ret = JOptionPane.showInputDialog("Slide Show Interval");
