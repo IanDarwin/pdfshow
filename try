@@ -1,3 +1,3 @@
 #!/bin/sh
 set -x
-mvn clean integration-test
+mvn -DskipTests clean integration-test

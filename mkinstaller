@@ -26,9 +26,12 @@ case $(uname) in
 			exit 1;
 esac
 
-while getopts "st:v" opt
+BUILT=NO
+
+while getopts "bst:v" opt
 do
 	case "$opt" in
+		b)	BUILT=YES;; # Use already-built uber-jar
 		s)	SKIP_TESTS=-DskipTests;;
 		t)	inst_format=$OPTARG;;
 		v)	VERBOSE=true;;
@@ -37,11 +40,13 @@ do
 done
 shift `expr $OPTIND - 1`		 # leave just filenames
 
+if [ "${BUILT}" = "NO" ]; then
+	mvn ${SKIP_TESTS} clean package assembly:single
+fi
+
 if $VERBOSE; then
 	set -x
 fi
-
-mvn ${SKIP_TESTS} clean package assembly:single
 
 jpackage \
 	--name PDFShow \
