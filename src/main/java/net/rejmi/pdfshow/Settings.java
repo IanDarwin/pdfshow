@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import javax.swing.JButton;
@@ -14,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.darwinsys.swingui.FontChooser;
+import com.darwinsys.swingui.I18N;
 
 /**
  * The Settings panel 
@@ -29,8 +31,9 @@ public class Settings extends JPanel {
 					boolean curSavePageNumbers, Consumer<Boolean> setSavePageNumbers) {
 
 		// GUI & Actions
+		ResourceBundle rb = ResourceBundle.getBundle("Menus");
 		setLayout(new GridLayout(0, 1));
-		JButton fontButton = new JButton("Font");
+        JButton fontButton = I18N.mkButton(rb, "fontButton");
 		fontButton.addActionListener(e -> {
 			FontChooser fontChooser = new FontChooser(jf);
 			fontChooser.setSelectedFont(curFont);
@@ -42,7 +45,7 @@ public class Settings extends JPanel {
 			fontChooser.dispose();
 		});
 		add(fontButton);
-		JButton colorButton = new JButton("Color");
+		JButton colorButton = I18N.mkButton(rb, "colorButton");
 		colorButton.addActionListener(e -> {
 			Color ch = JColorChooser.showDialog(
 				jf,             // parent
@@ -54,7 +57,7 @@ public class Settings extends JPanel {
 		});
 		add(colorButton);
 
-		JButton linewidthButton = new JButton("Line Thickness");
+		JButton linewidthButton = I18N.mkButton(rb, "lineWidthButton");
 		// XXX This could be much better - a slider with a live line preview
 		linewidthButton.addActionListener(e -> {
 			String ret = JOptionPane.showInputDialog("Line Thickness");
@@ -72,7 +75,7 @@ public class Settings extends JPanel {
 		});
 		add(linewidthButton);
 
-        JButton slideDelayButton = new JButton("Slide Show Interval");
+        JButton slideDelayButton = I18N.mkButton(rb, "slideDelayButton");
         // XXX This could be much better - a slider with a live line preview
         slideDelayButton.addActionListener(e -> {
             String ret = JOptionPane.showInputDialog("Slide Show Interval");
