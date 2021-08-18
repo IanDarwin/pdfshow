@@ -13,7 +13,6 @@ import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 import com.darwinsys.swingui.FontChooser;
 import com.darwinsys.swingui.I18N;
@@ -36,8 +35,7 @@ public class Settings extends JPanel {
     	this.curColor = curColor;
     	
 		// GUI & Actions
-    	Border border = BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED);
-		setBorder(border);
+    	setBorder(BorderFactory.createTitledBorder("Settings"));
     	ResourceBundle rb = ResourceBundle.getBundle("Menus");
 		setLayout(new GridLayout(0, 1));
         JButton fontButton = I18N.mkButton(rb, "fontButton");

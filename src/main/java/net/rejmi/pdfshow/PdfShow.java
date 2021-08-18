@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -101,11 +102,12 @@ public class PdfShow {
 	final static String KEY_FEEDBACK_URL = "feedback_general",
 			KEY_BUG_ENHANCE = "feedback_bug_enhance",
 			KEY_FEEDBACK_EMAIL = "feedback_email",
-			KEY_SOURCE_URL = "github_url";
+			KEY_SOURCE_URL = "github_url",
+			KEY_SAVE_PAGENUMS = "save pagenums"; // XXX
 	final static String KEY_FILECHOOSER_DIR = "file_chooser_dir";
 	final static String EMAIL_TEMPLATE = "mailto:%s?subject=PdfShow Feedback";
 	
-	boolean savePageNumbers = true;
+	boolean savePageNumbers = prefs.getBoolean(KEY_SAVE_PAGENUMS, true);
 
 	// GUI Controls - defined here since referenced throughout
 	static JFrame frame;
@@ -119,7 +121,7 @@ public class PdfShow {
 		lineButton, polyLineButton, ovalButton, rectangleButton; // Me three
 	final RecentMenu recents;
 
-	// For slideshow
+	// For slide show
     ExecutorService pool = Executors.newSingleThreadExecutor();
     Thread slideshowThread;
     int slideTime = 10;
@@ -177,7 +179,9 @@ public class PdfShow {
 		tabPane = new JTabbedPane();
 		tabPane.addChangeListener(evt -> {
 			currentTab = (DocTab)tabPane.getSelectedComponent();
-			updatePageNumbersDisplay();
+			if (currentTab != null) { // Avoid NPE on removal
+				updatePageNumbersDisplay();
+			}
 		});
 		frame.add(BorderLayout.CENTER, tabPane);
 
@@ -269,7 +273,7 @@ public class PdfShow {
 		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
 		aboutButton.addActionListener(e->
 			JOptionPane.showMessageDialog(frame, "PdfShow v0.0\n" +
-			"c 2020 Ian Darwin\n" +
+			"c 2021 Ian Darwin\n" +
 			"https://darwinsys.com/freeware\n" +
 			"Some icons from feathericons.com; rest by the author.",
 			"About PdfShow(tm)",
@@ -305,6 +309,7 @@ public class PdfShow {
 		sidePanel.setPreferredSize(new Dimension(150, 800));
 		
 		JPanel navBox = new JPanel();
+		navBox.setBorder(BorderFactory.createTitledBorder("Navigation"));
 		navBox.setLayout(new GridLayout(0,2));
 		
 		// Row 1 - just Up button
@@ -325,7 +330,7 @@ public class PdfShow {
 		// Row 2 - first page, # page, last page
 		pageNumTF = new JTextField("1");
 		pageNumTF.addMouseListener(new MouseAdapter() {
-			// If you click in it, select all so you can overtype
+			// If you click in it, we select all so you can overtype
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				pageNumTF.selectAll();
@@ -360,6 +365,7 @@ public class PdfShow {
 		logger.info("PdfShow(): Building Toolbox\n");
 
 		JPanel toolBox = new JPanel();
+		toolBox.setBorder(BorderFactory.createTitledBorder("Toolbox"));
 		toolBox.setLayout(new GridLayout(0, 2));
 
 		// Mode buttons
@@ -423,6 +429,8 @@ public class PdfShow {
             // slideshowThread.interrupt();
         }));
 		
+        // SETTINGS
+        
 		sidePanel.add(new Settings(
 				frame,
 				GObject.getFont(), GObject::setFont,
@@ -444,6 +452,7 @@ public class PdfShow {
 
 	/** Controls saving page numbers when closing file / exiting app */
 	void setSavePageNumbers(boolean b) {
+		prefs.putBoolean(KEY_SAVE_PAGENUMS, b);
 		savePageNumbers = b;
 	}
 
@@ -481,6 +490,7 @@ public class PdfShow {
             while (!done) {
                 if (tab != currentTab) {
                     // User manually changed it, so "the show must go off"!
+                	done = true;
                     return;
                 }
                 try {
@@ -550,7 +560,6 @@ public class PdfShow {
 	 * have to implement every method.
 	 */
 	private abstract class State {
-
 		private JButton button;
 
 		public State(JButton button) {
@@ -927,8 +936,9 @@ public class PdfShow {
 	static State currentState;
 
 	static void gotoState(State state) {
-		if (currentState != null)	// At beginning of program
+		if (currentState != null) {	// At beginning of program
 			currentState.leaveState();
+		}
 		currentState = state;
 		currentState.enterState();
 	}
@@ -1064,14 +1074,17 @@ public class PdfShow {
 		tabPane.addTab(file.getName(), currentTab = t);
 		final int index = tabPane.getTabCount() - 1;
 		tabPane.setSelectedIndex(index);
-		tabPane.setTabComponentAt(index, new ClosableTabHeader(this::closeFile, tabPane, t));
-		int pageNum = prefs.getInt("PAGE#" + file.getName(), -1);
+		ClosableTabHeader tabComponent = new ClosableTabHeader(this::closeFile, tabPane, t);
+		tabPane.setTabComponentAt(index, tabComponent);
+		int pageNum = savePageNumbers ? prefs.getInt("PAGE#" + file.getName(), -1) : 0;
 		moveToPage(pageNum == -1 ? 0 : pageNum);
 	}
 
 	void closeFile(DocTab dt) {
-		dt.close();
 		tabPane.remove(dt);
+		if (savePageNumbers)
+		 prefs.putInt("PAGE#" + dt.getName(), dt.getPageNumber());
+		dt.close();
 	}
 
 	private void moveToPage(int newPage) {

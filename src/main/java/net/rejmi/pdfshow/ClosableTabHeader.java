@@ -14,19 +14,6 @@ final class ClosableTabHeader extends JPanel {
 		setLayout(new FlowLayout());
         JLabel label = new JLabel(docTab.file.getName());
         add(label);
-		label.setToolTipText(docTab.file.getAbsolutePath());
-        // ToolTip eats mouse event; switching fails without this; see https://stackoverflow.com/questions/19910739
-        label.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                panel.setSelectedComponent(docTab);
-            }
-            // This will be used when handling dragging tabs
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                super.mouseDragged(e);
-            }
-        });
 		JButton xButton = new MyCloseButton();
 		add(xButton);
 		xButton.setPreferredSize(new Dimension(16,16));
