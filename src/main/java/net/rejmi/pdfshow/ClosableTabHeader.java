@@ -6,7 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
-/** The header for the TabbedPane doctabs */
+/** The header-providing wrapper for the TabbedPane doctabs */
 final class ClosableTabHeader extends JPanel {
 	private static final long serialVersionUID = 1L;
 
