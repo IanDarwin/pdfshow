@@ -38,7 +38,8 @@ abstract class GObject {
 	boolean isSelected = false;
 
 	// Class Drawing Parameters - constructors should save what they need!
-	static Color curColor = Color.RED;
+	// Color starts with neutral blue - save Red for important stuff
+	static Color curColor = new Color(0x3399FF);
 	static Font curFont = new Font("Sans", Font.PLAIN, 24);
 	static int curLineThickness = 3;
 

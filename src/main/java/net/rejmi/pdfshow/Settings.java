@@ -22,6 +22,7 @@ import com.darwinsys.swingui.I18N;
  */
 public class Settings extends JPanel {
 	private static final long serialVersionUID = 1L;
+	Color curColor;
 
     public Settings(JFrame jf,
                     Font curFont, Consumer<Font> setFont,
@@ -30,6 +31,9 @@ public class Settings extends JPanel {
                     int curSlideTime, Consumer<Integer> setSlideTime,
 					boolean curSavePageNumbers, Consumer<Boolean> setSavePageNumbers) {
 
+    	// Save state for re-use (in case user runs eg Color twice w/o closing dialog)
+    	this.curColor = curColor;
+    	
 		// GUI & Actions
 		ResourceBundle rb = ResourceBundle.getBundle("Menus");
 		setLayout(new GridLayout(0, 1));
@@ -50,9 +54,9 @@ public class Settings extends JPanel {
 			Color ch = JColorChooser.showDialog(
 				jf,             // parent
 				"Pick a Drawing Color",   // title
-				curColor);
+				this.curColor);
 			if (ch != null) {
-				setColor.accept(ch);
+				setColor.accept(this.curColor = ch);
 			}
 		});
 		add(colorButton);
