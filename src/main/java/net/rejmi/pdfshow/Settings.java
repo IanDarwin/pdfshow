@@ -47,7 +47,7 @@ public class Settings extends JPanel {
 			Color ch = JColorChooser.showDialog(
 				jf,             // parent
 				"Pick a Drawing Color",   // title
-				getForeground());          // default
+				curColor);
 			if (ch != null) {
 				setColor.accept(ch);
 			}
@@ -73,9 +73,9 @@ public class Settings extends JPanel {
 		add(linewidthButton);
 
         JButton slideDelayButton = new JButton("Slide Show Interval");
-        // XXX This could be much better - a slider with a live line preview
+        // XXX This could be much better - a slider
         slideDelayButton.addActionListener(e -> {
-            String ret = JOptionPane.showInputDialog("Slide Show Interval");
+            String ret = JOptionPane.showInputDialog("Slide Show Interval (seconds)");
             if (ret == null)
                 return;
             try {
