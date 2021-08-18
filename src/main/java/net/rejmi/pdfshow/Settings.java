@@ -1,18 +1,19 @@
 package net.rejmi.pdfshow;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import com.darwinsys.swingui.FontChooser;
 import com.darwinsys.swingui.I18N;
@@ -35,7 +36,9 @@ public class Settings extends JPanel {
     	this.curColor = curColor;
     	
 		// GUI & Actions
-		ResourceBundle rb = ResourceBundle.getBundle("Menus");
+    	Border border = BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED);
+		setBorder(border);
+    	ResourceBundle rb = ResourceBundle.getBundle("Menus");
 		setLayout(new GridLayout(0, 1));
         JButton fontButton = I18N.mkButton(rb, "fontButton");
 		fontButton.addActionListener(e -> {

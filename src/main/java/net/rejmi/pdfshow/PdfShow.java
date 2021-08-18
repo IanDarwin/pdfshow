@@ -247,11 +247,6 @@ public class PdfShow {
 			currentTab.deleteSelected();
 		});
 		editMenu.add(deleteItemMI);
-		JMenuItem prefsMI = MenuUtils.mkMenuItem(rb, "edit", "preferences");
-		prefsMI.addActionListener(e -> {
-			showSettingsDialog();
-		});
-		editMenu.add(prefsMI);
 
         final JMenu slideshowMenu = MenuUtils.mkMenu(rb, "slideshow");
         menuBar.add(slideshowMenu);
@@ -427,10 +422,6 @@ public class PdfShow {
             done = true;
             // slideshowThread.interrupt();
         }));
-
-		JButton settingsButton = new JButton(getMyImageIcon("Settings"));
-		settingsButton.addActionListener(e -> showSettingsDialog());
-		sidePanel.add(settingsButton);
 		
 		sidePanel.add(new Settings(
 				frame,
@@ -444,19 +435,6 @@ public class PdfShow {
 		frame.add(BorderLayout.WEST, sidePanel);
 
 		// END TOOL BOX
-	}
-
-	// Show Settings - invoked from menu or from button
-	void showSettingsDialog() {
-		// Need to pass all current params as well as the handlers
-		JOptionPane.showMessageDialog(frame, new Settings(
-			frame,
-			GObject.getFont(), GObject::setFont,
-			GObject.getColor(), GObject::setColor,
-			GObject.getLineThickness(), GObject::setLineThickness,
-			slideTime, this::setSlideTime,
-			savePageNumbers, this::setSavePageNumbers
-		));
 	}
 
 	/** Adjusts the slide show time interval */
