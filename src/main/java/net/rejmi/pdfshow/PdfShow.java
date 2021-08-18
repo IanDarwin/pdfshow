@@ -272,7 +272,7 @@ public class PdfShow {
 		menuBar.add(helpMenu);
 		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
 		aboutButton.addActionListener(e->
-			JOptionPane.showMessageDialog(frame, "PdfShow v0.0\n" +
+			JOptionPane.showMessageDialog(frame, "PdfShow&tm; v${project.version}\n" +
 			"c 2021 Ian Darwin\n" +
 			"https://darwinsys.com/freeware\n" +
 			"Some icons from feathericons.com; rest by the author.",
