@@ -431,6 +431,15 @@ public class PdfShow {
 		JButton settingsButton = new JButton(getMyImageIcon("Settings"));
 		settingsButton.addActionListener(e -> showSettingsDialog());
 		sidePanel.add(settingsButton);
+		
+		sidePanel.add(new Settings(
+				frame,
+				GObject.getFont(), GObject::setFont,
+				GObject.getColor(), GObject::setColor,
+				GObject.getLineThickness(), GObject::setLineThickness,
+				slideTime, this::setSlideTime,
+				savePageNumbers, this::setSavePageNumbers
+			));
 
 		frame.add(BorderLayout.WEST, sidePanel);
 
