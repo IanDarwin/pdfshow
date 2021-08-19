@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
@@ -45,11 +46,14 @@ class DocTab extends JPanel {
 	/** Our user's annotations for this doc, indexed by page#-1 to get list */
 	List<List<GObject>> addIns;
 	private PDPage deletedPage;
+	private Preferences prefs;
 	
 	/** Construct one Document Tab */
-	DocTab(File file) throws IOException {
+	DocTab(File file, Preferences prefs) throws IOException {
 		super();
 
+		this.prefs = prefs;
+		
 		// PDF stuff
 		this.file = file;
 		// Start of "Should be done in a background thread"
@@ -197,7 +201,9 @@ class DocTab extends JPanel {
 
 	void close() {
 		try {
-			doc.close();
+			prefs.putInt("PAGE#" + getName(), getPageNumber());
+			if (doc != null)
+				doc.close();
 			doc = null;
 		} catch (IOException e) {
 			e.printStackTrace();	// Nobody wants to listen to your chuntering.

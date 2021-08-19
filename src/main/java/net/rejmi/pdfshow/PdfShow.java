@@ -19,6 +19,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -179,6 +180,12 @@ public class PdfShow {
 					dt.computeScaling();
 				}
 			};
+		});
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				checkAndQuit();				
+			}	
 		});
 
 		programProps = new Properties();
@@ -378,7 +385,7 @@ public class PdfShow {
 		// END NAV BOX
 
 		// TOOL BOX
-		logger.info("PdfShow(): Building Toolbox\n");
+		logger.info("PdfShow(): Building Toolbox");
 
 		JPanel toolBox = new JPanel();
 		toolBox.setBorder(BorderFactory.createTitledBorder("Toolbox"));
@@ -675,10 +682,11 @@ public class PdfShow {
 		public void mouseClicked(MouseEvent e) {
 			int mx = e.getX(), my = e.getY();
 			logger.info(String.format(
-					"PdfShow.ViewState.mouseClicked() x %d y %d\n", mx, my));
+					"PdfShow.ViewState.mouseClicked() x %d y %d", mx, my));
 			changed = found = false;
 			// Avoid old selection
 			visitCurrentPageGObjs(gobj -> gobj.isSelected = false);
+
 			visitCurrentPageGObjs(gobj -> {
 				if (found) {
 					return;	// Only select one
@@ -1016,17 +1024,15 @@ public class PdfShow {
 
 	/*
 	 * Should be the only place we exit from.
-	 * XXX Need a WindowListener on Frame to get in here!
 	 */
 	private void checkAndQuit() {
 		if (savePageNumbers) {
 			int nt = tabPane.getTabCount();
 			for (int i = 0; i < nt; i++) {
-				DocTab dt = (DocTab)tabPane.getComponent(nt);
-				prefs.putInt("PAGE#" + dt.getName(), dt.getPageNumber());
+				((DocTab)tabPane.getComponent(nt)).close();
 			}
 		}
-		// TODO Once we add saving, check for unsaved changes
+		// XXX Once we add saving, check for unsaved changes
 		System.exit(0);
 	}
 
@@ -1079,7 +1085,7 @@ public class PdfShow {
 	 * @parameter file A File descriptor for the file to be opened.
 	 */
 	private void openPdfFile(File file) throws IOException {
-		DocTab t = new DocTab(file);
+		DocTab t = new DocTab(file, prefs);
 		t.setFocusable(true);
 		t.addKeyListener(kl);
 		t.addMouseListener(ml);
