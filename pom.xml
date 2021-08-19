@@ -65,10 +65,10 @@
 
 		<resources>
 			<resource>
-				<directory>src/main/java</directory>
+				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 				<includes>
-					<include>**/PdfShow.java</include>
+					<include>**/*.properties</include>
 				</includes>
 			</resource>
 			<resource>

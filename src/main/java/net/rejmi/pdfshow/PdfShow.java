@@ -99,12 +99,17 @@ public class PdfShow {
 	Properties programProps = new Properties();
 	Preferences prefs = Preferences.userNodeForPackage(PdfShow.class);
 	final static String PROPS_FILE_NAME = "/pdfshow.properties";
+	// For programProps
 	final static String KEY_FEEDBACK_URL = "feedback_general",
 			KEY_BUG_ENHANCE = "feedback_bug_enhance",
 			KEY_FEEDBACK_EMAIL = "feedback_email",
-			KEY_SOURCE_URL = "github_url",
-			KEY_SAVE_PAGENUMS = "save pagenums"; // XXX
-	final static String KEY_FILECHOOSER_DIR = "file_chooser_dir";
+			KEY_SOURCE_URL = "source_url",
+			KEY_HOME_URL = "home_url",
+			KEY_VERSION = "version";
+	// For Prefs
+	final static String
+			KEY_SAVE_PAGENUMS = "save pagenums",
+			KEY_FILECHOOSER_DIR = "file_chooser_dir";
 	final static String EMAIL_TEMPLATE = "mailto:%s?subject=PdfShow Feedback";
 	
 	boolean savePageNumbers = prefs.getBoolean(KEY_SAVE_PAGENUMS, true);
@@ -272,10 +277,12 @@ public class PdfShow {
 		menuBar.add(helpMenu);
 		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
 		aboutButton.addActionListener(e->
-			JOptionPane.showMessageDialog(frame, "PdfShow&tm; v${project.version}\n" +
-			"c 2021 Ian Darwin\n" +
-			"https://darwinsys.com/freeware\n" +
-			"Some icons from feathericons.com; rest by the author.",
+			JOptionPane.showMessageDialog(frame, 
+			String.format("PdfShow(tm) %s\n" +
+				"(c) 2021 Ian Darwin\n" +
+				"%s\n",
+				programProps.getProperty(KEY_VERSION),
+				programProps.getProperty(KEY_HOME_URL)),
 			"About PdfShow(tm)",
 			JOptionPane.INFORMATION_MESSAGE));
 		helpMenu.add(aboutButton);
