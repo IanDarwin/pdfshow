@@ -1029,7 +1029,13 @@ public class PdfShow {
 		if (savePageNumbers) {
 			int nt = tabPane.getTabCount();
 			for (int i = 0; i < nt; i++) {
-				((DocTab)tabPane.getComponent(nt)).close();
+				((DocTab)tabPane.getComponent(i)).close();
+			}
+			try {
+				prefs.flush();
+			} catch (BackingStoreException e) {
+				JOptionPane.showMessageDialog(frame, "Failed to save some prefs: " + e);
+				// Nothing can be done, alas.
 			}
 		}
 		// XXX Once we add saving, check for unsaved changes
