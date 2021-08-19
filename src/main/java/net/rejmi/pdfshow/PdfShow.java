@@ -1,6 +1,7 @@
 package net.rejmi.pdfshow;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -49,6 +50,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.border.Border;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
@@ -66,18 +68,23 @@ public class PdfShow {
 	
 	static Logger logger;
 
+	static {
+		// Configure for macOS if possible/applicable -
+		// ignored on other platforms
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
+		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
+				PdfShow.class.getSimpleName());
+		// Now Start GUI thread
+		frame = new JFrame("PDFShow");
+	}
+	
 	public static void main(String[] args) throws Exception {
 
 		// Configure logging
 		LoggerSetup.init();
 		logger = Logger.getLogger("pdfshow");
 		logger.info("PdfShow Starting.");
-
-		// Configure for macOS if possible/applicable - ignored on other platforms
-		System.setProperty("apple.laf.useScreenMenuBar", "true");
-		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-			PdfShow.class.getSimpleName());
-
+		
 		// Instantiate main program
 		PdfShow.instance = new PdfShow();
 		PdfShow.instance.setVisible(true);
@@ -118,12 +125,18 @@ public class PdfShow {
 	static JFrame frame;
 	private JTabbedPane tabPane;
 	private DocTab currentTab;
-	private JButton upButton, downButton; // Do not move into constr
-	private JTextField pageNumTF;		 // Nor me.
-	private JLabel pageCountTF;		// Me neither.
+	private JButton upButton = new JButton(getMyImageIcon("Chevron-Up")),
+			downButton = new JButton(getMyImageIcon("Chevron-Down"));
+	private JTextField pageNumTF;
+	private JLabel pageCountTF;
 	// These can't be final due to constructor operation ordering:
-	private /*final*/ JButton selectButton, textButton, markerButton,
-		lineButton, polyLineButton, ovalButton, rectangleButton; // Me three
+	private JButton selectButton = new JButton(getMyImageIcon("Select")), 
+		textButton = new JButton(getMyImageIcon("Text")), 
+		markerButton = new JButton(getMyImageIcon("Marker")),
+		lineButton = new JButton(getMyImageIcon("Line")), 
+		polyLineButton = new JButton(getMyImageIcon("PolyLine")), 
+		ovalButton = new JButton(getMyImageIcon("Oval")), 
+		rectangleButton = new JButton(getMyImageIcon("Rectangle"));
 	final RecentMenu recents;
 
 	// For slide show
@@ -139,8 +152,6 @@ public class PdfShow {
 		gotoState(viewState);
 
 		// GUI SETUP
-		frame = new JFrame("PDFShow");
-
 		try {
 			desktop=Desktop.getDesktop();
 		} catch (UnsupportedOperationException ex) {
@@ -201,7 +212,7 @@ public class PdfShow {
 		miOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		fm.add(miOpen);
-		recents = new RecentMenu(prefs) {
+		recents = new RecentMenu(prefs, 10) {
 			private static final long serialVersionUID = 1L;
 			@Override
 			public void loadFile(String fileName) throws IOException {
@@ -320,10 +331,8 @@ public class PdfShow {
 		navBox.setLayout(new GridLayout(0,2));
 		
 		// Row 1 - just Up button
-		upButton = new JButton(getMyImageIcon("Chevron-Up"));
 		upButton.addActionListener(e -> moveToPage(currentTab.getPageNumber() - 1));
 		navBox.add(upButton);
-		downButton = new JButton(getMyImageIcon("Chevron-Down"));
 		downButton.addActionListener(e -> moveToPage(currentTab.getPageNumber() + 1));
 		navBox.add(downButton);
 
@@ -376,37 +385,29 @@ public class PdfShow {
 		toolBox.setLayout(new GridLayout(0, 2));
 
 		// Mode buttons
-
-		selectButton = new JButton(getMyImageIcon("Select"));
 		selectButton.addActionListener(e -> gotoState(viewState));
 		toolBox.add(selectButton);
 
-		textButton = new JButton(getMyImageIcon("Text"));
 		textButton.addActionListener(e -> gotoState(textDrawState));
 		textButton.setToolTipText("Add text object");
 		toolBox.add(textButton);
 
-		markerButton = new JButton(getMyImageIcon("Marker"));
 		markerButton.addActionListener(e -> gotoState(markingState));
 		markerButton.setToolTipText("Add marker");
 		toolBox.add(markerButton);
 
-		lineButton = new JButton(getMyImageIcon("Line"));
 		lineButton.addActionListener(e -> gotoState(lineDrawState));
 		lineButton.setToolTipText("Add straight line");
 		toolBox.add(lineButton);
 		
-		polyLineButton = new JButton(getMyImageIcon("PolyLine"));
 		polyLineButton.addActionListener(e -> gotoState(polyLineDrawState));
 		polyLineButton.setToolTipText("Add a polyline");
 		toolBox.add(polyLineButton);
 		
-		ovalButton = new JButton(getMyImageIcon("Oval"));
 		ovalButton.addActionListener(e -> gotoState(ovalState));
 		ovalButton.setToolTipText("Add oval");
 		toolBox.add(ovalButton);
 		
-		rectangleButton = new JButton(getMyImageIcon("Rectangle"));
 		rectangleButton.addActionListener(e -> gotoState(rectangleState));
 		rectangleButton.setToolTipText("Add rectangle");
 		toolBox.add(rectangleButton);
@@ -567,18 +568,23 @@ public class PdfShow {
 	 * have to implement every method.
 	 */
 	private abstract class State {
-		private JButton button;
+		private final JButton button;
+		private final Border active = BorderFactory.createLineBorder(Color.BLUE, 3);
 
 		public State(JButton button) {
 			this.button = button;
 		}
 		/** Anything to be done on entering a given state */
 		public void enterState() {
-			//
+			logger.fine(String.format("enterState of %s, button is %s", getClass(), button));
+			if (button != null)
+				button.setBorder(active);
 		}
 
 		public void leaveState() {
-			//
+			logger.fine("leaveState of " + getClass());
+			if (button != null)
+				button.setBorder(null);
 		}
 
 		public void keyPressed(KeyEvent e) {
@@ -715,6 +721,7 @@ public class PdfShow {
 		
 		@Override
 		public void leaveState() {
+			super.leaveState();
 			visitCurrentPageGObjs(gobj->{
 				if (gobj.isSelected) {
 					gobj.isSelected = false;
