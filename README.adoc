@@ -3,7 +3,8 @@
 Maybe you have to present a talk and you only have the PDF, not the ODP, KeyNote or PPT file(s).
 Some training companies just distribute their courses to instructors as PDFs, 
 not presentation-software files.
-Or maybe you want to re-give somebody else's preso from the PDF-only version they published online.
+Or maybe you want to re-give somebody else's preso from the PDF-only version they published online
+(if you do this, make sure to give credit, and respect copyrights/licenses).
 For whatever reason you need to present with just have the PDF of the slides,
 `PdfShow` is for you!
 `PdfShow` is a PDF viewer specifically for running slide shows.
