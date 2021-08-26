@@ -3,7 +3,7 @@
 
 	<groupId>net.rejmi</groupId>
 	<artifactId>pdfshow</artifactId>
-	<version>0.1.4</version>	<!-- DRY? Keep mkinstaller at same x.y.z level -->
+	<version>1.0.0</version>	<!-- DRY? Keep mkinstaller at same x.y.z level -->
 	<packaging>jar</packaging>
 	<inceptionYear>2019</inceptionYear>
 
@@ -29,7 +29,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<javase.version>11</javase.version>
+		<javase.version>16</javase.version>
 		<maven.compiler.source>${javase.version}</maven.compiler.source>
 		<maven.compiler.target>${javase.version}</maven.compiler.target>
 		<maven.compiler.testSource>${javase.version}</maven.compiler.testSource>
@@ -50,6 +50,14 @@
 			<groupId>com.darwinsys</groupId>
 			<artifactId>darwinsys-api</artifactId>
 			<version>1.5.15</version>
+		</dependency>
+
+		<!-- Update maven plugin for legacy systems -->
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>3.8.1</version>
+			<type>maven-plugin</type>
 		</dependency>
 
 		<dependency>
@@ -105,7 +113,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.6</version>
+				<version>3.3.0</version>
 				<configuration>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
