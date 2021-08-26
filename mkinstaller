@@ -9,6 +9,7 @@ function usage {		# give usage message, and exit
 	exit 1
 }
 
+# Check for known OS and set os-specific options
 case $(uname) in
 	MSYS_NT-10*)	inst_format=msi
 			icon_format=ico
@@ -26,6 +27,18 @@ case $(uname) in
 			exit 1;
 esac
 
+# Next, let's make sure jpackage is available (most likely failure?)
+FOUND=0
+OLDIFS=$IFS
+IFS=':'; for d in $PATH; do if [ -x $d/jpackage ]; then FOUND=1; break; else echo $d; fi; done
+IFS=$OLDIFS
+
+if [ $FOUND -eq 0 ]; then
+	echo 'jpackage not on $PATH; please install modern JDK, use supported OS, and set PATH correctly'
+	exit 1
+fi
+
+# Now try command-line args
 BUILT=NO
 
 while getopts "bst:v" opt
