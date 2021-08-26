@@ -30,7 +30,7 @@ esac
 # Next, let's make sure jpackage is available (most likely failure?)
 FOUND=0
 OLDIFS=$IFS
-IFS=':'; for d in $PATH; do if [ -x $d/jpackage ]; then FOUND=1; break; else echo $d; fi; done
+IFS=':'; for d in $PATH; do if [ -x $d/jpackage ]; then FOUND=1; break; fi; done
 IFS=$OLDIFS
 
 if [ $FOUND -eq 0 ]; then
