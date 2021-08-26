@@ -4,7 +4,7 @@ RELEASE_VERSION=0.1.4	# DRY? Keep in sync with pom file
 
 USAGE="$0 [-t installer-type] [-v]"
 
-function usage {		# give usage message, and exit
+usage() {		# give usage message, and exit
 	echo "Usage: ${USAGE}" 2>&1
 	exit 1
 }
@@ -51,7 +51,7 @@ do
 		*)	usage;;
 	esac
 done
-shift `expr $OPTIND - 1`		 # leave just filenames
+shift $(expr $OPTIND - 1)		 # leave just filenames
 
 if [ "${BUILT}" = "NO" ]; then
 	mvn ${SKIP_TESTS} clean package assembly:single
