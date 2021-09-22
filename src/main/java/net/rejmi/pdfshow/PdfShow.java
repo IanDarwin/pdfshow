@@ -489,6 +489,8 @@ public class PdfShow {
                     done = true;
                     return;
                 }
+                if (done)
+                	return;
                 n = (n + 1) % tabPane.getTabCount();
                 tabPane.setSelectedIndex(n);
             }
