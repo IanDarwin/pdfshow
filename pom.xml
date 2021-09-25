@@ -7,6 +7,11 @@
 	<packaging>jar</packaging>
 	<inceptionYear>2019</inceptionYear>
 
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/IanDarwin/pdfshow/issues</url>
+	</issueManagement>
+
 	<name>pdfshow</name>
 	<description>
 		pdfshow
