@@ -5,7 +5,10 @@ Some training companies just distribute their courses to instructors as PDFs,
 not presentation-software files.
 Or maybe you want to re-give somebody else's preso from the PDF-only version they published online
 (if you do this, make sure to give credit, and respect copyrights/licenses).
-For whatever reason you need to present with just have the PDF of the slides,
+Or yet again, maybe you use the open-source
+https://staff.fnwi.uva.nl/b.diertens/useful/gpresent/[gpresent],
+which doesn't run shows but generates the PDF and leaves it to others to display.
+For whatever reason you need to present with just the PDF of the slides,
 `PdfShow` is for you!
 `PdfShow` is a PDF viewer specifically for running slide shows.
 I wrote it because I do sometimes teach from PDFs and was tired of general-purpose programs 
