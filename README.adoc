@@ -1,7 +1,7 @@
 = PdfShow
 
 ifndef::current-release[]
-:current-release: 16
+:current-release: Java 16
 endif::[]
 
 Maybe you have to present a talk and you only have the PDF, not the ODP, KeyNote or PPT file(s).
