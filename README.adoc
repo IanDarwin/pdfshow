@@ -1,5 +1,9 @@
 = PdfShow
 
+ifndef::current-release[]
+:current-release: 16
+endif::[]
+
 Maybe you have to present a talk and you only have the PDF, not the ODP, KeyNote or PPT file(s).
 Some training companies just distribute their courses to instructors as PDFs, 
 not presentation-software files.
@@ -37,9 +41,10 @@ If not, there's a Jar file that you can run with `java -jar`.
 
 Note that the installers bundle their own Java VM, with which they are known
 to work; they are about 50Mb to download and about 120-140Mb when installed.
-If you use the source or JAR approach, you have to be sure
+If you already have a current Java installed, you may prefer to run the JAR file.
+WHen using the source or JAR approach, you have to be sure
 you have a JDK that will work with `PdfShow`.
-The jar is currentl build with Java 16.
+The jar is currently built with Java 16 or 17.
 
 If there's no installer, or you'd rather build from source, see <<building>> below.
 
