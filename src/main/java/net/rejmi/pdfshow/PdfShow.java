@@ -422,7 +422,7 @@ public class PdfShow {
 		// Other buttons
 		final JButton clearButton = new JButton(getMyImageIcon("Trash"));
 		clearButton.addActionListener(e -> currentTab.deleteAll());
-		clearButton.setToolTipText("Delete an object");
+		clearButton.setToolTipText("Delete ALL objects");
 		toolBox.add(clearButton);
 		
 		final JButton undoButton = new JButton(getMyImageIcon("Undo"));
