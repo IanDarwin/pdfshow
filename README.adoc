@@ -1,11 +1,18 @@
 = PdfShow
 
+ifndef::current-release[]
+:current-release: Java 16
+endif::[]
+
 Maybe you have to present a talk and you only have the PDF, not the ODP, KeyNote or PPT file(s).
 Some training companies just distribute their courses to instructors as PDFs, 
 not presentation-software files.
 Or maybe you want to re-give somebody else's preso from the PDF-only version they published online
 (if you do this, make sure to give credit, and respect copyrights/licenses).
-For whatever reason you need to present with just have the PDF of the slides,
+Or yet again, maybe you use the open-source
+https://staff.fnwi.uva.nl/b.diertens/useful/gpresent/[gpresent],
+which doesn't run shows but generates the PDF and leaves it to others to display.
+For whatever reason you need to present with just the PDF of the slides,
 `PdfShow` is for you!
 `PdfShow` is a PDF viewer specifically for running slide shows.
 I wrote it because I do sometimes teach from PDFs and was tired of general-purpose programs 
@@ -34,9 +41,10 @@ If not, there's a Jar file that you can run with `java -jar`.
 
 Note that the installers bundle their own Java VM, with which they are known
 to work; they are about 50Mb to download and about 120-140Mb when installed.
-If you use the source or JAR approach, you have to be sure
+If you already have a current Java installed, you may prefer to run the JAR file.
+WHen using the source or JAR approach, you have to be sure
 you have a JDK that will work with `PdfShow`.
-The jar is currentl build with Java 16.
+The jar is currently built with Java 16 or 17.
 
 If there's no installer, or you'd rather build from source, see <<building>> below.
 

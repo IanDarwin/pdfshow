@@ -489,6 +489,8 @@ public class PdfShow {
                     done = true;
                     return;
                 }
+                if (done)
+                	return;
                 n = (n + 1) % tabPane.getTabCount();
                 tabPane.setSelectedIndex(n);
             }
@@ -1027,9 +1029,10 @@ public class PdfShow {
 	 */
 	private void checkAndQuit() {
 		if (savePageNumbers) {
-			int nt = tabPane.getTabCount();
-			for (int i = 0; i < nt; i++) {
-				((DocTab)tabPane.getComponent(i)).close();
+			for (int i = 0; i < tabPane.getTabCount(); i++) {
+				Object comp = tabPane.getComponent(i);
+				if (comp instanceof DocTab)
+					((DocTab)comp).close();
 			}
 			try {
 				prefs.flush();
