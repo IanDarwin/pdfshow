@@ -206,7 +206,7 @@ class DocTab extends JPanel {
 				doc.close();
 			doc = null;
 		} catch (IOException e) {
-			e.printStackTrace();	// Nobody wants to listen to your chuntering.
+			System.err.printf("IOException %s, but: Nobody wants to listen to your chuntering.\n", e);
 		}
 	}
 
