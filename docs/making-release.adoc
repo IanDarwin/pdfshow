@@ -7,8 +7,6 @@
 * git push --tag
 * For each supported platform:
 ** sh mkinstaller
-** If it happens that you find a mistake while building installers, fix it, commit it, push it,
-then `git push --delete origin v1.0.x` *and* repeat the `git push --tag`
 ** Upload the binaries to github:
 *** Signon if needed
 *** On first machine:
@@ -17,7 +15,7 @@ then `git push --delete origin v1.0.x` *and* repeat the `git push --tag`
 **** Pick a cutesy release name.
 **** Write a bit about this release
 **** Drag the `with-dependencies- jar from one machine.
-**** Check "is a pre-release" until we decide otherwise.
+**** Wait for that to upload. Then upload your newly-minted installer.
 *** On subsequent machines:
 **** Under Releases, Update Release (subsequent)
 *** Drag the just-created installer into the drag area
