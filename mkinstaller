@@ -70,7 +70,10 @@ jpackage \
 	--icon src/main/resources/images/logo.${icon_format} \
 	--input target \
 	--main-jar pdfshow-${RELEASE_VERSION}-jar-with-dependencies.jar \
-	${OS_SPECIFIC}
+	${OS_SPECIFIC} || {
+		echo jpackage did not complete normally!
+		exit 1
+	}
 exit
 	# The following are not used in production releases
 	# Omit file-association for OSes that only allow one program per filetype.
