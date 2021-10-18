@@ -4,6 +4,12 @@ ifndef::current-release[]
 :current-release: Java 16
 endif::[]
 
+`PdfShow` is a PDF viewer specifically for running slide shows.
+I wrote it because I do sometimes teach from PDFs and was tired of general-purpose programs 
+like PDF Annotator and Adobe Reader, which have too many modes,
+controls, etc. and aren't really optimized for showing slide decks.
+
+Wait! Who presents from PDFs?
 Maybe you have to present a talk and you only have the PDF, not the ODP, KeyNote or PPT file(s).
 Some training companies just distribute their courses to instructors as PDFs, 
 not presentation-software files.
@@ -12,12 +18,10 @@ Or maybe you want to re-give somebody else's preso from the PDF-only version the
 Or yet again, maybe you use the open-source
 https://staff.fnwi.uva.nl/b.diertens/useful/gpresent/[gpresent],
 which doesn't run shows but generates the PDF and leaves it to others to display.
-For whatever reason you need to present with just the PDF of the slides,
+Or the Markdown-based https://marp.app/[MARP], which can generate PDFs directly.
+Or the MagicPoint-based https://mg.pov.lt/mgp2pdf/[MagicPoint to PDF Converter].
+Whatever the reason you need to present with just the PDF of the slides,
 `PdfShow` is for you!
-`PdfShow` is a PDF viewer specifically for running slide shows.
-I wrote it because I do sometimes teach from PDFs and was tired of general-purpose programs 
-like PDF Annotator and Adobe Reader, which have too many modes,
-controls, etc. and aren't really optimized for showing slide decks.
 
 image::samples/SampleShow.png[width="800"]
 
@@ -109,7 +113,7 @@ To make a JAR file with just the program and its images (without the dependencie
 
 To make a clickable runnable JAR file, run `mvn package assembly:single`.
 You'll then find a `jar` with dependencies in the target folder.
-It'll be named something like `pdfshow-x.y.z-SNAPSHOT-jar-with-dependencies.jar`.
+It'll be named something like `target/pdfshow-x.y.z-SNAPSHOT-jar-with-dependencies.jar`.
 You can run it with `java -jar target/pdfshow*dependencies.jar` (see `scripts/pdfshow`), or just click on it in a file
 manager window in MS-Windows, macOS, or most *Nix windowed environments.
 
