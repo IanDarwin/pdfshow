@@ -275,6 +275,13 @@ public class PdfShow {
 		});
 		editMenu.add(deleteItemMI);
 
+		final JMenu viewMenu = MenuUtils.mkMenu(rb, "view");
+		menuBar.add(viewMenu);
+
+		JMenuItem favoritesMI = MenuUtils.mkMenuItem(rb, "view","favorites");
+		favoritesMI.setEnabled(false);
+		viewMenu.add(favoritesMI);
+
         final JMenu slideshowMenu = MenuUtils.mkMenu(rb, "slideshow");
         menuBar.add(slideshowMenu);
         final JMenuItem ssThisTabFromStartButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_start");
@@ -306,7 +313,8 @@ public class PdfShow {
 		helpMenu.add(aboutButton);
 		final JMenuItem helpButton = MenuUtils.mkMenuItem(rb, "help", "help");
 		helpButton.addActionListener(e->
-	    	JOptionPane.showMessageDialog(frame, "Help not written yet, sorry!"));
+	    	JOptionPane.showMessageDialog(frame, "Help not written yet", 
+				"Sorry", JOptionPane.WARNING_MESSAGE));
 		helpMenu.add(helpButton);
 		final JMenuItem sourceButton = new JMenuItem("Source Code");
 		sourceButton.setIcon(getMyImageIcon("octocat"));
@@ -434,6 +442,13 @@ public class PdfShow {
 		feedbackButton.addActionListener(feedbackAction);
 		feedbackButton.setToolTipText("Send feedback");
 		toolBox.add(feedbackButton);
+
+		final JButton starButton = new JButton(getMyImageIcon("Star"));
+		starButton.addActionListener(e->
+			JOptionPane.showMessageDialog(frame, "Fave handling not written yet",
+				"Sorry", JOptionPane.WARNING_MESSAGE));
+		starButton.setToolTipText("Favorite this page");
+		toolBox.add(starButton);
 		
 		sidePanel.add(toolBox);
 
