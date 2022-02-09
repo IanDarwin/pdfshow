@@ -56,6 +56,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 
+import com.darwinsys.swingui.BreakTimer;
 import com.darwinsys.swingui.MenuUtils;
 import com.darwinsys.swingui.RecentMenu;
 
@@ -282,6 +283,14 @@ public class PdfShow {
 		favoritesMI.setEnabled(false);
 		viewMenu.add(favoritesMI);
 
+		JMenuItem breakTimerMI = MenuUtils.mkMenuItem(rb, "view","break_timer");
+		breakTimerMI.addActionListener(e ->  {
+			var bt = new BreakTimer().packAndCenter();
+			bt.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			bt.setVisible(true);
+		});
+		viewMenu.add(breakTimerMI);
+
         final JMenu slideshowMenu = MenuUtils.mkMenu(rb, "slideshow");
         menuBar.add(slideshowMenu);
         final JMenuItem ssThisTabFromStartButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_start");
@@ -297,6 +306,10 @@ public class PdfShow {
         final JMenuItem ssAcrossTabsButton = MenuUtils.mkMenuItem(rb, "slideshow", "across_tabs");
         ssAcrossTabsButton.addActionListener(slideshowAcrossTabsAction);
         slideshowMenu.add(ssAcrossTabsButton);
+        final JMenuItem ssCustomButton = MenuUtils.mkMenuItem(rb, "slideshow", "custom");
+        ssCustomButton.setEnabled(false);
+		// XXX: a list of open files with a Pages textfield in each (1, 1-5, or "1,5,6")
+        slideshowMenu.add(ssCustomButton);
 
 		final JMenu helpMenu = MenuUtils.mkMenu(rb, "help");
 		menuBar.add(helpMenu);
@@ -316,7 +329,7 @@ public class PdfShow {
 	    	JOptionPane.showMessageDialog(frame, "Help not written yet", 
 				"Sorry", JOptionPane.WARNING_MESSAGE));
 		helpMenu.add(helpButton);
-		final JMenuItem sourceButton = new JMenuItem("Source Code");
+		final JMenuItem sourceButton = MenuUtils.mkMenuItem(rb, "help", "source_code");
 		sourceButton.setIcon(getMyImageIcon("octocat"));
 		sourceButton.addActionListener(e -> {
 			String url = programProps.getProperty(KEY_SOURCE_URL);
@@ -332,7 +345,7 @@ public class PdfShow {
 			}
 		});
 		helpMenu.add(sourceButton);
-		final JMenuItem feedbackMI = new JMenuItem("Feedback");
+		final JMenuItem feedbackMI = MenuUtils.mkMenuItem(rb, "help", "feedback");
 		feedbackMI.addActionListener(feedbackAction);
 		helpMenu.add(feedbackMI);
 
