@@ -59,6 +59,7 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import com.darwinsys.swingui.BreakTimer;
 import com.darwinsys.swingui.MenuUtils;
 import com.darwinsys.swingui.RecentMenu;
+import com.darwinsys.swingui.UtilGUI;
 
 /** 
  * A simpler PDF viewer.
@@ -285,7 +286,8 @@ public class PdfShow {
 
 		JMenuItem breakTimerMI = MenuUtils.mkMenuItem(rb, "view","break_timer");
 		breakTimerMI.addActionListener(e ->  {
-			var bt = new BreakTimer().packAndCenter();
+			var bt = new BreakTimer().getJFrame();
+			UtilGUI.packAndCenter(bt);
 			bt.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			bt.setVisible(true);
 		});
