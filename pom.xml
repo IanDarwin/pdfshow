@@ -3,7 +3,7 @@
 
 	<groupId>net.rejmi</groupId>
 	<artifactId>pdfshow</artifactId>
-	<version>1.0.1</version>	<!-- DRY? Keep mkinstaller at same x.y.z level -->
+	<version>1.0.2</version>	<!-- DRY? Keep mkinstaller at same x.y.z level -->
 	<packaging>jar</packaging>
 	<inceptionYear>2019</inceptionYear>
 
