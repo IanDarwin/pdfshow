@@ -35,22 +35,7 @@ import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileFilter;
 
@@ -286,10 +271,11 @@ public class PdfShow {
 
 		JMenuItem breakTimerMI = MenuUtils.mkMenuItem(rb, "view","break_timer");
 		breakTimerMI.addActionListener(e ->  {
-			var bt = new BreakTimer().getJFrame();
-			UtilGUI.packAndCenter(bt);
-			bt.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			bt.setVisible(true);
+			JInternalFrame jiffy =
+					new JInternalFrame("Timer", true, true, false, false);
+			new BreakTimer(jiffy);
+			frame.setGlassPane(jiffy);
+			jiffy.setVisible(true);
 		});
 		viewMenu.add(breakTimerMI);
 
