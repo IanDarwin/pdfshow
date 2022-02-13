@@ -124,6 +124,33 @@ https://docs.oracle.com/en/java/javase/14/docs/specs/man/jpackage.html[jpackage]
 You can run that script yourself if you want.
 You can only build the Mac installer on macOS, the Windows installer on Windows, etc.
 
+=== Configuring a Linux rpm-based system to build pdfshow
+
+This may not be optimal, but should to work. Newer versions may be available.
+
+----
+sudo dnf install https://cdn.azul.com/zulu/bin/zulu17.32.13-ca-jdk17.0.2-linux.x86_64.rpm
+
+sudo dnf install rpm-build
+
+# These systems' packaging have Maven depending on dark ages' JDK-1.8, so:
+
+curl -o apache-maven-3.8.4-bin.tar.gz \
+	https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz
+
+cd /usr/local; sudo tar xzvf apache-maven-3.8.4.tar.gz
+
+add /usr/local/apache-maven-3.8.4/bin to PATH
+
+mkdir git
+cd git
+git clone https://github.com/IanDarwin/pdfshow
+
+cd pdfshow
+
+mkinstaller -s # skiptests; they fail on this Linux with infra-related errs, don't care
+----
+
 ==== Pre-requisites
 On Windows `jpackage` has a couple of pre-requisites,
 which it will let you know about if they're not already installed.
