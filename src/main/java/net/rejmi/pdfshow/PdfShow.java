@@ -47,7 +47,7 @@ import com.darwinsys.swingui.RecentMenu;
 import com.darwinsys.swingui.UtilGUI;
 
 /** 
- * A simpler PDF viewer.
+ * A simpler PDF viewer. Main class is too big.
  * Zero or one? In this class, all page numbers are one-origin.
  * DocTab's API is also one-based; it must subtract 1 internally.
  * @author Ian Darwin
@@ -126,6 +126,7 @@ public class PdfShow {
 		ovalButton = new JButton(getMyImageIcon("Oval")), 
 		rectangleButton = new JButton(getMyImageIcon("Rectangle"));
 	final RecentMenu recents;
+	private BreakTimer breakTimer;
 
 	// For slide show
     ExecutorService pool = Executors.newSingleThreadExecutor();
@@ -269,12 +270,17 @@ public class PdfShow {
 		favoritesMI.setEnabled(false);
 		viewMenu.add(favoritesMI);
 
+		JInternalFrame jiffy =
+				new JInternalFrame("Timer", true, true, true, true);
+		breakTimer = new BreakTimer(jiffy);
+
 		JMenuItem breakTimerMI = MenuUtils.mkMenuItem(rb, "view","break_timer");
 		breakTimerMI.addActionListener(e ->  {
-			JInternalFrame jiffy =
-					new JInternalFrame("Timer", true, true, false, false);
-			new BreakTimer(jiffy);
-			frame.setGlassPane(jiffy);
+			boolean glassify = true;
+			if (glassify)
+				frame.setGlassPane(jiffy);
+			else
+				frame.add(jiffy);
 			jiffy.setVisible(true);
 		});
 		viewMenu.add(breakTimerMI);
@@ -317,6 +323,9 @@ public class PdfShow {
 	    	JOptionPane.showMessageDialog(frame, "Help not written yet", 
 				"Sorry", JOptionPane.WARNING_MESSAGE));
 		helpMenu.add(helpButton);
+		final JMenuItem breakTimerHelpButton = MenuUtils.mkMenuItem(rb, "help", "breaktimer");
+		helpMenu.add(breakTimerHelpButton);
+		breakTimerHelpButton.addActionListener(e -> breakTimer.doHelp());
 		final JMenuItem sourceButton = MenuUtils.mkMenuItem(rb, "help", "source_code");
 		sourceButton.setIcon(getMyImageIcon("octocat"));
 		sourceButton.addActionListener(e -> {
@@ -453,7 +462,7 @@ public class PdfShow {
 		
 		sidePanel.add(toolBox);
 
-        JButton stop_show = new JButton("Stop show");
+        JButton stop_show = new JButton("Stop slide show");
         sidePanel.add(stop_show);
         stop_show.addActionListener((e -> {
             done = true;
