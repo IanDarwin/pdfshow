@@ -27,7 +27,7 @@ image::samples/SampleShow.png[width="800"]
 
 `PdfShow` has limitations compared with other tools, due to
 its relative youth and, more importantly, its design goals.
-_please_ see the https://github.com/IanDarwin/pdfshow/issues[TODO list];
+_Please_ see the https://github.com/IanDarwin/pdfshow/issues[TODO list];
 read through it before condemning the app as incomplete and again before
 adding to it - anyone can create a free github account and add issues there!
 
@@ -41,7 +41,9 @@ within the general tone of the program - _minimalist, but functional._
 There may be an installer for your computing platform; see
 https://github.com/IanDarwin/pdfshow/releases. Check the latest
 release under the _Assets_ dropdown.
+
 If not, there's a Jar file that you can run with `java -jar`.
+You can rebuild that with `mvn package assembly:single`
 
 Note that the installers bundle their own Java VM, with which they are known
 to work; they are about 50Mb to download and about 120-140Mb when installed.
