@@ -9,3 +9,4 @@ target
 *.rpm
 *.deb
 *.html
+pdfshow-runtime 

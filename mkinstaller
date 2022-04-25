@@ -61,6 +61,11 @@ if $VERBOSE; then
 	set -x
 fi
 
+# Use jlink to build a smaller JRE-like thing
+rm -r pdfshow-runtime
+jlink --output pdfshow-runtime --add-modules java.base,java.desktop,java.logging
+
+# Now use jpackage with that runtime image to create the final installer.
 jpackage \
 	--name PDFShow \
 	--app-version ${RELEASE_VERSION} \
@@ -70,6 +75,7 @@ jpackage \
 	--icon src/main/resources/images/logo.${icon_format} \
 	--input target \
 	--main-jar pdfshow-${RELEASE_VERSION}-jar-with-dependencies.jar \
+	--runtime-image pdfshow-runtime \
 	${OS_SPECIFIC} || {
 		echo jpackage did not complete normally!
 		exit 1
