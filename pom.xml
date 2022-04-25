@@ -54,7 +54,7 @@
 		<dependency>
 			<groupId>com.darwinsys</groupId>
 			<artifactId>darwinsys-api</artifactId>
-			<version>1.7.4</version>
+			<version>1.7.5</version>
 		</dependency>
 
 		<!-- Update maven plugin for legacy systems -->
