@@ -1,0 +1,18 @@
+= Release Process
+
+Make all changes for the milestone. Make sure all tests needed are written and passing.
+
+Update the build number in 
+
+* pom.xml 
+* mkinstaler script.
+* install-aux/winget-manifest.yaml.
+
+Run mkinstaller on Linux, on macOS and on Windoze.
+
+Pick a silly name for the release.
+
+Create the release on GitHub, uploading the three binaries.
+
+
+Upload it with a pull request to Microsoft.
