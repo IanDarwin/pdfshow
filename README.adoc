@@ -1,7 +1,7 @@
 = PdfShow
 
 ifndef::current-release[]
-:current-release: Java 16
+:current-release: Java 17
 endif::[]
 
 `PdfShow` is a PDF viewer specifically for running slide shows.
@@ -154,6 +154,7 @@ mkinstaller -s # skiptests; they fail on this Linux with infra-related errs, don
 ----
 
 ==== Pre-requisites
+
 On Windows `jpackage` has a couple of pre-requisites,
 which it will let you know about if they're not already installed.
 
