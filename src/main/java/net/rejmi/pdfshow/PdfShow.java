@@ -1,28 +1,19 @@
 package net.rejmi.pdfshow;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import com.darwinsys.swingui.BreakTimer;
+import com.darwinsys.swingui.MenuUtils;
+import com.darwinsys.swingui.RecentMenu;
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serial;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -34,17 +25,6 @@ import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.filechooser.FileFilter;
-
-import org.apache.pdfbox.pdmodel.PDDocumentInformation;
-
-import com.darwinsys.swingui.BreakTimer;
-import com.darwinsys.swingui.MenuUtils;
-import com.darwinsys.swingui.RecentMenu;
-import com.darwinsys.swingui.UtilGUI;
 
 /** 
  * A simpler PDF viewer. Main class is too big.
@@ -91,7 +71,7 @@ public class PdfShow {
 	static PdfShow instance;
 
 	Desktop desktop;
-	Properties programProps = new Properties();
+	Properties programProps;
 	Preferences prefs = Preferences.userNodeForPackage(PdfShow.class);
 	final static String PROPS_FILE_NAME = "/pdfshow.properties";
 	// For programProps
@@ -113,20 +93,20 @@ public class PdfShow {
 	static JFrame frame;
 	private JTabbedPane tabPane;
 	private DocTab currentTab;
-	private JButton upButton = new JButton(getMyImageIcon("Chevron-Up")),
+	private final JButton upButton = new JButton(getMyImageIcon("Chevron-Up")),
 			downButton = new JButton(getMyImageIcon("Chevron-Down"));
-	private JTextField pageNumTF;
-	private JLabel pageCountTF;
+	private final JTextField pageNumTF;
+	private final JLabel pageCountTF;
 	// These can't be final due to constructor operation ordering:
-	private JButton selectButton = new JButton(getMyImageIcon("Select")), 
+	private final JButton selectButton = new JButton(getMyImageIcon("Select")),
 		textButton = new JButton(getMyImageIcon("Text")), 
 		markerButton = new JButton(getMyImageIcon("Marker")),
 		lineButton = new JButton(getMyImageIcon("Line")), 
 		polyLineButton = new JButton(getMyImageIcon("PolyLine")), 
 		ovalButton = new JButton(getMyImageIcon("Oval")), 
 		rectangleButton = new JButton(getMyImageIcon("Rectangle"));
-	final RecentMenu recents;
-	private BreakTimer breakTimer;
+	private final RecentMenu recents;
+	private final BreakTimer breakTimer;
 
 	// For slide show
     ExecutorService pool = Executors.newSingleThreadExecutor();
@@ -167,7 +147,7 @@ public class PdfShow {
 					DocTab dt = (DocTab)tabPane.getComponent(nt);
 					dt.computeScaling();
 				}
-			};
+			}
 		});
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
@@ -187,7 +167,7 @@ public class PdfShow {
 
 		// TABBEDPANE (main window for viewing PDFs)
 
-		tabPane = new JTabbedPane();
+		tabPane = new DnDTabbedPane();
 		tabPane.addChangeListener(evt -> {
 			currentTab = (DocTab)tabPane.getSelectedComponent();
 			if (currentTab != null) { // Avoid NPE on removal
@@ -208,7 +188,8 @@ public class PdfShow {
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		fm.add(miOpen);
 		recents = new RecentMenu(prefs, 10) {
-			private static final long serialVersionUID = 1L;
+			@Serial
+			private static final long serialVersionUID = 828751972333590042L;
 			@Override
 			public void loadFile(String fileName) throws IOException {
 				openPdfFile(new File(fileName));
@@ -289,14 +270,10 @@ public class PdfShow {
         menuBar.add(slideshowMenu);
         final JMenuItem ssThisTabFromStartButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_start");
         slideshowMenu.add(ssThisTabFromStartButton);
-        ssThisTabFromStartButton.addActionListener(e -> {
-            runSlideShow(1);
-        });
+        ssThisTabFromStartButton.addActionListener(e -> runSlideShow(1));
         final JMenuItem ssThisTabCurButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_current");
         slideshowMenu.add(ssThisTabCurButton);
-        ssThisTabCurButton.addActionListener((e) -> {
-            runSlideShow(currentTab.getPageNumber());
-        });
+        ssThisTabCurButton.addActionListener((e) -> runSlideShow(currentTab.getPageNumber()));
         final JMenuItem ssAcrossTabsButton = MenuUtils.mkMenuItem(rb, "slideshow", "across_tabs");
         ssAcrossTabsButton.addActionListener(slideshowAcrossTabsAction);
         slideshowMenu.add(ssAcrossTabsButton);
@@ -310,9 +287,7 @@ public class PdfShow {
 		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
 		aboutButton.addActionListener(e->
 			JOptionPane.showMessageDialog(frame, 
-			String.format("PdfShow(tm) %s\n" +
-				"(c) 2021 Ian Darwin\n" +
-				"%s\n",
+			String.format("PdfShow(tm) %s\n(c) 2021 Ian Darwin\n%s\n",
 				programProps.getProperty(KEY_VERSION),
 				programProps.getProperty(KEY_HOME_URL)),
 			"About PdfShow(tm)",
@@ -545,7 +520,7 @@ public class PdfShow {
                 tab.gotoPage(slideShowPageNumber);
             }
         });
-    };
+    }
 
     ActionListener feedbackAction = e -> {
 		String[] choices = { "Web-Comment", "Bug Report/Feature Req", "Email Team", "Cancel" }; // XXX  I18N this!
@@ -583,7 +558,7 @@ public class PdfShow {
 				}
 				return;
 			case 3:
-				return;
+				break;
 			}
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame, "Unable to contact feedback form\n" + ex,
@@ -1006,11 +981,11 @@ public class PdfShow {
 	}
 
 	// Listeners; these get added to each DocTab in openPdfFile().
-	private MouseListener ml = new MouseAdapter() {
+	private final MouseListener ml = new MouseAdapter() {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			currentState.mousePressed(e);
-		};
+		}
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			currentState.mouseClicked(e);
@@ -1027,9 +1002,9 @@ public class PdfShow {
 		@Override
 		public void mouseExited(MouseEvent e) {
 			currentState.mouseExited(e);
-		};
+		}
 	};
-	private MouseMotionListener mml = new MouseMotionListener() {
+	private final MouseMotionListener mml = new MouseMotionListener() {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
@@ -1042,11 +1017,11 @@ public class PdfShow {
 		}		
 	};
  
-	private KeyListener kl = new KeyAdapter() {
+	private final KeyListener kl = new KeyAdapter() {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			currentState.keyPressed(e);
-		};
+		}
 	};
 
 	/*
@@ -1085,7 +1060,7 @@ public class PdfShow {
 				// ending in one of the extensions don't show up!
 				if (f.isDirectory()) {
 					return true;
-				};
+				}
 				return (f.isFile() && f.getName().endsWith(".pdf"));
 			}
 
@@ -1183,8 +1158,7 @@ public class PdfShow {
 		for (String ext : new String[] {".png", ".jpg" }) {			
 			URL imageURL = getClass().getResource(imgName  + ext);
 			if (imageURL != null) {
-				ImageIcon ii = new ImageIcon(imageURL);
-				return ii;
+				return new ImageIcon(imageURL);
 			}
 		}
 		throw new IllegalArgumentException("No image: " + imgName);
