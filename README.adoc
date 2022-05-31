@@ -31,6 +31,9 @@ _Please_ see the https://github.com/IanDarwin/pdfshow/issues[list of issues];
 read through it before condemning the app as incomplete and again before
 adding to it - anyone can create a free github account and add issues there!
 
+The program is for desktops, not mobiles. There is too much dependency on Swing
+to make it feasible to run on platforms other than desktop Java.
+
 More bells and whistles will be added as time permits, but let's keep it relatively simple.
 There is still some basic functionality that is imperfect or incomplete.
 Pull requests will be gratefully accepted as long as they fit
@@ -38,7 +41,7 @@ within the general tone of the program - _minimalist, but functional._
 
 == Installing PdfShow
 
-There may be an installer for your computing platform; see
+There may be an installer for your desktop computing platform; see
 https://github.com/IanDarwin/pdfshow/releases. Check the latest
 release under the _Assets_ dropdown.
 
@@ -48,9 +51,9 @@ You can rebuild that with `mvn package assembly:single`
 Note that the installers bundle their own Java VM, with which they are known
 to work; they are about 50Mb to download and about 120-140Mb when installed.
 If you already have a current Java installed, you may prefer to run the JAR file.
-WHen using the source or JAR approach, you have to be sure
+When using the source or JAR approach, you have to be sure
 you have a JDK that will work with `PdfShow`.
-The jar is currently built with Java 16 or 17.
+The jar is currently built with Java 17 on most platforms.
 
 If there's no installer, or you'd rather build from source, see <<building>> below.
 
