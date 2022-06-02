@@ -6,8 +6,9 @@ These are the source files:
 
 * PDFShow.java is the main program, and implements a State Machine pattern; there is a State for each of the buttons
 in the toolbox.
-* DocTab is the Document Tab; there is one for each open file.
 * GObject.java is the graphics objects. They are POJO objects, not Swing JComponents.
+* DocTab is the Document Tab; there is one for each open file.
+* DnDTabbedPane is the TabPane; there is one for each DocTab.
 * ClosableTabHeader.java is the header for the tabs
 * Settings.java is the interactions for the settings dialogs.
 * LoggerSetup.java is for java.util.logging.

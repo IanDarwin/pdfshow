@@ -91,7 +91,7 @@ public class PdfShow {
 
 	// GUI Controls - defined here since referenced throughout
 	static JFrame frame;
-	private JTabbedPane tabPane;
+	private JTabbedPane tabPane = new DnDTabbedPane();
 	private DocTab currentTab;
 	private final JButton upButton = new JButton(getMyImageIcon("Chevron-Up")),
 			downButton = new JButton(getMyImageIcon("Chevron-Down"));
@@ -165,9 +165,8 @@ public class PdfShow {
 		propwash.close();
 		logger.info("PdfShow(): Properties " + programProps);
 
-		// TABBEDPANE (main window for viewing PDFs)
+		// TABBEDPANE a DnDTabbedPane: the main window for viewing PDFs)
 
-		tabPane = new DnDTabbedPane();
 		tabPane.addChangeListener(evt -> {
 			currentTab = (DocTab)tabPane.getSelectedComponent();
 			if (currentTab != null) { // Avoid NPE on removal
