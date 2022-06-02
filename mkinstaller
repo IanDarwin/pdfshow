@@ -38,6 +38,9 @@ if [ $FOUND -eq 0 ]; then
 	exit 1
 fi
 
+# Make sure our code is up-to-date
+git pull
+
 # Now try command-line args
 BUILT=NO
 
