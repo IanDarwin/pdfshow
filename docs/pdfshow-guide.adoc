@@ -105,9 +105,4 @@ it will resume where you left off. This behaviour is true by default.
 
 == Credits
 
-Program by Ian Darwin of Rejminet Group Inc.
-
-PDF access (i.e., some of the heavy listing!) is done by 
-https://pdfbox.apache.org/[Apache PDFBox] software.
-
-Some icons from feathericons.com, and a simpler ones icons by Ian Darwin.
+See the top-level README file for code credits.
