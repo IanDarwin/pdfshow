@@ -9,7 +9,7 @@ in the toolbox.
 * GObject.java is the graphics objects. They are POJO objects, not Swing JComponents.
 * DocTab is the Document Tab; there is one for each open file.
 * DnDTabbedPane is the TabPane; there is one for each DocTab.
-* ClosableTabHeader.java is the header for the tabs
+* ClosableTabHeader.java is the header for the tabs. Has a title and a "X" close button, a ref to the DocTab, and a close callback.
 * Settings.java is the interactions for the settings dialogs.
 * LoggerSetup.java is for java.util.logging.
 

@@ -14,7 +14,7 @@ Maybe you have to present a talk and you only have the PDF, not the ODP, KeyNote
 Some training companies just distribute their courses to instructors as PDFs, 
 not presentation-software files.
 Or maybe you want to re-give somebody else's preso from the PDF-only version they published online
-(if you do this, make sure to give credit, and respect copyrights/licenses).
+(if you do this, make sure to ask permission, give credit, and respect copyrights/licenses).
 Or yet again, maybe you use the open-source
 https://staff.fnwi.uva.nl/b.diertens/useful/gpresent/[gpresent],
 which doesn't run shows but generates the PDF and leaves it to others to display.
@@ -200,6 +200,9 @@ Program written by Ian Darwin of Rejminet Group Inc.
 Contributions by a cast of thousands (we hope);
 their names are listed on the main github page.
 Thanks folks!
+
+Draggable Tab component DnDTabbedPane courtesy of
+https://java-swing-tips.blogspot.com/2008/04/drag-and-drop-tabs-in-jtabbedpane.html
 
 PDF access (i.e., some of the heavy listing!) is done by
 https://pdfbox.apache.org/[Apache PDFBox] software.

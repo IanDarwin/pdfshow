@@ -7,7 +7,7 @@ slide deck, this is not for you.
 Use Adobe Reader DC, PDF Annotator, or some other fancier tool.
 And if your presentation skills depend on blurry transitions or zippy little animations,
 just present in KeyNote, LibreOffice or PowerPoint.
-However, if you like to scribble all over your slides each time you run your course,
+However, if you like to scribble all over the slides in your PDF slide deck each time you run your course,
 to make the slides come alive, then `PdfShow` may be right for you.
 
 This program is free software and may be copied for use without fee.
