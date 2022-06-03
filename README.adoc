@@ -158,10 +158,12 @@ mkinstaller -s # skiptests; they fail on this Linux with infra-related errs, don
 
 ==== Pre-requisites
 
+On all platforms you need JDK and Apache Maven installed.
 On Windows `jpackage` has a couple of pre-requisites,
 which it will let you know about if they're not already installed.
 
 On Linux, for RPMs, you need `rpm-build` or you will get told that 'rpm' is an invalid type.
+On Linux, for DEBs, you may need `fakeroot` (sudo apt install fakeroot).
 
 The install formats are:
 
