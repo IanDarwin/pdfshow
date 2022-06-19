@@ -27,9 +27,9 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 /** 
- * A simpler PDF viewer. Main class is too big.
+ * PDFShow: A simpler PDF viewer. Main class just does Swing UI.
  * Zero or one? In this class, all page numbers are one-origin.
- * DocTab's API is also one-based; it must subtract 1 internally.
+ * DocTab's API is also one-based; it does the "subtract 1" dance internally.
  * @author Ian Darwin
  */
 public class PdfShow {
@@ -670,14 +670,14 @@ public class PdfShow {
 	}
 
 	boolean changed = false, found = false;
-	
+
 	/** State for normal viewing */
 	class ViewState extends State {
 		// Default State
 		ViewState(JButton button) {
 			super(button);
 		}
-		
+
 		// Select an object
 		@Override
 		public void mouseClicked(MouseEvent e) {
