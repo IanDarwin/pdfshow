@@ -27,8 +27,8 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 /** 
- * PDFShow: A simpler PDF viewer. Main class just does Swing UI.
- * Zero or one? In this class, all page numbers are one-origin.
+ * Main class of "PDFShow: A simpler PDF viewer"; this class just does Swing UI.
+ * Page numbers: Zero or one? In this class, all page numbers are one-origin.
  * DocTab's API is also one-based; it does the "subtract 1" dance internally.
  * @author Ian Darwin
  */

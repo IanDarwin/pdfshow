@@ -27,6 +27,9 @@ import java.util.stream.IntStream;
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalTabbedPaneUI;
 
+/**
+ * A TabbedPane that supports re-ordering via drag-and-drop.
+ */
 class DnDTabbedPane extends JTabbedPane {
   private static final int LINE_SIZE = 3;
   private static final int RWH = 20;
