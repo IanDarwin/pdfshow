@@ -113,6 +113,10 @@ public class PdfShow {
     Thread slideshowThread;
     int slideTime = 10;
     boolean done = false;
+
+	// For "busy" popup
+	private final JProgressBar progressBar;
+	private final JDialog progressDialog;
 	
 	// MAIN CONSTRUCTOR
 
@@ -140,6 +144,13 @@ public class PdfShow {
 		logger.fine("PdfShow.PdfShow(): " + iconImage);
 		frame.setIconImage(iconImage);
 		
+		progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
+		progressBar.setIndeterminate(true);
+		JOptionPane pane = new JOptionPane();
+		pane.add(progressBar);
+		progressDialog = pane.createDialog(frame, "Loading...");
+		progressDialog.add(progressBar);
+
 		frame.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
 				int nt = tabPane.getTabCount();
@@ -1093,6 +1104,7 @@ public class PdfShow {
 	 * @parameter file A File descriptor for the file to be opened.
 	 */
 	private void openPdfFile(File file) throws IOException {
+		startIndefiniteProgressBar();
 		DocTab t = new DocTab(file, prefs);
 		t.setFocusable(true);
 		t.addKeyListener(kl);
@@ -1106,6 +1118,7 @@ public class PdfShow {
 		tabPane.setTabComponentAt(index, tabComponent);
 		int pageNum = savePageNumbers ? prefs.getInt("PAGE#" + file.getName(), -1) : 0;
 		moveToPage(pageNum == -1 ? 0 : pageNum);
+		stopIndefiniteProgressBar();
 	}
 
 	void closeFile(DocTab dt) {
@@ -1171,5 +1184,25 @@ public class PdfShow {
 			throw new IllegalArgumentException("No image: " + imgName);
 		}
 		return Toolkit.getDefaultToolkit().getImage(imageURL);
+	}
+
+	/** Show the indefinite progress bar */
+	void startIndefiniteProgressBar() {
+		new SwingWorker() {
+			@Override
+			protected Object doInBackground() throws Exception {
+				progressDialog.setVisible(true);
+				return null;
+			}
+			@Override
+			protected void done() {
+				super.done();
+			}
+		}.execute();
+	}
+
+	/** Hide the indefinite progress bar */
+	void stopIndefiniteProgressBar() {
+		progressDialog.setVisible(false);
 	}
 }
