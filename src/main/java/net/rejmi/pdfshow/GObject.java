@@ -9,8 +9,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.geom.AffineTransform;
 import java.util.logging.Logger;
 
-/** This represents additions that we make to the PDF.
- * In the present version they are not saved with the PDF!
+/** 
+ * This class hierarchy represents additions that we make to the PDF.
+ * They are not saved with the PDF (yet).
  */
 abstract class GObject {
 	/** pdfbox leaves the Graphics object in upside down mode */

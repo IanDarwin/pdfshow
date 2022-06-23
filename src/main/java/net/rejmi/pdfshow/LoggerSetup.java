@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.LogManager;
 
+/**
+ * Set up the Logger configuration so main doesn't have to.
+ */
 public class LoggerSetup {
 	public static void init() {};
 	static {
