@@ -94,7 +94,8 @@ public class PdfShow {
 	private JTabbedPane tabPane;
 	private DocTab currentTab;
 	private final JButton upButton = new JButton(getMyImageIcon("Chevron-Up")),
-			downButton = new JButton(getMyImageIcon("Chevron-Down"));
+			downButton = new JButton(getMyImageIcon("Chevron-Down")),
+			timerButton = new JButton(getMyImageIcon("Timer"));
 	private final JTextField pageNumTF;
 	private final JLabel pageCountTF;
 	// These can't be final due to constructor operation ordering:
@@ -434,7 +435,14 @@ public class PdfShow {
 				"Sorry", JOptionPane.WARNING_MESSAGE));
 		starButton.setToolTipText("Favorite this page");
 		toolBox.add(starButton);
-		
+
+		timerButton.addActionListener(e-> {
+			JOptionPane.showMessageDialog(frame, "Timer invocation not written yet",
+				"Sorry", JOptionPane.WARNING_MESSAGE);
+			starButton.setToolTipText("Open Break Timer");
+		});
+		toolBox.add(timerButton);
+
 		sidePanel.add(toolBox);
 
         JButton stop_show = new JButton("Stop slide show");
