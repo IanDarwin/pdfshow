@@ -94,11 +94,9 @@ public class PdfShow {
 	private JTabbedPane tabPane = new DnDTabbedPane();
 	DocTab currentTab;
 	private final JButton upButton = new JButton(getMyImageIcon("Chevron-Up")),
-			downButton = new JButton(getMyImageIcon("Chevron-Down")),
-			timerButton = new JButton(getMyImageIcon("Timer"));
+			downButton = new JButton(getMyImageIcon("Chevron-Down"));
 	private final JTextField pageNumTF;
 	private final JLabel pageCountTF;
-	// These can't be final due to constructor operation ordering:
 	private final JButton selectButton = new JButton(getMyImageIcon("Select")),
 		textButton = new JButton(getMyImageIcon("Text")), 
 		markerButton = new JButton(getMyImageIcon("Marker")),
@@ -106,6 +104,7 @@ public class PdfShow {
 		polyLineButton = new JButton(getMyImageIcon("PolyLine")), 
 		ovalButton = new JButton(getMyImageIcon("Oval")), 
 		rectangleButton = new JButton(getMyImageIcon("Rectangle"));
+	private final JButton timerButton = new JButton(getMyImageIcon("Timer"));
 	private final RecentMenu recents;
 	private final BreakTimer breakTimer;
 
@@ -446,11 +445,10 @@ public class PdfShow {
 		starButton.setToolTipText("Favorite this page");
 		toolBox.add(starButton);
 
-		timerButton.addActionListener(e-> {
+		timerButton.addActionListener(e->
 			JOptionPane.showMessageDialog(frame, "Timer invocation not written yet",
-				"Sorry", JOptionPane.WARNING_MESSAGE);
-			starButton.setToolTipText("Open Break Timer");
-		});
+				"Sorry", JOptionPane.WARNING_MESSAGE));
+		timerButton.setToolTipText("Open Break Timer");
 		toolBox.add(timerButton);
 
 		sidePanel.add(toolBox);
