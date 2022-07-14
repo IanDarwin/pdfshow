@@ -266,14 +266,15 @@ public class PdfShow {
 		breakTimer = new BreakTimer(jiffy);
 
 		JMenuItem breakTimerMI = MenuUtils.mkMenuItem(rb, "view","break_timer");
-		breakTimerMI.addActionListener(e ->  {
+		ActionListener showBreakTimer = e ->  {
 			boolean glassify = true;
 			if (glassify)
 				frame.setGlassPane(jiffy);
 			else
 				frame.add(jiffy);
 			jiffy.setVisible(true);
-		});
+		};
+		breakTimerMI.addActionListener(showBreakTimer);
 		viewMenu.add(breakTimerMI);
 
         final JMenu slideshowMenu = MenuUtils.mkMenu(rb, "slideshow");
@@ -445,9 +446,7 @@ public class PdfShow {
 		starButton.setToolTipText("Favorite this page");
 		toolBox.add(starButton);
 
-		timerButton.addActionListener(e->
-			JOptionPane.showMessageDialog(frame, "Timer invocation not written yet",
-				"Sorry", JOptionPane.WARNING_MESSAGE));
+		timerButton.addActionListener(showBreakTimer);
 		timerButton.setToolTipText("Open Break Timer");
 		toolBox.add(timerButton);
 
