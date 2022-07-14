@@ -34,6 +34,7 @@ final class ClosableTabHeader extends JPanel {
         }
         @Override
         public Dimension getPreferredSize() {
+			// This is OK on most current monitors, but may need scaling as res goes up
             return new Dimension(16, 16);
         }
     }

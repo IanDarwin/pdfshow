@@ -14,7 +14,7 @@ Maybe you have to present a talk and you only have the PDF, not the ODP, KeyNote
 Some training companies just distribute their courses to instructors as PDFs, 
 not presentation-software files.
 Or maybe you want to re-give somebody else's preso from the PDF-only version they published online
-(if you do this, make sure to give credit, and respect copyrights/licenses).
+(if you do this, make sure to ask permission, give credit, and respect copyrights/licenses).
 Or yet again, maybe you use the open-source
 https://staff.fnwi.uva.nl/b.diertens/useful/gpresent/[gpresent],
 which doesn't run shows but generates the PDF and leaves it to others to display.
@@ -27,9 +27,12 @@ image::samples/SampleShow.png[width="800"]
 
 `PdfShow` has limitations compared with other tools, due to
 its relative youth and, more importantly, its design goals.
-_Please_ see the https://github.com/IanDarwin/pdfshow/issues[TODO list];
+_Please_ see the https://github.com/IanDarwin/pdfshow/issues[list of issues];
 read through it before condemning the app as incomplete and again before
 adding to it - anyone can create a free github account and add issues there!
+
+The program is for desktops, not mobiles. There is too much dependency on Swing
+to make it feasible to run on platforms other than desktop Java.
 
 More bells and whistles will be added as time permits, but let's keep it relatively simple.
 There is still some basic functionality that is imperfect or incomplete.
@@ -38,7 +41,7 @@ within the general tone of the program - _minimalist, but functional._
 
 == Installing PdfShow
 
-There may be an installer for your computing platform; see
+There may be an installer for your desktop computing platform; see
 https://github.com/IanDarwin/pdfshow/releases. Check the latest
 release under the _Assets_ dropdown.
 
@@ -48,9 +51,9 @@ You can rebuild that with `mvn package assembly:single`
 Note that the installers bundle their own Java VM, with which they are known
 to work; they are about 50Mb to download and about 120-140Mb when installed.
 If you already have a current Java installed, you may prefer to run the JAR file.
-WHen using the source or JAR approach, you have to be sure
+When using the source or JAR approach, you have to be sure
 you have a JDK that will work with `PdfShow`.
-The jar is currently built with Java 16 or 17.
+The jar is currently built with Java 17 on most platforms.
 
 If there's no installer, or you'd rather build from source, see <<building>> below.
 
@@ -155,10 +158,13 @@ mkinstaller -s # skiptests; they fail on this Linux with infra-related errs, don
 
 ==== Pre-requisites
 
+On all platforms you need JDK and Apache Maven installed.
 On Windows `jpackage` has a couple of pre-requisites,
 which it will let you know about if they're not already installed.
 
-On Linux, for RPMs, you need `rpm-build` or you will get told that 'rpm' is an invalid type.
+On Linux, for RPMs, you need `rpm-build` or you will get told that 'rpm' is an invalid type
+(sudo dnf install rpm-build).
+On Linux, for DEBs, you may need `fakeroot` (sudo apt install fakeroot).
 
 The install formats are:
 
@@ -197,6 +203,9 @@ Program written by Ian Darwin of Rejminet Group Inc.
 Contributions by a cast of thousands (we hope);
 their names are listed on the main github page.
 Thanks folks!
+
+Draggable Tab component DnDTabbedPane courtesy of
+https://java-swing-tips.blogspot.com/2008/04/drag-and-drop-tabs-in-jtabbedpane.html
 
 PDF access (i.e., some of the heavy listing!) is done by
 https://pdfbox.apache.org/[Apache PDFBox] software.

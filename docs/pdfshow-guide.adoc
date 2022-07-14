@@ -7,7 +7,7 @@ slide deck, this is not for you.
 Use Adobe Reader DC, PDF Annotator, or some other fancier tool.
 And if your presentation skills depend on blurry transitions or zippy little animations,
 just present in KeyNote, LibreOffice or PowerPoint.
-However, if you like to scribble all over your slides each time you run your course,
+However, if you like to scribble all over the slides in your PDF slide deck each time you run your course,
 to make the slides come alive, then `PdfShow` may be right for you.
 
 This program is free software and may be copied for use without fee.
@@ -25,7 +25,7 @@ pick the `pdfshow`-x.x.x-with-dependencies.jar.
 
 If you'd rather a full installer, pick the `pdfshow`-x.x.x.dmg file for your macOS system
 or the `pdfshow`-x.x.x.msi for your Windows box.
-I plan to build an RPM and/or DEB for Linux later.
+I  build an RPM installer for Linux less frequently at the moment.
 
 == Using It
 
@@ -37,7 +37,8 @@ There is a code issue (https://github.com/IanDarwin/pdfshow/issues/7[Issue#7]) t
 
 Like most GUI tools, you can open a file either by passing it on the command line,
 via the `File->Open` menu, or via `CTRL`/`CMD`-O.
-You can have multiple files open, using the tab selecter at the top.
+You can have multiple files open, using the tab selector at the top.
+As of 1.3, you can drag tabs to change their order in the tabbed pane.
 
 === Navigation
 
@@ -104,9 +105,4 @@ it will resume where you left off. This behaviour is true by default.
 
 == Credits
 
-Program by Ian Darwin of Rejminet Group Inc.
-
-PDF access (i.e., some of the heavy listing!) is done by 
-https://pdfbox.apache.org/[Apache PDFBox] software.
-
-Some icons from feathericons.com, and a simpler ones icons by Ian Darwin.
+See the top-level README file for code credits.

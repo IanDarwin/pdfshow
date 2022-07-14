@@ -38,6 +38,9 @@ if [ $FOUND -eq 0 ]; then
 	exit 1
 fi
 
+# Make sure our code is up-to-date
+git pull
+
 # Now try command-line args
 BUILT=NO
 
@@ -62,7 +65,7 @@ if $VERBOSE; then
 fi
 
 # Use jlink to build a smaller JRE-like thing
-rm -r pdfshow-runtime
+rm -rf pdfshow-runtime
 jlink --output pdfshow-runtime --add-modules java.base,java.desktop,java.logging
 
 # Now use jpackage with that runtime image to create the final installer.

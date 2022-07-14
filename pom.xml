@@ -34,7 +34,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<javase.version>16</javase.version>
+		<javase.version>17</javase.version>
 		<maven.compiler.source>${javase.version}</maven.compiler.source>
 		<maven.compiler.target>${javase.version}</maven.compiler.target>
 		<maven.compiler.testSource>${javase.version}</maven.compiler.testSource>
@@ -74,8 +74,8 @@
 	</dependencies>
 
 	<build>
-		<!-- Put Version Number into About box -->
 
+		<!-- Put Version Number into About box -->
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -92,8 +92,10 @@
 				</includes>
 			</resource>
 		</resources>
+
 		<plugins>
 			<plugin>
+				<!-- run the app! -->
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.1.1</version>
