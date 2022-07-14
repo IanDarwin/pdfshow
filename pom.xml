@@ -94,6 +94,16 @@
 		</resources>
 
 		<plugins>
+			<!-- Allow 'mvn exec:java' to run the program -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<configuration>
+					<mainClass>net.rejmi.pdfshow.PdfShow</mainClass>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<!-- run the app! -->
 				<groupId>org.codehaus.mojo</groupId>
