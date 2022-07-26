@@ -54,11 +54,11 @@ The JARr is built with Java {current-release} on most platforms.
 
 For MS-Windows 10 or 11, there's an MSI installer in {releases-link}[the releases folder].
 I'm only building for 64-bit AMD/Intel systems as that's the vast majority; others can run the jar file or build it themselves.
-For those with x64 systems, you can either manually download the MSI installer, or simplify with winget.
+For those with x64 systems, you can either manually download and run the MSI installer, or simplify with winget.
 Winget is MS' relatively-new package installer - they're finally catching up with every other desktop OS on the planet :-)
-Anyway, if you don't have winget but do have "Microsoft Store", you can get winget from 
+Anyway, if you don't have winget but do have the "Microsoft Store" app, you can get `winge`t from 
 https://www.microsoft.com/p/app-installer/9nblggh4nns1#activetab=pivot:overviewtab (it's part of "Microsoft App Installer"). 
-This makes for easier installation on Windows, without affecting the other environments. Just type in a terminal window:
+Once you have `winget` installed, just type this in a terminal window:
 
 	winget install RejminetGroupInc.PDFShow
 
