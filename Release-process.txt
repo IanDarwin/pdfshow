@@ -6,11 +6,13 @@ Update the build number in:
 
 	pom.xml mkinstaller install-aux/winget-manifest.yaml
 
-Run mkinstaller on Linux, on macOS and on Windoze.
+Run mkinstaller on Linux (twice), on macOS and on Windoze.
 
 Pick a silly name for the release.
 
-Create the release on GitHub, uploading the three binaries.
+Create the release on GitHub, uploading all the binaries.
 
-When the problem of not working fully in quiet mode is solved:
-Upload it with a pull request to Microsoft.
+Update the version in our entry in winget, push, send pull request.
+
+Update the 'ver' variable in the README, make the doc locally,
+test all the download links, then push to GitHub.

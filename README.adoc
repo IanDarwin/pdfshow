@@ -1,9 +1,13 @@
 = PdfShow
 
-ifndef::current-release[]
-:current-release: Java 17
+ifndef::ver[]
+:ver: 1.0.3
+endif::[]
+ifndef::current-java-ver[]
+:current-java-ver: Java 17
 endif::[]
 :releases-link: https://github.com/IanDarwin/pdfshow/releases
+:download-link: {releases-link}/download/v{ver}
 
 `PdfShow` is a PDF viewer specifically for running slide shows.
 I wrote it because I sometimes teach from PDFs and was tired of general-purpose programs 
@@ -50,7 +54,7 @@ These installers bundle their own Java VM, with which they are known
 to work; they are about 50Mb to download and about 120-140Mb when installed.
 If you already have a current Java installed, you may prefer to run the JAR file; you have to be sure
 you have a JDK that will work with `PdfShow`.
-The JARr is built with Java {current-release} on most platforms.
+The JARr is built with Java {current-java-ver} on most platforms.
 
 For MS-Windows 10 or 11, there's an MSI installer in {releases-link}[the releases folder].
 I'm only building for 64-bit AMD/Intel systems as that's the vast majority; others can run the jar file or build it themselves.
@@ -62,10 +66,22 @@ Once you have `winget` installed, just type this in a terminal window:
 
 	winget install RejminetGroupInc.PDFShow
 
-Rejminet Group Inc. is my consulting company.
+(That's really me; Rejminet Group Inc. is my consulting company.)
 
 If there's no installer, and you have Java, there's a Jar file that you can run with `java -jar`.
 You can rebuild that from source with `mvn package assembly:single`; see <<building>> below.
+
+[[installation-summary]]
+.Installation/Download Summary
+[options="header",cols="2,2,5,5"]
+|====
+|OS|Pkg Format|CLI Install|Install Download
+|Java|fat jar|n/a/|{download-link}/pdfshow-{ver}-jar-with-dependencies.jar
+|Linux|deb|n/a|{download-link}/pdfshow_{ver}-1_amd64.deb
+|Linux|rpm|n/a|{download-link}/pdfshow-{ver}-1.x86_64.rpm
+|macOS|dmg|n/a|{download-link}/PDFShow-{ver}.dmg
+|Windows|msi|winget install RejminetGroupInc.PDFShow|{download-link}/PDFShow-{ver}.msi
+|====
 
 == Using PdfShow
 
@@ -81,7 +97,7 @@ There is more documentation in the `docs` folder.
 
 You need to have Java 11+ and Maven installed.
 You need Java 14+ if you want to build any of the full platform-specific installers.
-The installers and the public Jar file are built with {current-release}.
+The installers and the public Jar file are built with {current-java-ver}.
 
 === Getting Source
 
