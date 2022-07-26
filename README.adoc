@@ -77,9 +77,9 @@ You can rebuild that from source with `mvn package assembly:single`; see <<build
 |====
 |OS|Pkg Format|CLI Install|Install Download
 |Java|fat jar|n/a/|{download-link}/pdfshow-{ver}-jar-with-dependencies.jar
-|Linux|deb|n/a|{download-link}/pdfshow_{ver}-1_amd64.deb
-|Linux|rpm|n/a|{download-link}/pdfshow-{ver}-1.x86_64.rpm
-|macOS|dmg|n/a|{download-link}/PDFShow-{ver}.dmg
+|Linux|deb|Download then deb install|{download-link}/pdfshow_{ver}-1_amd64.deb
+|Linux|rpm|Download then dnf install|{download-link}/pdfshow-{ver}-1.x86_64.rpm
+|macOS|dmg|Download; should open|{download-link}/PDFShow-{ver}.dmg
 |Windows|msi|winget install RejminetGroupInc.PDFShow|{download-link}/PDFShow-{ver}.msi
 |====
 
