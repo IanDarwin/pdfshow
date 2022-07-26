@@ -89,8 +89,8 @@ There is more documentation in the `docs` folder.
 
 === Prerequisites
 
-You need Java JDK, probably {current-java-ver}+, and Maven installed.
-You need at least Java 14+ if you want to build any of the full platform-specific installers.
+You need Java JDK, probably {current-java-ver}$$+$$, and Maven installed.
+You need at least Java 14$$+$$ if you want to build any of the full platform-specific installers.
 The installers and the public Jar file are built with {current-java-ver}.
 
 === Getting Source
