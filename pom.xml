@@ -40,6 +40,8 @@
 		<maven.compiler.testSource>${javase.version}</maven.compiler.testSource>
 		<maven.compiler.testTarget>${javase.version}</maven.compiler.testTarget>
 		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+		<darwinsys-api-version>1.7.7-SNAPSHOT</darwinsys-api-version>
+		<pdfbox-version>2.0.24</pdfbox-version>
 	</properties>
 
 	<dependencies>
@@ -47,14 +49,14 @@
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
-			<version>2.0.24</version>
+			<version>${pdfbox-version}</version>
 		</dependency>
 
 		<!-- My own rather trivial API -->
 		<dependency>
 			<groupId>com.darwinsys</groupId>
 			<artifactId>darwinsys-api</artifactId>
-			<version>1.7.5</version>
+			<version>${darwinsys-api-version}</version>
 		</dependency>
 
 		<!-- Update maven plugin for legacy systems -->
