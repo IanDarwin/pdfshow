@@ -155,8 +155,13 @@ public class PdfShow {
 			public void componentResized(ComponentEvent e) {
 				int nt = tabPane.getTabCount();
 				for (int i = 0; i < nt; i++) {
-					DocTab dt = (DocTab)tabPane.getComponent(nt);
-					dt.computeScaling();
+					Component tabComponent = tabPane.getComponent(nt);
+					if (tabPane.getComponent(nt) instanceof DocTab) {
+						DocTab dt = (DocTab) tabComponent;
+						dt.computeScaling();
+					} else {
+						System.out.printf("Tab %d is %s, not DocTab", i, tabComponent.getClass());
+					}
 				}
 			}
 		});
