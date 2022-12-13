@@ -6,7 +6,6 @@ import com.darwinsys.swingui.RecentMenu;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
@@ -55,7 +54,6 @@ public class PdfShow {
 		
 		// Instantiate main program
 		PdfShow.instance = new PdfShow();
-		PdfShow.instance.setVisible(true);
 
 		// Open files from command line, if any
 		for (String arg : args) {
@@ -91,7 +89,7 @@ public class PdfShow {
 
 	// GUI Controls - defined here since referenced throughout
 	static JFrame frame;
-	private JTabbedPane tabPane = new DnDTabbedPane();
+	private final JTabbedPane tabPane = new DnDTabbedPane();
 	DocTab currentTab;
 	private final JButton upButton = new JButton(getMyImageIcon("Chevron-Up")),
 			downButton = new JButton(getMyImageIcon("Chevron-Down"));
@@ -104,7 +102,7 @@ public class PdfShow {
 		polyLineButton = new JButton(getMyImageIcon("PolyLine")), 
 		ovalButton = new JButton(getMyImageIcon("Oval")), 
 		rectangleButton = new JButton(getMyImageIcon("Rectangle"));
-	private final JButton timerButton = new JButton(getMyImageIcon("Timer"));
+
 	private final RecentMenu recents;
 	private final BreakTimer breakTimer;
 
@@ -115,7 +113,7 @@ public class PdfShow {
     boolean done = false;
 
 	// For "busy" popup
-	private final JProgressBar progressBar;
+
 	private final JDialog progressDialog;
 	
 	// MAIN CONSTRUCTOR
@@ -143,8 +141,8 @@ public class PdfShow {
 		final Image iconImage = getImage("/images/logo.png");
 		logger.fine("PdfShow.PdfShow(): " + iconImage);
 		frame.setIconImage(iconImage);
-		
-		progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
+
+		final JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
 		progressBar.setIndeterminate(true);
 		JOptionPane pane = new JOptionPane();
 		pane.add(progressBar);
@@ -160,7 +158,7 @@ public class PdfShow {
 						DocTab dt = (DocTab) tabComponent;
 						dt.computeScaling();
 					} else {
-						System.out.printf("Tab %d is %s, not DocTab", i, tabComponent.getClass());
+						System.out.printf("Tab %d is %s, not DocTab\n", i, tabComponent.getClass());
 					}
 				}
 			}
@@ -181,7 +179,7 @@ public class PdfShow {
 		propwash.close();
 		logger.info("PdfShow(): Properties " + programProps);
 
-		// TABBEDPANE a DnDTabbedPane: the main window for viewing PDFs)
+		// TABBEDPANE a DnDTabbedPane: the main window for viewing PDFs
 
 		tabPane.addChangeListener(evt -> {
 			currentTab = (DocTab)tabPane.getSelectedComponent();
@@ -362,7 +360,7 @@ public class PdfShow {
 		// Row 2 - first page, # page, last page
 		pageNumTF = new JTextField("1");
 		pageNumTF.addMouseListener(new MouseAdapter() {
-			// If you click in it, we select all so you can overtype
+			// If you click in it, we select all so that you can overtype
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				pageNumTF.selectAll();
@@ -451,6 +449,7 @@ public class PdfShow {
 		starButton.setToolTipText("Favorite this page");
 		toolBox.add(starButton);
 
+		final JButton timerButton = new JButton(getMyImageIcon("Timer"));
 		timerButton.addActionListener(showBreakTimer);
 		timerButton.setToolTipText("Open Break Timer");
 		toolBox.add(timerButton);
@@ -478,6 +477,8 @@ public class PdfShow {
 		frame.add(BorderLayout.WEST, sidePanel);
 
 		// END TOOL BOX
+
+		frame.setVisible(true);
 	}
 
 	/** Adjusts the slide show time interval */
@@ -504,7 +505,7 @@ public class PdfShow {
             int n = tabPane.getSelectedIndex();
             while (!done) {
                 try {
-                    Thread.sleep(slideTime * 1000);
+                    Thread.sleep(slideTime * 1000L);
                 } catch (InterruptedException ex) {
                     done = true;
                     return;
@@ -531,7 +532,7 @@ public class PdfShow {
                     return;
                 }
                 try {
-                    Thread.sleep(slideTime * 1000);
+                    Thread.sleep(slideTime * 1000L);
                 } catch (InterruptedException ex) {
                     done = true;
                     return;
@@ -586,10 +587,6 @@ public class PdfShow {
 		}
 	};
 
-	void setVisible(boolean vis) {
-		frame.setVisible(vis);
-	}
-
 	void visitCurrentPageGObjs(Consumer<GObject> consumer) {
 		if (currentTab == null) {
 			return;	// Try to draw before opening a file?
@@ -599,10 +596,8 @@ public class PdfShow {
 			logger.fine("No annotations");
 			return;
 		}
-		currentPageAddIns.forEach(gobj -> consumer.accept(gobj));
+		currentPageAddIns.forEach(consumer::accept);
 	}
-
-	boolean changed = false, found = false;
 
 	final State viewState = new ViewState(this, selectButton);
 	final State textDrawState = new TextDrawState(this, textButton);
@@ -748,7 +743,7 @@ public class PdfShow {
 
 	/**
 	 * Opens one file.
-	 * @parameter file A File descriptor for the file to be opened.
+	 * @param file A File descriptor for the file to be opened.
 	 */
 	private void openPdfFile(File file) throws IOException {
 		startIndefiniteProgressBar();
@@ -837,7 +832,7 @@ public class PdfShow {
 	void startIndefiniteProgressBar() {
 		new SwingWorker() {
 			@Override
-			protected Object doInBackground() throws Exception {
+			protected Object doInBackground() {
 				progressDialog.setVisible(true);
 				return null;
 			}
