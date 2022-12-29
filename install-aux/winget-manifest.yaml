@@ -1,0 +1,14 @@
+PackageIdentifier: IanDarwin.PDFShow
+PackageVersion: 1.0.3.0
+PackageLocale: en-US
+Publisher: Ian Darwin
+PackageName: PDFShow
+License: MIT
+ShortDescription: Presentation tool for PDF slide decks.
+Installers: 
+ - Architecture: x64
+   InstallerType: msi
+   InstallerUrl: https://github.com/IanDarwin/pdfshow/releases/download/v1.0.3/PDFShow-1.0.3.msi
+   InstallerSha256: 0a1fb711866a53b042b390f5675cc139283a325b03d97b5a62e9a02adf3d560d
+ManifestType: singleton
+ManifestVersion: 1.0.0

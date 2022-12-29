@@ -21,4 +21,5 @@
 *** Drag the just-created installer into the drag area
 *** Click Create or Update Release
 
-
+Note that the WinGet (windows CLI installer) support is not working;
+`jpackage` seems to have some incompatibility.

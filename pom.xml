@@ -3,7 +3,7 @@
 
 	<groupId>net.rejmi</groupId>
 	<artifactId>pdfshow</artifactId>
-	<version>1.0.2</version>	<!-- DRY? Keep mkinstaller at same x.y.z level -->
+	<version>1.0.3</version>	<!-- DRY? Keep mkinstaller at same x.y.z level -->
 	<packaging>jar</packaging>
 	<inceptionYear>2019</inceptionYear>
 
@@ -34,12 +34,14 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<javase.version>16</javase.version>
+		<javase.version>17</javase.version>
 		<maven.compiler.source>${javase.version}</maven.compiler.source>
 		<maven.compiler.target>${javase.version}</maven.compiler.target>
 		<maven.compiler.testSource>${javase.version}</maven.compiler.testSource>
 		<maven.compiler.testTarget>${javase.version}</maven.compiler.testTarget>
 		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+		<darwinsys-api-version>1.7.7-SNAPSHOT</darwinsys-api-version>
+		<pdfbox-version>2.0.24</pdfbox-version>
 	</properties>
 
 	<dependencies>
@@ -47,14 +49,14 @@
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
-			<version>2.0.24</version>
+			<version>${pdfbox-version}</version>
 		</dependency>
 
 		<!-- My own rather trivial API -->
 		<dependency>
 			<groupId>com.darwinsys</groupId>
 			<artifactId>darwinsys-api</artifactId>
-			<version>1.7.5</version>
+			<version>${darwinsys-api-version}</version>
 		</dependency>
 
 		<!-- Update maven plugin for legacy systems -->
@@ -74,8 +76,8 @@
 	</dependencies>
 
 	<build>
-		<!-- Put Version Number into About box -->
 
+		<!-- Put Version Number into About box -->
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -92,8 +94,20 @@
 				</includes>
 			</resource>
 		</resources>
+
 		<plugins>
+			<!-- Allow 'mvn exec:java' to run the program -->
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<configuration>
+					<mainClass>net.rejmi.pdfshow.PdfShow</mainClass>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<!-- run the app! -->
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.1.1</version>

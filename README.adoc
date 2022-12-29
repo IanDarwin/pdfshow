@@ -1,11 +1,17 @@
 = PdfShow
 
-ifndef::current-release[]
-:current-release: Java 16
+ifndef::ver[]
+:ver: 1.0.3
 endif::[]
+ifndef::current-java-ver[]
+:current-java-ver: Java 17
+endif::[]
+:gh-url: https://github.com/IanDarwin/pdfshow
+:releases-link: {gh-url}/releases
+:download-link: {releases-link}/download/v{ver}
 
 `PdfShow` is a PDF viewer specifically for running slide shows.
-I wrote it because I do sometimes teach from PDFs and was tired of general-purpose programs 
+I wrote it because I sometimes teach from PDFs and was tired of general-purpose programs 
 like PDF Annotator and Adobe Reader, which have too many modes,
 controls, etc. and aren't really optimized for showing slide decks.
 
@@ -14,7 +20,7 @@ Maybe you have to present a talk and you only have the PDF, not the ODP, KeyNote
 Some training companies just distribute their courses to instructors as PDFs, 
 not presentation-software files.
 Or maybe you want to re-give somebody else's preso from the PDF-only version they published online
-(if you do this, make sure to give credit, and respect copyrights/licenses).
+(if you do this, make sure to ask permission, give credit, and respect copyrights/licenses).
 Or yet again, maybe you use the open-source
 https://staff.fnwi.uva.nl/b.diertens/useful/gpresent/[gpresent],
 which doesn't run shows but generates the PDF and leaves it to others to display.
@@ -25,11 +31,15 @@ Whatever the reason you need to present with just the PDF of the slides,
 
 image::samples/SampleShow.png[width="800"]
 
-`PdfShow` has limitations compared with other tools, due to
+`PdfShow` has fewer features thah other tools, due to
 its relative youth and, more importantly, its design goals.
-_Please_ see the https://github.com/IanDarwin/pdfshow/issues[TODO list];
+_Please_ see the https://github.com/IanDarwin/pdfshow/issues[list of issues];
 read through it before condemning the app as incomplete and again before
 adding to it - anyone can create a free github account and add issues there!
+That is also why there's no TODO file here - all the TODOs are in the issues list.
+
+The program is for desktops, not mobiles. There is too much dependency on Swing
+to make it feasible to run on platforms other than desktop Java.
 
 More bells and whistles will be added as time permits, but let's keep it relatively simple.
 There is still some basic functionality that is imperfect or incomplete.
@@ -38,21 +48,34 @@ within the general tone of the program - _minimalist, but functional._
 
 == Installing PdfShow
 
-There may be an installer for your computing platform; see
-https://github.com/IanDarwin/pdfshow/releases. Check the latest
-release under the _Assets_ dropdown.
+[[installation-summary]]
+.Installation/Download Summary
+[options="header",cols="2,2,5,5"]
+|====
+|OS|Pkg Format|CLI Install|Install Download
+|Java|fat jar|n/a/|{download-link}/pdfshow-{ver}-jar-with-dependencies.jar
+|Linux|deb|Download then deb install|{download-link}/pdfshow_{ver}-1_amd64.deb
+|Linux|rpm|Download then dnf install|{download-link}/pdfshow-{ver}-1.x86_64.rpm
+|macOS|dmg|Download; should open|{download-link}/PDFShow-{ver}.dmg
+|Windows|msi|winget install RejminetGroupInc.PDFShow|{download-link}/PDFShow-{ver}.msi
+|====
 
-If not, there's a Jar file that you can run with `java -jar`.
-You can rebuild that with `mvn package assembly:single`
+Or check the {releases-link}[latest release under the _Assets_ dropdown].
 
-Note that the installers bundle their own Java VM, with which they are known
+The installers bundle their own Java VM, with which they are known
 to work; they are about 50Mb to download and about 120-140Mb when installed.
-If you already have a current Java installed, you may prefer to run the JAR file.
-WHen using the source or JAR approach, you have to be sure
+If you already have a current Java installed, you may prefer to run the JAR file; you have to be sure
 you have a JDK that will work with `PdfShow`.
-The jar is currently built with Java 16 or 17.
+The JAR is built with Java {current-java-ver} on most platforms.
 
-If there's no installer, or you'd rather build from source, see <<building>> below.
+For MS-Windows, once you have `winget` installed, just type this in a terminal window:
+
+	winget install RejminetGroupInc.PDFShow
+
+(That's really me; Rejminet Group Inc. is my consulting company.)
+
+If there's no installer, and you have Java, there's a Jar file that you can run with `java -jar`.
+You can rebuild that from source with `mvn package assembly:single`; see <<building>> below.
 
 == Using PdfShow
 
@@ -66,14 +89,13 @@ There is more documentation in the `docs` folder.
 
 === Prerequisites
 
-You need to have Java 11+ and Maven installed.
-You need Java 14+ if you want to build any of the full platform-specific installers.
-The installers and the public Jar file are built with {current-release}.
-
+You need Java JDK, probably {current-java-ver}$$+$$, and Maven installed.
+You need at least Java 14$$+$$ if you want to build any of the full platform-specific installers.
+The installers and the public Jar file are built with {current-java-ver}.
 
 === Getting Source
 
-Download the repository from https://github.com/IanDarwin/pdfshow.
+Download the repository from {gh-url}.
 
 Install Apache-Maven if not already installed.
 
@@ -126,7 +148,7 @@ https://docs.oracle.com/en/java/javase/14/docs/specs/man/jpackage.html[jpackage]
 You can run that script yourself if you want.
 You can only build the Mac installer on macOS, the Windows installer on Windows, etc.
 
-=== Configuring a Linux rpm-based system to build pdfshow
+=== Configuring a Linux rpm-based system and building PDFShow
 
 This may not be optimal, but should to work. Newer versions may be available.
 
@@ -142,7 +164,7 @@ curl -o apache-maven-3.8.4-bin.tar.gz \
 
 cd /usr/local; sudo tar xzvf apache-maven-3.8.4.tar.gz
 
-add /usr/local/apache-maven-3.8.4/bin to PATH
+PATH=$PATH:/usr/local/apache-maven-3.8.4/bin
 
 mkdir git
 cd git
@@ -154,10 +176,14 @@ mkinstaller -s # skiptests; they fail on this Linux with infra-related errs, don
 ----
 
 ==== Pre-requisites
+
+On all platforms you need JDK and Apache Maven installed.
 On Windows `jpackage` has a couple of pre-requisites,
 which it will let you know about if they're not already installed.
 
-On Linux, for RPMs, you need `rpm-build` or you will get told that 'rpm' is an invalid type.
+On Linux, for RPMs, you need `rpm-build` or you will get told that 'rpm' is an invalid type
+(sudo dnf install rpm-build).
+On Linux, for DEBs, you may need `fakeroot` (sudo apt install fakeroot).
 
 The install formats are:
 
@@ -171,7 +197,7 @@ The install formats are:
 |Windows|MSI installer|exe
 |====
 
-== Development
+== Contributing / Development
 
 Fork the repo, clone your forked copy, make changes, test changes, send a pull request.
 
@@ -196,6 +222,9 @@ Program written by Ian Darwin of Rejminet Group Inc.
 Contributions by a cast of thousands (we hope);
 their names are listed on the main github page.
 Thanks folks!
+
+Draggable Tab component DnDTabbedPane courtesy of
+https://java-swing-tips.blogspot.com/2008/04/drag-and-drop-tabs-in-jtabbedpane.html
 
 PDF access (i.e., some of the heavy listing!) is done by
 https://pdfbox.apache.org/[Apache PDFBox] software.
