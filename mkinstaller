@@ -20,7 +20,7 @@ case $(uname) in
 			;;
 	Linux)		inst_format="rpm deb"
 			icon_format=png
-			OS_SPECIFIC="--linux-shortcut --linux-menu-group Office --linux-app-category Office"
+			OS_SPECIFIC="--linux-shortcut --linux-menu-group Office --linux-app-category Office --resource-dir unixlinux"
 			;;
 	*)
 			echo "Don't know how to package for this OS, sorry.";
