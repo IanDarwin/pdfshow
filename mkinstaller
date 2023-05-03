@@ -18,7 +18,7 @@ case $(uname) in
 	Darwin)		inst_format=dmg
 			icon_format=icns
 			;;
-	Linux)		inst_format=rpm
+	Linux)		inst_format="rpm deb"
 			icon_format=png
 			OS_SPECIFIC="--linux-shortcut --linux-menu-group Office --linux-app-category Office"
 			;;
@@ -69,12 +69,13 @@ rm -rf pdfshow-runtime
 jlink --output pdfshow-runtime --add-modules java.base,java.desktop,java.logging
 
 # Now use jpackage with that runtime image to create the final installer.
-jpackage \
+for fmt in ${inst_format}; do
+    jpackage \
 	--name PDFShow \
 	--app-version ${RELEASE_VERSION} \
 	--license-file LICENSE.txt \
 	--vendor "Rejminet Group Inc." \
-	--type "${inst_format}" \
+	--type "${fmt}" \
 	--icon src/main/resources/images/logo.${icon_format} \
 	--input target \
 	--main-jar pdfshow-${RELEASE_VERSION}-jar-with-dependencies.jar \
@@ -83,6 +84,7 @@ jpackage \
 		echo jpackage did not complete normally!
 		exit 1
 	}
+done
 exit
 	# The following are not used in production releases
 	# Omit file-association for OSes that only allow one program per filetype.
