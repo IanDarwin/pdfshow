@@ -41,8 +41,6 @@ public class PdfShow {
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
 				PdfShow.class.getSimpleName());
-		// Now Start GUI thread
-		frame = new JFrame("PDFShow");
 	}
 	
 	public static void main(String[] args) throws Exception {
@@ -59,7 +57,7 @@ public class PdfShow {
 		for (String arg : args) {
 			final File file = new File(arg);
 			if (!file.canRead()) {
-				JOptionPane.showMessageDialog(PdfShow.frame, "Can't open file " + file);
+				JOptionPane.showMessageDialog(frame, "Can't open file " + file);
 				continue;
 			}
 			PdfShow.instance.recents.openFile(arg); // Include in Recents dropdown
@@ -90,21 +88,22 @@ public class PdfShow {
 	// GUI Controls - defined here since referenced throughout
 	static JFrame frame;
 	private final JTabbedPane tabPane = new DnDTabbedPane();
+	JInternalFrame jiffy;
 	DocTab currentTab;
 	private final JButton upButton = new JButton(getMyImageIcon("Chevron-Up")),
 			downButton = new JButton(getMyImageIcon("Chevron-Down"));
-	private final JTextField pageNumTF;
-	private final JLabel pageCountTF;
+	private JTextField pageNumTF;
+	private JLabel pageCountTF;
 	private final JButton selectButton = new JButton(getMyImageIcon("Select")),
-		textButton = new JButton(getMyImageIcon("Text")), 
+		textButton = new JButton(getMyImageIcon("Text")),
 		markerButton = new JButton(getMyImageIcon("Marker")),
-		lineButton = new JButton(getMyImageIcon("Line")), 
-		polyLineButton = new JButton(getMyImageIcon("PolyLine")), 
-		ovalButton = new JButton(getMyImageIcon("Oval")), 
+		lineButton = new JButton(getMyImageIcon("Line")),
+		polyLineButton = new JButton(getMyImageIcon("PolyLine")),
+		ovalButton = new JButton(getMyImageIcon("Oval")),
 		rectangleButton = new JButton(getMyImageIcon("Rectangle"));
 
-	private final RecentMenu recents;
-	private final BreakTimer breakTimer;
+	private RecentMenu recents;
+	private BreakTimer breakTimer;
 
 	// For slide show
     ExecutorService pool = Executors.newSingleThreadExecutor();
@@ -119,6 +118,9 @@ public class PdfShow {
 	// MAIN CONSTRUCTOR
 
 	PdfShow() throws IOException {
+
+		JFrame frame = new JFrame("PDFShow");
+		PdfShow.frame = frame;
 
 		gotoState(viewState);
 
@@ -179,6 +181,39 @@ public class PdfShow {
 		propwash.close();
 		logger.info("PdfShow(): Properties " + programProps);
 
+
+		makeTabbedPane(frame);
+
+		JMenuBar menuBar = makeMenus();
+		frame.setJMenuBar(menuBar);
+
+		JPanel sidePanel = new JPanel();
+		sidePanel.setPreferredSize(new Dimension(200, 800));
+
+		JPanel navBox = makeNavBox();
+		sidePanel.add(navBox);
+
+		JPanel toolBox = makeToolbox();
+		sidePanel.add(toolBox);
+		
+        // SETTINGS
+		sidePanel.add(new Settings(
+				frame,
+				GObject.getFont(), GObject::setFont,
+				GObject.getColor(), GObject::setColor,
+				GObject.getLineThickness(), GObject::setLineThickness,
+				slideTime, this::setSlideTime,
+				savePageNumbers, this::setSavePageNumbers
+			));
+
+		frame.add(BorderLayout.WEST, sidePanel);
+
+		// END TOOL BOX
+
+		frame.setVisible(true);
+	}
+
+	private void makeTabbedPane(JFrame frame) {
 		// TABBEDPANE a DnDTabbedPane: the main window for viewing PDFs
 
 		tabPane.addChangeListener(evt -> {
@@ -188,11 +223,12 @@ public class PdfShow {
 			}
 		});
 		frame.add(BorderLayout.CENTER, tabPane);
+	}
 
-		// MENUS
+	/** Create a JMenuBar with all the menus. */
+	private JMenuBar makeMenus() {
 
 		JMenuBar menuBar = new JMenuBar();
-		frame.setJMenuBar(menuBar);
 		ResourceBundle rb = ResourceBundle.getBundle("Menus");
 		JMenu fm = MenuUtils.mkMenu(rb, "file");
 		menuBar.add(fm);
@@ -264,53 +300,45 @@ public class PdfShow {
 		favoritesMI.setEnabled(false);
 		viewMenu.add(favoritesMI);
 
-		JInternalFrame jiffy =
-				new JInternalFrame("Timer", true, true, true, true);
+		jiffy = new JInternalFrame("Timer", true, true, true, true);
 		breakTimer = new BreakTimer(jiffy);
 
 		JMenuItem breakTimerMI = MenuUtils.mkMenuItem(rb, "view","break_timer");
-		ActionListener showBreakTimer = e ->  {
-			boolean glassify = true;
-			if (glassify)
-				frame.setGlassPane(jiffy);
-			else
-				frame.add(jiffy);
-			jiffy.setVisible(true);
-		};
+
 		breakTimerMI.addActionListener(showBreakTimer);
 		viewMenu.add(breakTimerMI);
 
-        final JMenu slideshowMenu = MenuUtils.mkMenu(rb, "slideshow");
-        menuBar.add(slideshowMenu);
-        final JMenuItem ssThisTabFromStartButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_start");
-        slideshowMenu.add(ssThisTabFromStartButton);
-        ssThisTabFromStartButton.addActionListener(e -> runSlideShow(1));
-        final JMenuItem ssThisTabCurButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_current");
-        slideshowMenu.add(ssThisTabCurButton);
-        ssThisTabCurButton.addActionListener((e) -> runSlideShow(currentTab.getPageNumber()));
-        final JMenuItem ssAcrossTabsButton = MenuUtils.mkMenuItem(rb, "slideshow", "across_tabs");
-        ssAcrossTabsButton.addActionListener(slideshowAcrossTabsAction);
-        slideshowMenu.add(ssAcrossTabsButton);
-        final JMenuItem ssCustomButton = MenuUtils.mkMenuItem(rb, "slideshow", "custom");
-        ssCustomButton.setEnabled(false);
+		final JMenu slideshowMenu = MenuUtils.mkMenu(rb, "slideshow");
+		menuBar.add(slideshowMenu);
+		final JMenuItem ssThisTabFromStartButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_start");
+		slideshowMenu.add(ssThisTabFromStartButton);
+		ssThisTabFromStartButton.addActionListener(e -> runSlideShow(1));
+		final JMenuItem ssThisTabCurButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_current");
+		slideshowMenu.add(ssThisTabCurButton);
+		ssThisTabCurButton.addActionListener((e) -> runSlideShow(currentTab.getPageNumber()));
+		final JMenuItem ssAcrossTabsButton = MenuUtils.mkMenuItem(rb, "slideshow", "across_tabs");
+		ssAcrossTabsButton.addActionListener(slideshowAcrossTabsAction);
+		slideshowMenu.add(ssAcrossTabsButton);
+		final JMenuItem ssCustomButton = MenuUtils.mkMenuItem(rb, "slideshow", "custom");
+		ssCustomButton.setEnabled(false);
 		// XXX: a list of open files with a Pages textfield in each (1, 1-5, or "1,5,6")
-        slideshowMenu.add(ssCustomButton);
+		slideshowMenu.add(ssCustomButton);
 
 		final JMenu helpMenu = MenuUtils.mkMenu(rb, "help");
 		menuBar.add(helpMenu);
 		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
 		aboutButton.addActionListener(e->
-			JOptionPane.showMessageDialog(frame, 
-			String.format("PdfShow(tm) %s\n(c) 2021 Ian Darwin\n%s\n",
-				programProps.getProperty(KEY_VERSION),
-				programProps.getProperty(KEY_HOME_URL)),
-			"About PdfShow(tm)",
-			JOptionPane.INFORMATION_MESSAGE));
+				JOptionPane.showMessageDialog(frame,
+						String.format("PdfShow(tm) %s\n(c) 2021 Ian Darwin\n%s\n",
+								programProps.getProperty(KEY_VERSION),
+								programProps.getProperty(KEY_HOME_URL)),
+						"About PdfShow(tm)",
+						JOptionPane.INFORMATION_MESSAGE));
 		helpMenu.add(aboutButton);
 		final JMenuItem helpButton = MenuUtils.mkMenuItem(rb, "help", "help");
 		helpButton.addActionListener(e->
-	    	JOptionPane.showMessageDialog(frame, "Help not written yet", 
-				"Sorry", JOptionPane.WARNING_MESSAGE));
+				JOptionPane.showMessageDialog(frame, "Help not written yet",
+						"Sorry", JOptionPane.WARNING_MESSAGE));
 		helpMenu.add(helpButton);
 		final JMenuItem breakTimerHelpButton = MenuUtils.mkMenuItem(rb, "help", "breaktimer");
 		helpMenu.add(breakTimerHelpButton);
@@ -320,8 +348,8 @@ public class PdfShow {
 		sourceButton.addActionListener(e -> {
 			String url = programProps.getProperty(KEY_SOURCE_URL);
 			if (desktop == null) {
-				JOptionPane.showMessageDialog(frame, 
-					"Java Desktop unsupported, visit " + url + " on your own.");
+				JOptionPane.showMessageDialog(frame,
+						"Java Desktop unsupported, visit " + url + " on your own.");
 			} else {
 				try {
 					desktop.browse(new URI(url));
@@ -335,15 +363,16 @@ public class PdfShow {
 		feedbackMI.addActionListener(feedbackAction);
 		helpMenu.add(feedbackMI);
 
-		// NAV BOX
+		return menuBar;
+	}
 
-		JPanel sidePanel = new JPanel();
-		sidePanel.setPreferredSize(new Dimension(150, 800));
-		
+	/** Create the navigation box - arrows for pageup/down etc. */
+	private JPanel makeNavBox() {
+
 		JPanel navBox = new JPanel();
 		navBox.setBorder(BorderFactory.createTitledBorder("Navigation"));
 		navBox.setLayout(new GridLayout(0,2));
-		
+
 		// Row 1 - just Up button
 		upButton.addActionListener(e -> moveToPage(currentTab.getPageNumber() - 1));
 		navBox.add(upButton);
@@ -364,7 +393,7 @@ public class PdfShow {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				pageNumTF.selectAll();
-			}			
+			}
 		});
 		pageNumTF.addActionListener(e -> {
 			String text = pageNumTF.getText();
@@ -373,10 +402,10 @@ public class PdfShow {
 				moveToPage(pgNum);
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(frame,
-					String.format(
-						"Could not interpret '%s' as a number, alas.", text),
-					"How's that?",
-					JOptionPane.ERROR_MESSAGE);
+						String.format(
+								"Could not interpret '%s' as a number, alas.", text),
+						"How's that?",
+						JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		pageCountTF = new JLabel("1");
@@ -387,13 +416,13 @@ public class PdfShow {
 		pageNumsPanel.add(pageCountTF);
 		navBox.add(pageNumsPanel);
 
-		sidePanel.add(navBox);
+		return navBox;
+	}
 
-		// END NAV BOX
+	/** Create the drawing-tool toolBox */
+	private JPanel makeToolbox() {
 
-		// TOOL BOX
 		logger.info("PdfShow(): Building Toolbox");
-
 		JPanel toolBox = new JPanel();
 		toolBox.setBorder(BorderFactory.createTitledBorder("Toolbox"));
 		toolBox.setLayout(new GridLayout(0, 2));
@@ -413,25 +442,25 @@ public class PdfShow {
 		lineButton.addActionListener(e -> gotoState(lineDrawState));
 		lineButton.setToolTipText("Add straight line");
 		toolBox.add(lineButton);
-		
+
 		polyLineButton.addActionListener(e -> gotoState(polyLineDrawState));
 		polyLineButton.setToolTipText("Add a polyline");
 		toolBox.add(polyLineButton);
-		
+
 		ovalButton.addActionListener(e -> gotoState(ovalState));
 		ovalButton.setToolTipText("Add oval");
 		toolBox.add(ovalButton);
-		
+
 		rectangleButton.addActionListener(e -> gotoState(rectangleState));
 		rectangleButton.setToolTipText("Add rectangle");
 		toolBox.add(rectangleButton);
-		
+
 		// Other buttons
 		final JButton clearButton = new JButton(getMyImageIcon("Trash"));
 		clearButton.addActionListener(e -> currentTab.deleteAll());
 		clearButton.setToolTipText("Delete ALL objects");
 		toolBox.add(clearButton);
-		
+
 		final JButton undoButton = new JButton(getMyImageIcon("Undo"));
 		undoButton.addActionListener(e -> { currentTab.removeLastIn(); currentTab.repaint(); });
 		undoButton.setToolTipText("Undo last object");
@@ -444,8 +473,8 @@ public class PdfShow {
 
 		final JButton starButton = new JButton(getMyImageIcon("Star"));
 		starButton.addActionListener(e->
-			JOptionPane.showMessageDialog(frame, "Fave handling not written yet",
-				"Sorry", JOptionPane.WARNING_MESSAGE));
+				JOptionPane.showMessageDialog(frame, "Fave handling not written yet",
+						"Sorry", JOptionPane.WARNING_MESSAGE));
 		starButton.setToolTipText("Favorite this page");
 		toolBox.add(starButton);
 
@@ -454,31 +483,14 @@ public class PdfShow {
 		timerButton.setToolTipText("Open Break Timer");
 		toolBox.add(timerButton);
 
-		sidePanel.add(toolBox);
+		JButton stop_show = new JButton("Stop slide show");
+		toolBox.add(stop_show);
+		stop_show.addActionListener((e -> {
+			done = true;
+			// slideshowThread.interrupt();
+		}));
 
-        JButton stop_show = new JButton("Stop slide show");
-        sidePanel.add(stop_show);
-        stop_show.addActionListener((e -> {
-            done = true;
-            // slideshowThread.interrupt();
-        }));
-		
-        // SETTINGS
-        
-		sidePanel.add(new Settings(
-				frame,
-				GObject.getFont(), GObject::setFont,
-				GObject.getColor(), GObject::setColor,
-				GObject.getLineThickness(), GObject::setLineThickness,
-				slideTime, this::setSlideTime,
-				savePageNumbers, this::setSavePageNumbers
-			));
-
-		frame.add(BorderLayout.WEST, sidePanel);
-
-		// END TOOL BOX
-
-		frame.setVisible(true);
+		return toolBox;
 	}
 
 	/** Adjusts the slide show time interval */
@@ -491,6 +503,15 @@ public class PdfShow {
 		prefs.putBoolean(KEY_SAVE_PAGENUMS, b);
 		savePageNumbers = b;
 	}
+
+	ActionListener showBreakTimer = e ->  {
+		boolean glassify = true;
+		if (glassify)
+			frame.setGlassPane(jiffy);
+		else
+			frame.add(jiffy);
+		jiffy.setVisible(true);
+	};
 
     /** Runs a show "across tabs" */
 	ActionListener slideshowAcrossTabsAction = e -> {
@@ -552,11 +573,11 @@ public class PdfShow {
 			switch(n) {
 			case 0: // Web - general
 				String webStr0 = programProps.getProperty(KEY_FEEDBACK_URL);
-				URI weburl0 = new URI(webStr0);
+				URI webUrl0 = new URI(webStr0);
 				if (desktop == null) {
 					JOptionPane.showMessageDialog(frame, "Java Desktop unsupported, help unavailable.");
 				} else {
-					desktop.browse(weburl0); 
+					desktop.browse(webUrl0);
 				}
 				return;
 			case 1: // Web - file bug report/enhancement request
@@ -596,7 +617,9 @@ public class PdfShow {
 			logger.fine("No annotations");
 			return;
 		}
-		currentPageAddIns.forEach(consumer::accept);
+		for (GObject t : currentPageAddIns) {
+			consumer.accept(t);
+		}
 	}
 
 	final State viewState = new ViewState(this, selectButton);
