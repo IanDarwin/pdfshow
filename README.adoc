@@ -20,10 +20,10 @@ Maybe you have to present a talk and you only have the PDF, not the ODP, KeyNote
 Some training companies just distribute their courses to instructors as PDFs, 
 not presentation-software files.
 Or maybe you want to re-give somebody else's preso from the PDF-only version they published online
-(if you do this, make sure to ask permission, give credit, and respect copyrights/licenses).
+(if you do this, make sure to ask permission/give credit/respect copyrights+licenses).
 Or yet again, maybe you use the open-source
 https://staff.fnwi.uva.nl/b.diertens/useful/gpresent/[gpresent],
-which doesn't run shows but generates the PDF and leaves it to others to display.
+which doesn't actually present shows but generates the PDF and leaves it to others to present.
 Or the Markdown-based https://marp.app/[MARP], which can generate PDFs directly.
 Or the MagicPoint-based https://mg.pov.lt/mgp2pdf/[MagicPoint to PDF Converter].
 Whatever the reason you need to present with just the PDF of the slides,
@@ -31,7 +31,7 @@ Whatever the reason you need to present with just the PDF of the slides,
 
 image::samples/SampleShow.png[width="800"]
 
-`PdfShow` has fewer features thah other tools, due to
+`PdfShow` has fewer features than other tools, due to
 its relative youth and, more importantly, its design goals.
 _Please_ see the https://github.com/IanDarwin/pdfshow/issues[list of issues];
 read through it before condemning the app as incomplete and again before
@@ -40,6 +40,12 @@ That is also why there's no TODO file here - all the TODOs are in the issues lis
 
 The program is for desktops, not mobiles. There is too much dependency on Swing
 to make it feasible to run on platforms other than desktop Java.
+
+`PdfShow` supports dual monitors, one for control and one for viewing slides.
+As of now, the control window will appear on Monitor 1 and the view on Monitor 2;
+someday that'll be switchable via an option.
+Also, the control doesn't show the current, next, and previous slides, which is obviously lamentable
+but should be easy to fix.
 
 More bells and whistles will be added as time permits, but let's keep it relatively simple.
 There is still some basic functionality that is imperfect or incomplete.
