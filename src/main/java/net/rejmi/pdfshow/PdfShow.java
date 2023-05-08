@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
 
 import com.darwinsys.swingui.BreakTimer;
@@ -138,7 +139,7 @@ public class PdfShow {
 			}
 			case 2 -> {
 				controlFrame = new JFrame("PDFShow Control");
-				controlFrame.add(new JButton("PDFShow Control"), BorderLayout.CENTER);
+				controlFrame.add(new Preview(), BorderLayout.CENTER);
 				controlFrame.setSize(800, 600);
 				controlFrame.setVisible(true);
 				GraphicsDevice screen2 = gs[1];
@@ -914,5 +915,41 @@ public class PdfShow {
 	/** Hide the indefinite progress bar */
 	void stopIndefiniteProgressBar() {
 		progressDialog.setVisible(false);
+	}
+
+	private class PreviewComponent extends JComponent {
+		@Override
+		protected void paintComponent(Graphics g) {
+			// 1) Super
+			super.paintComponent(g);
+			// renderer.renderPage()...
+		}
+	}
+
+	class Preview extends JPanel {
+		JComponent current, prev, next;
+		Preview() {
+			setLayout(new TripartiteLayoutManager());
+
+			current = new PreviewComponent();
+			TitledBorder currentBorder = new TitledBorder("Current");
+			currentBorder.setTitleJustification(TitledBorder.CENTER);
+			current.setBorder(currentBorder);
+			add("current", current);
+
+			prev  = new PreviewComponent();
+			TitledBorder prevBorder = new TitledBorder("Previous");
+			prevBorder.setTitleJustification(TitledBorder.LEADING);
+			prev.setBorder(prevBorder);
+			add("prev", prev);
+
+			next  = new PreviewComponent();
+			TitledBorder nextBorder = new TitledBorder("Next");
+			nextBorder.setTitleJustification(TitledBorder.TRAILING);
+			next.setBorder(nextBorder);
+			add("next", next);
+
+
+		}
 	}
 }
