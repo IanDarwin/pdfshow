@@ -2,24 +2,11 @@ package net.rejmi.pdfshow;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serial;
-import java.net.URI;
-import java.net.URL;
 import java.util.List;
-import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
 
 /** 
  * GUI State class hierarchy - can control interactions differently in each state.
@@ -212,7 +199,7 @@ class TextDrawState extends State {
 			JOptionPane.QUESTION_MESSAGE,
 			JOptionPane.DEFAULT_OPTION);
 		pane.setWantsInput(true);
-		JDialog dialog = pane.createDialog(PdfShow.frame, "Text?");
+		JDialog dialog = pane.createDialog(PdfShow.controlFrame, "Text?");
 		dialog.setLocation(e.getX(), e.getY());
 		dialogClosed = false;
 		dialog.addWindowListener(new WindowAdapter() {

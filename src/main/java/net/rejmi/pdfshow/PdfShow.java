@@ -1,12 +1,5 @@
 package net.rejmi.pdfshow;
 
-import com.darwinsys.swingui.BreakTimer;
-import com.darwinsys.swingui.MenuUtils;
-import com.darwinsys.swingui.RecentMenu;
-import org.apache.pdfbox.pdmodel.PDDocumentInformation;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -24,6 +17,13 @@ import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+
+import com.darwinsys.swingui.BreakTimer;
+import com.darwinsys.swingui.MenuUtils;
+import com.darwinsys.swingui.RecentMenu;
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 
 /** 
  * Main class of "PDFShow: A simpler PDF viewer"; this class just does Swing UI.
@@ -47,7 +47,7 @@ public class PdfShow {
 
 		// Configure logging
 		LoggerSetup.init();
-		logger = Logger.getLogger("pdfshow");
+		logger = Logger.getLogger("net.rejmi.pdfshow");
 		logger.info("PdfShow Starting.");
 		
 		// Instantiate main program
@@ -57,7 +57,7 @@ public class PdfShow {
 		for (String arg : args) {
 			final File file = new File(arg);
 			if (!file.canRead()) {
-				JOptionPane.showMessageDialog(frame, "Can't open file " + file);
+				JOptionPane.showMessageDialog(controlFrame, "Can't open file " + file);
 				continue;
 			}
 			PdfShow.instance.recents.openFile(arg); // Include in Recents dropdown
@@ -86,9 +86,10 @@ public class PdfShow {
 	boolean savePageNumbers = prefs.getBoolean(KEY_SAVE_PAGENUMS, true);
 
 	// GUI Controls - defined here since referenced throughout
-	static JFrame frame;
+	static JFrame controlFrame, viewFrame;
 	private final JTabbedPane tabPane = new DnDTabbedPane();
 	JInternalFrame jiffy;
+	JLabel emptyViewScreenLabel;
 	DocTab currentTab;
 	private final JButton upButton = new JButton(getMyImageIcon("Chevron-Up")),
 			downButton = new JButton(getMyImageIcon("Chevron-Down"));
@@ -112,46 +113,71 @@ public class PdfShow {
     boolean done = false;
 
 	// For "busy" popup
-
 	private final JDialog progressDialog;
-	
-	// MAIN CONSTRUCTOR
 
-	PdfShow() throws IOException {
+	/**
+	 * MAIN CONSTRUCTOR
+ 	 */
+	private PdfShow() throws IOException {
 
-		JFrame frame = new JFrame("PDFShow");
-		PdfShow.frame = frame;
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice[] gs = ge.getScreenDevices();
+		int numScreens = gs.length;
+		System.out.println("Found " + numScreens + " screen(s)");
+		for (GraphicsDevice curGs : gs) { // Informational
+			DisplayMode dm = curGs.getDisplayMode();
+			System.out.println(dm.getWidth() + " x " + dm.getHeight());
+		}
+		GraphicsDevice screen1 = gs[0]; // must be >= 1
+		viewFrame = new JFrame("PDFShow Display");
 
+		switch (numScreens) {
+			case 1 -> {
+				screen1.setFullScreenWindow(viewFrame);
+				controlFrame = viewFrame;
+			}
+			case 2 -> {
+				controlFrame = new JFrame("PDFShow Control");
+				controlFrame.add(new JButton("PDFShow Control"), BorderLayout.CENTER);
+				controlFrame.setSize(800, 600);
+				controlFrame.setVisible(true);
+				GraphicsDevice screen2 = gs[1];
+				emptyViewScreenLabel = new JLabel("<html><b>PDFShow Display</b><br/>" +
+						"Open a file from the Control window to view.",
+						JLabel.CENTER);
+				viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
+				screen2.setFullScreenWindow(viewFrame);
+			}
+			default -> {
+				JOptionPane.showMessageDialog(null, "Cant handle >2 screens ATM");
+				System.exit(1);
+			}
+		}
+		
 		gotoState(viewState);
 
-		// GUI SETUP
 		try {
 			desktop=Desktop.getDesktop();
 		} catch (UnsupportedOperationException ex) {
-			JOptionPane.showMessageDialog(frame, "Java Desktop unsupported, help &c will not work.");
+			JOptionPane.showMessageDialog(controlFrame, "Java Desktop unsupported, help &c may not work.");
 			// Leave it null; check before use
 		}
 
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		final Dimension screenSize = tk.getScreenSize();
-		final Dimension windowSize = 
-			new Dimension(screenSize.width, screenSize.height - 50);
-		frame.setSize(windowSize);
-		frame.setLocation(0, 0);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setFocusable(true);
+		controlFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		controlFrame.setFocusable(true);
 		final Image iconImage = getImage("/images/logo.png");
 		logger.fine("PdfShow.PdfShow(): " + iconImage);
-		frame.setIconImage(iconImage);
+		controlFrame.setIconImage(iconImage);
 
 		final JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
 		progressBar.setIndeterminate(true);
 		JOptionPane pane = new JOptionPane();
 		pane.add(progressBar);
-		progressDialog = pane.createDialog(frame, "Loading...");
+		progressDialog = pane.createDialog(controlFrame, "Loading...");
 		progressDialog.add(progressBar);
 
-		frame.addComponentListener(new ComponentAdapter() {
+		// If view gets resized, must re-calc scaling
+		viewFrame.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
 				int nt = tabPane.getTabCount();
 				for (int i = 0; i < nt; i++) {
@@ -165,7 +191,8 @@ public class PdfShow {
 				}
 			}
 		});
-		frame.addWindowListener(new WindowAdapter() {
+		// ControlFrame close -> exit
+		controlFrame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				checkAndQuit();				
@@ -181,11 +208,10 @@ public class PdfShow {
 		propwash.close();
 		logger.info("PdfShow(): Properties " + programProps);
 
-
-		makeTabbedPane(frame);
+		makeTabbedPane(viewFrame);
 
 		JMenuBar menuBar = makeMenus();
-		frame.setJMenuBar(menuBar);
+		controlFrame.setJMenuBar(menuBar);
 
 		JPanel sidePanel = new JPanel();
 		sidePanel.setPreferredSize(new Dimension(200, 800));
@@ -195,10 +221,13 @@ public class PdfShow {
 
 		JPanel toolBox = makeToolbox();
 		sidePanel.add(toolBox);
+
+		JComponent stopButton = makeStopShowButton();
+		sidePanel.add(stopButton);
 		
         // SETTINGS
 		sidePanel.add(new Settings(
-				frame,
+				controlFrame,
 				GObject.getFont(), GObject::setFont,
 				GObject.getColor(), GObject::setColor,
 				GObject.getLineThickness(), GObject::setLineThickness,
@@ -206,15 +235,14 @@ public class PdfShow {
 				savePageNumbers, this::setSavePageNumbers
 			));
 
-		frame.add(BorderLayout.WEST, sidePanel);
+		controlFrame.add(BorderLayout.WEST, sidePanel);
 
-		// END TOOL BOX
-
-		frame.setVisible(true);
+		controlFrame.setVisible(true);
+		viewFrame.setVisible(true);
 	}
 
+	/** Create a DnDTabbedPane: the main window for viewing PDFs */
 	private void makeTabbedPane(JFrame frame) {
-		// TABBEDPANE a DnDTabbedPane: the main window for viewing PDFs
 
 		tabPane.addChangeListener(evt -> {
 			currentTab = (DocTab)tabPane.getSelectedComponent();
@@ -234,7 +262,7 @@ public class PdfShow {
 		menuBar.add(fm);
 		JMenuItem miOpen = MenuUtils.mkMenuItem(rb, "file", "open");
 		miOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
-				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+				ActionEvent.CTRL_MASK));
 		fm.add(miOpen);
 		recents = new RecentMenu(prefs, 10) {
 			@Serial
@@ -252,7 +280,7 @@ public class PdfShow {
 				}
 				recents.openFile(chosenFile.getAbsolutePath());
 			} catch (Exception e1) {
-				JOptionPane.showMessageDialog(frame, "Can't open file: " + e1);
+				JOptionPane.showMessageDialog(controlFrame, "Can't open file: " + e1);
 			}
 		});
 		fm.add(recents);
@@ -328,7 +356,7 @@ public class PdfShow {
 		menuBar.add(helpMenu);
 		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
 		aboutButton.addActionListener(e->
-				JOptionPane.showMessageDialog(frame,
+				JOptionPane.showMessageDialog(controlFrame,
 						String.format("PdfShow(tm) %s\n(c) 2021 Ian Darwin\n%s\n",
 								programProps.getProperty(KEY_VERSION),
 								programProps.getProperty(KEY_HOME_URL)),
@@ -337,7 +365,7 @@ public class PdfShow {
 		helpMenu.add(aboutButton);
 		final JMenuItem helpButton = MenuUtils.mkMenuItem(rb, "help", "help");
 		helpButton.addActionListener(e->
-				JOptionPane.showMessageDialog(frame, "Help not written yet",
+				JOptionPane.showMessageDialog(controlFrame, "Help not written yet",
 						"Sorry", JOptionPane.WARNING_MESSAGE));
 		helpMenu.add(helpButton);
 		final JMenuItem breakTimerHelpButton = MenuUtils.mkMenuItem(rb, "help", "breaktimer");
@@ -348,13 +376,13 @@ public class PdfShow {
 		sourceButton.addActionListener(e -> {
 			String url = programProps.getProperty(KEY_SOURCE_URL);
 			if (desktop == null) {
-				JOptionPane.showMessageDialog(frame,
+				JOptionPane.showMessageDialog(controlFrame,
 						"Java Desktop unsupported, visit " + url + " on your own.");
 			} else {
 				try {
 					desktop.browse(new URI(url));
 				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(frame, "Failed to open browser to " + url);
+					JOptionPane.showMessageDialog(controlFrame, "Failed to open browser to " + url);
 				}
 			}
 		});
@@ -401,7 +429,7 @@ public class PdfShow {
 				final int pgNum = Integer.parseInt(text.trim());
 				moveToPage(pgNum);
 			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(frame,
+				JOptionPane.showMessageDialog(controlFrame,
 						String.format(
 								"Could not interpret '%s' as a number, alas.", text),
 						"How's that?",
@@ -409,12 +437,12 @@ public class PdfShow {
 			}
 		});
 		pageCountTF = new JLabel("1");
-		JPanel pageNumsPanel = new JPanel();
-		pageNumsPanel.setLayout(new BoxLayout(pageNumsPanel, BoxLayout.LINE_AXIS));
-		pageNumsPanel.add(pageNumTF);
-		pageNumsPanel.add(new JLabel(" of "));
-		pageNumsPanel.add(pageCountTF);
-		navBox.add(pageNumsPanel);
+		JPanel pageNumbersPanel = new JPanel();
+		pageNumbersPanel.setLayout(new BoxLayout(pageNumbersPanel, BoxLayout.LINE_AXIS));
+		pageNumbersPanel.add(pageNumTF);
+		pageNumbersPanel.add(new JLabel(" of "));
+		pageNumbersPanel.add(pageCountTF);
+		navBox.add(pageNumbersPanel);
 
 		return navBox;
 	}
@@ -473,7 +501,7 @@ public class PdfShow {
 
 		final JButton starButton = new JButton(getMyImageIcon("Star"));
 		starButton.addActionListener(e->
-				JOptionPane.showMessageDialog(frame, "Fave handling not written yet",
+				JOptionPane.showMessageDialog(controlFrame, "Fave handling not written yet",
 						"Sorry", JOptionPane.WARNING_MESSAGE));
 		starButton.setToolTipText("Favorite this page");
 		toolBox.add(starButton);
@@ -484,13 +512,23 @@ public class PdfShow {
 		toolBox.add(timerButton);
 
 		JButton stop_show = new JButton("Stop slide show");
-		toolBox.add(stop_show);
+		// toolBox.add(stop_show);
 		stop_show.addActionListener((e -> {
 			done = true;
 			// slideshowThread.interrupt();
 		}));
 
 		return toolBox;
+	}
+
+	private JComponent makeStopShowButton() {
+		JButton stop_show = new JButton("Stop slide show");
+		// toolBox.add(stop_show);
+		stop_show.addActionListener((e -> {
+			done = true;
+			// slideshowThread.interrupt();
+		}));
+		return stop_show;
 	}
 
 	/** Adjusts the slide show time interval */
@@ -507,9 +545,9 @@ public class PdfShow {
 	ActionListener showBreakTimer = e ->  {
 		boolean glassify = true;
 		if (glassify)
-			frame.setGlassPane(jiffy);
+			controlFrame.setGlassPane(jiffy);
 		else
-			frame.add(jiffy);
+			controlFrame.add(jiffy);
 		jiffy.setVisible(true);
 	};
 
@@ -566,7 +604,7 @@ public class PdfShow {
 
     ActionListener feedbackAction = e -> {
 		String[] choices = { "Web-Comment", "Bug Report/Feature Req", "Email Team", "Cancel" }; // XXX  I18N this!
-		int n = JOptionPane.showOptionDialog(frame, "How to send feedback?", "Send Feedback", 
+		int n = JOptionPane.showOptionDialog(controlFrame, "How to send feedback?", "Send Feedback",
 					JOptionPane.NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, 
 					choices, 0);
 		try {
@@ -575,7 +613,7 @@ public class PdfShow {
 				String webStr0 = programProps.getProperty(KEY_FEEDBACK_URL);
 				URI webUrl0 = new URI(webStr0);
 				if (desktop == null) {
-					JOptionPane.showMessageDialog(frame, "Java Desktop unsupported, help unavailable.");
+					JOptionPane.showMessageDialog(controlFrame, "Java Desktop unsupported, help unavailable.");
 				} else {
 					desktop.browse(webUrl0);
 				}
@@ -584,7 +622,7 @@ public class PdfShow {
 				String webStr1 = programProps.getProperty(KEY_BUG_ENHANCE);
 				URI weburl1 = new URI(webStr1);
 				if (desktop == null) {
-					JOptionPane.showMessageDialog(frame, "Java Desktop unsupported, help unavailable.");
+					JOptionPane.showMessageDialog(controlFrame, "Java Desktop unsupported, help unavailable.");
 				} else {
 					desktop.browse(weburl1); 
 				}
@@ -594,7 +632,7 @@ public class PdfShow {
 				URI mailurl = new URI(
 						String.format(EMAIL_TEMPLATE, mailStr).replaceAll(" ", "%20"));
 				if (desktop == null) {
-					JOptionPane.showMessageDialog(frame, "Java Desktop unsupported, sending unavailable.");
+					JOptionPane.showMessageDialog(controlFrame, "Java Desktop unsupported, sending unavailable.");
 				} else {
 					desktop.mail(mailurl);
 				}
@@ -603,7 +641,7 @@ public class PdfShow {
 				break;
 			}
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(frame, "Unable to contact feedback form\n" + ex,
+			JOptionPane.showMessageDialog(controlFrame, "Unable to contact feedback form\n" + ex,
 					"Feedback Fail!", JOptionPane.ERROR_MESSAGE);
 		}
 	};
@@ -646,12 +684,12 @@ public class PdfShow {
 
 	void showFileProps() {
 		final PDDocumentInformation docInfo = currentTab.doc.getDocumentInformation();
-		StringBuilder sb = new StringBuilder();
+		var sb = new StringBuilder();
 		sb.append("Title: ").append(docInfo.getTitle()).append('\n');
 		sb.append("Author: ").append(docInfo.getAuthor()).append('\n');
 		sb.append("Producer: ").append(docInfo.getProducer()).append('\n');
 		sb.append("Subject: ").append(docInfo.getSubject()).append('\n');
-		JOptionPane.showMessageDialog(frame, sb.toString(), 
+		JOptionPane.showMessageDialog(controlFrame, sb.toString(),
 			currentTab.file.getName(), JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -712,7 +750,7 @@ public class PdfShow {
 			try {
 				prefs.flush();
 			} catch (BackingStoreException e) {
-				JOptionPane.showMessageDialog(frame, "Failed to save some prefs: " + e);
+				JOptionPane.showMessageDialog(controlFrame, "Failed to save some prefs: " + e);
 				// Nothing can be done, alas.
 			}
 		}
@@ -749,7 +787,7 @@ public class PdfShow {
 		fc.addChoosableFileFilter(filter);
 		fc.setAcceptAllFileFilterUsed(false);
 
-		fc.showOpenDialog(frame);
+		fc.showOpenDialog(controlFrame);
 		final File selectedFile = fc.getSelectedFile();
 		if (selectedFile != null) {
 			logger.fine("PdfShow.chooseFile(): put: " + selectedFile.getParent());
@@ -757,7 +795,7 @@ public class PdfShow {
 			try {
 				prefs.flush();
 			} catch (BackingStoreException e) {
-				JOptionPane.showMessageDialog(frame, "Failed to save prefs: " + e);
+				JOptionPane.showMessageDialog(controlFrame, "Failed to save prefs: " + e);
 				e.printStackTrace();
 			}
 		}
@@ -769,6 +807,8 @@ public class PdfShow {
 	 * @param file A File descriptor for the file to be opened.
 	 */
 	private void openPdfFile(File file) throws IOException {
+		if (emptyViewScreenLabel != null)
+			viewFrame.remove(emptyViewScreenLabel);
 		startIndefiniteProgressBar();
 		DocTab t = new DocTab(file, prefs);
 		t.setFocusable(true);
@@ -788,8 +828,13 @@ public class PdfShow {
 
 	void closeFile(DocTab dt) {
 		tabPane.remove(dt);
-		if (savePageNumbers)
-		 prefs.putInt("PAGE#" + dt.getName(), dt.getPageNumber());
+		System.out.println("tabPane.# = " + tabPane.getTabCount());
+		if (tabPane.getTabCount() == 0) {
+			viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
+		}
+		if (savePageNumbers) {
+			prefs.putInt("PAGE#" + dt.getName(), dt.getPageNumber());
+		}
 		dt.close();
 	}
 
