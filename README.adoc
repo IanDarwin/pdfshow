@@ -72,7 +72,7 @@ The installers bundle their own Java VM, with which they are known
 to work; they are about 50Mb to download and about 120-140Mb when installed.
 If you already have a current Java installed, you may prefer to run the JAR file; you have to be sure
 you have a JDK that will work with `PdfShow`.
-The JAR is built with Java {current-java-ver} on most platforms.
+The JAR is built with {current-java-ver} on most platforms.
 
 For MS-Windows, once you have `winget` installed, just type this in a terminal window:
 
