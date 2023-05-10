@@ -35,14 +35,6 @@ public class PdfShow {
 	
 	static Logger logger;
 
-	static {
-		// Configure for macOS if possible/applicable -
-		// ignored on other platforms
-		System.setProperty("apple.laf.useScreenMenuBar", "true");
-		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-				PdfShow.class.getSimpleName());
-	}
-	
 	public static void main(String[] args) throws Exception {
 
 		// Configure logging
@@ -123,21 +115,27 @@ public class PdfShow {
 	 * MAIN CONSTRUCTOR
  	 */
 	private PdfShow() throws IOException {
-
+		DisplayMode dm = null;
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice[] gs = ge.getScreenDevices();
 		int numScreens = gs.length;
 		System.out.println("Found " + numScreens + " screen(s)");
 		for (GraphicsDevice curGs : gs) { // Informational
-			DisplayMode dm = curGs.getDisplayMode();
+			dm = curGs.getDisplayMode();
 			System.out.println(dm.getWidth() + " x " + dm.getHeight());
 		}
 		GraphicsDevice screen1 = gs[0]; // must be >= 1
 		viewFrame = new JFrame("PDFShow Display");
+		viewFrame.setSize(dm.getWidth(), dm.getHeight());
 
 		switch (numScreens) {
 			case 1 -> {
-				screen1.setFullScreenWindow(viewFrame);
+				// Configure for macOS if possible/applicable -
+				// ignored on other platforms
+				System.setProperty("apple.laf.useScreenMenuBar", "true");
+				System.setProperty("com.apple.mrj.application.apple.menu.about.name",
+						PdfShow.class.getSimpleName());
+				// screen1.setFullScreenWindow(viewFrame);
 				controlFrame = viewFrame;
 			}
 			case 2 -> {
