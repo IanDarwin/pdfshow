@@ -14,3 +14,4 @@ Pick a silly name for the release.
 Create the release on GitHub (using ver and sillyName), uploading all the binaries.
 
 Update the version in our entry in winget, push, send pull request.
+XXX Do we need to update InstallerSha256 manually?
