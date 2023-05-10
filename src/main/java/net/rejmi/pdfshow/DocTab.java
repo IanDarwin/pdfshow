@@ -27,13 +27,12 @@ import org.apache.pdfbox.rendering.PDFRenderer;
  * Page numbers in methods are one-based, but PDFRenderer is
  * zero-based, so subtract 1 for PDTree
  */
-@SuppressWarnings("serial")
 class DocTab extends JPanel {
 
 	static Logger logger = Logger.getLogger("pdfshow.doctab");
 
-	private JScrollBar sbar;
-	private JComponent pdfComponent;
+	private final JScrollBar sbar;
+	private final JComponent pdfComponent;
 	/** one--based pageNumber, same as from document's page numbering */
 	private int pageNumber = 1;
 	/** The current PDF */
@@ -46,8 +45,7 @@ class DocTab extends JPanel {
 	float scaleX, scaleY;
 	/** Our user's annotations for this doc, indexed by page#-1 to get list */
 	List<List<GObject>> addIns;
-	private PDPage deletedPage;
-	private Preferences prefs;
+	private final Preferences prefs;
 	
 	/** Construct one Document Tab */
 	DocTab(File file, Preferences prefs) throws IOException {
@@ -91,9 +89,7 @@ class DocTab extends JPanel {
 	 * Scaling is quick & dirty: works for slide decks, not for books(!).
 	 * XXX Must either constrain ratio or allow to manually adjust.
 	 */
-	public void computeScaling() {
-		final PDRectangle pdfBBox = doc.getPage(0).getBBox();
-		logger.fine("BBox: " + pdfBBox);
+	public void computeScaling(PDRectangle pdfBBox, JComponent pdfComponent) {
 		final Dimension compSize = pdfComponent.getSize();
 		logger.fine("Component size = " + compSize);
 		scaleX = (float)(compSize.getWidth() / pdfBBox.getWidth());
@@ -107,7 +103,9 @@ class DocTab extends JPanel {
 		sbar.setValue(pageNumber);
 		pdfComponent.repaint();
 		PdfShow.instance.updatePageNumbersDisplay();
-		PdfShow.instance.previewer.setPageNumber(pageNumber);
+		if (PdfShow.instance.previewer != null) {
+			PdfShow.instance.previewer.setPageNumber(pageNumber);
+		}
 	}
 
 	int getPageNumber() {
@@ -147,17 +145,16 @@ class DocTab extends JPanel {
 		PDPage newPage = new PDPage();
 		pageTree.insertAfter(newPage, curPage);
 		sbar.setMaximum(getPageCount() + 1);
-		addIns.add(pageNumber, new ArrayList<GObject>());
+		addIns.add(pageNumber, new ArrayList<>());
 		gotoNext();
 	}
 	
 	/** Delete the given page
-	 * @param index the one-origin page number
+	 * @param pageNumber the one-origin page number
 	 */
-	void deletePage(int index) {
+	void deletePage(int pageNumber) {
 		final PDPageTree pageTree = doc.getPages();
 		PDPage curPage = pageTree.get(pageNumber - 1);
-		deletedPage = curPage;	// for undo
 		pageTree.remove(curPage);
 		sbar.setMaximum(getPageCount() + 1);
 		gotoPrev();
@@ -223,7 +220,7 @@ class DocTab extends JPanel {
 			try {
 				// 2) PdfBox - whole page
 				if (scaleX == 0) {
-					computeScaling();
+					computeScaling(doc.getPage(0).getBBox(), pdfComponent);
 				}
 				renderer.renderPageToGraphics(pageNumber - 1, (Graphics2D) g, scaleX, scaleY);
 				// 3) Our annotations, if any

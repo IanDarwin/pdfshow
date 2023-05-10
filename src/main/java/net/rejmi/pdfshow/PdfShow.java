@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
 
 import com.darwinsys.swingui.BreakTimer;
@@ -191,7 +190,7 @@ public class PdfShow {
 					Component tabComponent = tabPane.getComponent(nt);
 					if (tabPane.getComponent(nt) instanceof DocTab) {
 						DocTab dt = (DocTab) tabComponent;
-						dt.computeScaling();
+						dt.computeScaling(dt.doc.getPage(0).getBBox(), (JComponent) tabComponent);
 					} else {
 						System.out.printf("Tab %d is %s, not DocTab\n", i, tabComponent.getClass());
 					}
