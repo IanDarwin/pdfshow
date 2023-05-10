@@ -977,7 +977,8 @@ public class PdfShow {
 			prev.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					currentTab.gotoPage(pageNumber - 1);
+					if (pageNumber > 1)
+						currentTab.gotoPage(pageNumber - 1);
 				}
 			});
 			add("left", prev);
@@ -986,7 +987,8 @@ public class PdfShow {
 			next.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					currentTab.gotoPage(pageNumber + 1);
+					if (pageNumber < currentTab.getPageCount() - 1)
+						currentTab.gotoPage(pageNumber + 1);
 				}
 			});
 			add("right", next);
