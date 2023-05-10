@@ -199,7 +199,7 @@ class TextDrawState extends State {
 			JOptionPane.QUESTION_MESSAGE,
 			JOptionPane.DEFAULT_OPTION);
 		pane.setWantsInput(true);
-		JDialog dialog = pane.createDialog(PdfShow.controlFrame, "Text?");
+		JDialog dialog = pane.createDialog(PdfShow.viewFrame, "Text?");
 		dialog.setLocation(e.getX(), e.getY());
 		dialogClosed = false;
 		dialog.addWindowListener(new WindowAdapter() {

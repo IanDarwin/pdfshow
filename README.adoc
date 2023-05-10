@@ -44,7 +44,9 @@ to make it feasible to run on platforms other than desktop Java.
 `PdfShow` supports dual monitors, one for control and one for viewing slides.
 As of now, the control window will appear on Monitor 1 and the view on Monitor 2;
 someday that'll be switchable via an option.
-If you unplug the second monitor, you have to re-start PDFshow, but that shouldn't be a problem.
+
+* You can't draw on the miniature view (yet?), and it doesn't show your drawings.
+* If you unplug the second monitor, you have to re-start PDFshow, but that shouldn't be a problem.
 
 More bells and whistles will be added as time permits, but let's keep it relatively simple.
 There is still some basic functionality that is imperfect or incomplete.

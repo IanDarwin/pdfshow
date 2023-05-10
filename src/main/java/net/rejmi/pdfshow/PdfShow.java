@@ -113,7 +113,6 @@ public class PdfShow {
 
 	// For slide show
     ExecutorService pool = Executors.newSingleThreadExecutor();
-    Thread slideshowThread;
     int slideTime = 10;
     boolean done = false;
 
@@ -145,7 +144,7 @@ public class PdfShow {
 				controlFrame = new JFrame("PDFShow Control");
 				previewer = new Preview();
 				controlFrame.add(previewer, BorderLayout.CENTER);
-				controlFrame.setSize(800, 600);
+				controlFrame.setSize(800, 800);
 				controlFrame.setVisible(true);
 				GraphicsDevice screen2 = gs[1];
 				emptyViewScreenLabel = new JLabel("<html><b>PDFShow Display</b><br/>" +
@@ -275,7 +274,18 @@ public class PdfShow {
 			private static final long serialVersionUID = 828751972333590042L;
 			@Override
 			public void loadFile(String fileName) throws IOException {
-				openPdfFile(new File(fileName));
+				var file = new File(fileName);
+				if (file.canRead()) {
+					pool.submit( () -> {
+						try {
+							openPdfFile(file);
+						} catch(IOException ex) {
+							JOptionPane.showMessageDialog(controlFrame, "Failed to open file: " + ex);
+						}
+					});
+				} else {
+					throw new IOException("Can't read file " + file);
+				}
 			}
 		};
 		miOpen.addActionListener(e -> {
@@ -521,7 +531,6 @@ public class PdfShow {
 		// toolBox.add(stop_show);
 		stop_show.addActionListener((e -> {
 			done = true;
-			// slideshowThread.interrupt();
 		}));
 
 		return toolBox;
@@ -532,7 +541,6 @@ public class PdfShow {
 		// toolBox.add(stop_show);
 		stop_show.addActionListener((e -> {
 			done = true;
-			// slideshowThread.interrupt();
 		}));
 		return stop_show;
 	}
@@ -562,7 +570,6 @@ public class PdfShow {
         done = false;
         final DocTab tab = currentTab;
         pool.submit(() -> {
-            slideshowThread = Thread.currentThread();
             if (tab != currentTab) {
                 // user is assuming control
                 return;
@@ -587,7 +594,6 @@ public class PdfShow {
 	void runSlideShow(int n) {
         done = false;
         pool.submit(() -> {
-            slideshowThread = Thread.currentThread();
             int slideShowPageNumber = n;
             DocTab tab = currentTab;
             while (!done) {
@@ -834,7 +840,6 @@ public class PdfShow {
 
 	void closeFile(DocTab dt) {
 		tabPane.remove(dt);
-		System.out.println("tabPane.# = " + tabPane.getTabCount());
 		if (tabPane.getTabCount() == 0) {
 			viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
 		}
@@ -945,7 +950,6 @@ public class PdfShow {
 			super.paintComponent(g);
 			try {
 				if (currentTab == null) {
-					System.out.println("PreviewComponent.paintComponent: quitting early: currentTab");
 					return;
 				}
 				if (pageNum < 0) {

@@ -15,8 +15,7 @@ public class LoggerSetup {
 		try {
 			LogManager.getLogManager().readConfiguration(stream);
 		} catch (IOException e) {
-			Error ex = new ExceptionInInitializerError("Could not load logging.properties");
-			ex.setStackTrace(e.getStackTrace());
+			System.err.println("Could not load logging.properties");
 		}
 	}
 }
