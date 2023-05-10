@@ -217,8 +217,8 @@ class DocTab extends JPanel {
 		protected void paintComponent(Graphics g) {
 			// 1) Super
 			super.paintComponent(g);
-			if (pageNumber < 1 || pageNumber == getPageCount()) {
-				throw new IllegalStateException("Ran off end, in paintComponent");
+			if (pageNumber < 1 || pageNumber > getPageCount()) {
+				throw new IllegalStateException("Ran off end, in paintComponent: pageNumber " + pageNumber);
 			}
 			try {
 				// 2) PdfBox - whole page
