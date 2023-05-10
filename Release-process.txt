@@ -2,14 +2,15 @@
 
 Make all changes for the milestone. Make sure all tests needed are written and passing.
 
-Update the build number, and commit and push, in:
+Update the build number and sillyName, and commit and push, in:
 
-	pom.xml mkinstaller README.adoc install-aux/winget-manifest.yaml
+	ver: pom.xml mkinstaller install-aux/winget-manifest.yaml
+	ver and sillyName: README.adoc 
 
 Run mkinstaller on Linux (twice), on macOS and on Windoze.
 
 Pick a silly name for the release.
 
-Create the release on GitHub, uploading all the binaries.
+Create the release on GitHub (using ver and sillyName), uploading all the binaries.
 
 Update the version in our entry in winget, push, send pull request.

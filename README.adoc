@@ -1,14 +1,15 @@
-= PdfShow
-
 ifndef::ver[]
 :ver: 1.0.3
 endif::[]
+:sillyName: TABitha Switchit
 ifndef::current-java-ver[]
 :current-java-ver: Java 17
 endif::[]
 :gh-url: https://github.com/IanDarwin/pdfshow
 :releases-link: {gh-url}/releases
 :download-link: {releases-link}/download/v{ver}
+
+= PdfShow Version {ver} ({sillyName})
 
 `PdfShow` is a PDF viewer specifically for running slide shows.
 I wrote it because I sometimes teach from PDFs and was tired of general-purpose programs 
@@ -40,6 +41,10 @@ That is also why there's no TODO file here - all the TODOs are in the issues lis
 
 The program is for desktops, not mobiles. There is too much dependency on Swing
 to make it feasible to run on platforms other than desktop Java.
+
+You can have multiple documents open, which show in the expected tab-vew format.
+You can drag the tabs around, e.g., to move the most important ones to the left (or right)
+or for any sort of ordering that makes sense to you at the time.
 
 `PdfShow` supports dual monitors, one for control and one for viewing slides.
 As of now, the control window will appear on Monitor 1 and the view on Monitor 2;
@@ -92,13 +97,29 @@ There's a "recent files" menu for subsequent days of your course, for example.
 There is more documentation in the `docs` folder.
 
 [[building]]
-== Build PdfShow From Source
+== Building PdfShow From Source
 
-=== Prerequisites
+=== Build: Prerequisites
 
-You need Java JDK, probably {current-java-ver}$$+$$, and Maven installed.
-You need at least Java 14$$+$$ if you want to build any of the full platform-specific installers.
-The installers and the public Jar file are built with {current-java-ver}.
+On all platforms you need JDK ({current-java-ver}$$+$$) and Apache Maven installed.
+On Windows `jpackage` has a couple of pre-requisites,
+which it will let you know about if they're not already installed.
+
+On Linux, for RPMs, you need `rpm-build` or you will get told that 'rpm' is an invalid type
+(sudo dnf install rpm-build).
+On Linux, for DEBs, you may need `fakeroot` (sudo apt install fakeroot).
+
+The install formats are:
+
+[[table-name]]
+.The Installer Formats
+[options="header",cols="2,4,3"]
+|====
+|OS|Default Format|Other formats with `mkinstaller -t`
+|macOS|DMG, with copy-to-Applications iconage.|pkg
+|Linux|rpm - Redhat/Yum/dnf/Zypher|deb
+|Windows|MSI installer|exe
+|====
 
 === Getting Source
 
@@ -181,28 +202,6 @@ cd pdfshow
 
 mkinstaller -s # skiptests; they fail on this Linux with infra-related errs, don't care
 ----
-
-==== Pre-requisites
-
-On all platforms you need JDK and Apache Maven installed.
-On Windows `jpackage` has a couple of pre-requisites,
-which it will let you know about if they're not already installed.
-
-On Linux, for RPMs, you need `rpm-build` or you will get told that 'rpm' is an invalid type
-(sudo dnf install rpm-build).
-On Linux, for DEBs, you may need `fakeroot` (sudo apt install fakeroot).
-
-The install formats are:
-
-[[table-name]]
-.The Installer Formats
-[options="header",cols="2,4,3"]
-|====
-|OS|Default Format|Other formats with `mkinstaller -t`
-|macOS|DMG, with copy-to-Applications iconage.|pkg
-|Linux|rpm - Redhat/Yum/dnf/Zypher|deb
-|Windows|MSI installer|exe
-|====
 
 == Contributing / Development
 
