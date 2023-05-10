@@ -24,7 +24,8 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 
 /**
  * A visual rep of one PDF document, for placing within a TabView
- * Page numbers in methods are one-based, so subtract 1 for PDTree
+ * Page numbers in methods are one-based, but PDFRenderer is
+ * zero-based, so subtract 1 for PDTree
  */
 @SuppressWarnings("serial")
 class DocTab extends JPanel {
@@ -106,6 +107,7 @@ class DocTab extends JPanel {
 		sbar.setValue(pageNumber);
 		pdfComponent.repaint();
 		PdfShow.instance.updatePageNumbersDisplay();
+		PdfShow.instance.previewer.setPageNumber(pageNumber);
 	}
 
 	int getPageNumber() {

@@ -5,16 +5,29 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 
+/**
+ * Create a layout like this:
+ * +-------------------------+
+ * +                         +
+ * +          main           +
+ * +                         +
+ * +-------------------------+
+ * +           +             +
+ * +  left     +  right      +
+ * +           +             +
+ * +-------------------------+
+ * The constraint names are currently "current", "prev" and "next",
+ * reflecting this class' origins in a slide show program.
+ */
 public class TripartiteLayoutManager implements LayoutManager {
     Component current, prev, next;
 
     @Override
     public void addLayoutComponent(String name, Component comp) {
-        System.out.println("TripartiteLayoutManager.addLayoutComponent: " + name + " " + comp);
         switch(name) {
-            case "current": current = comp; break;
-            case "prev": prev = comp; break;
-            case "next": next = comp; break;
+            case "main": current = comp; break;
+            case "left": prev = comp; break;
+            case "right": next = comp; break;
             default: throw new IllegalArgumentException("Constraint must be in {current,prev,next}");
         }
     }
@@ -48,7 +61,5 @@ public class TripartiteLayoutManager implements LayoutManager {
         prev.setBounds(0, dy, dx, dy);
 
         next.setBounds(dx, dy, dx, dy);
-        System.out.printf("Parent size %s dx,dy=%d,%d, Current: %s\n\tPrev: %s\n\tNext: %s\n",
-                totalSize, dx, dy, current, prev, next);
     }
 }

@@ -67,6 +67,11 @@ public class PdfShow {
 	
 	static PdfShow instance;
 
+	/** Notify code that the current tab has been changed */
+	ObservableHelper tabChangeNotifier = new ObservableHelper();
+	/** Notify code that the page number (1-based) in the current tab has changed. */
+	ObservableHelper pageChangeNotifier = new ObservableHelper();
+
 	Desktop desktop;
 	Properties programProps;
 	Preferences prefs = Preferences.userNodeForPackage(PdfShow.class);
@@ -103,7 +108,7 @@ public class PdfShow {
 		polyLineButton = new JButton(getMyImageIcon("PolyLine")),
 		ovalButton = new JButton(getMyImageIcon("Oval")),
 		rectangleButton = new JButton(getMyImageIcon("Rectangle"));
-
+	Preview previewer;
 	private RecentMenu recents;
 	private BreakTimer breakTimer;
 
@@ -139,7 +144,8 @@ public class PdfShow {
 			}
 			case 2 -> {
 				controlFrame = new JFrame("PDFShow Control");
-				controlFrame.add(new Preview(), BorderLayout.CENTER);
+				previewer = new Preview();
+				controlFrame.add(previewer, BorderLayout.CENTER);
 				controlFrame.setSize(800, 600);
 				controlFrame.setVisible(true);
 				GraphicsDevice screen2 = gs[1];
@@ -887,7 +893,7 @@ public class PdfShow {
 		throw new IllegalArgumentException("No image: " + imgName);
 	}
 
-	// Old format, still needed for JFrame(?)
+	// Old format, still needed for JFrame icon(?)
 	private Image getImage(String imgName) {
 		URL imageURL = getClass().getResource(imgName);
 
@@ -918,38 +924,80 @@ public class PdfShow {
 	}
 
 	private class PreviewComponent extends JComponent {
+		int pageNum;
+		float scaleX, scaleY;
+
+		PreviewComponent(float x, float y) {
+			this.scaleX = x;
+			this.scaleY = y;
+		}
+
+		void setPageNum(int pageNum) {
+			this.pageNum = pageNum;
+			repaint();
+		}
+
+		/** A simple draw component for slide miniatures.
+		 * NB Page numbers in this code are zero based
+		 * @param g the <code>Graphics</code> object to draw with
+		 */
 		@Override
 		protected void paintComponent(Graphics g) {
-			// 1) Super
 			super.paintComponent(g);
-			// renderer.renderPage()...
+			try {
+				if (currentTab == null) {
+					System.out.println("PreviewComponent.paintComponent: quitting early: currentTab");
+					return;
+				}
+				if (pageNum < 0) {
+					return;
+				}
+				if (pageNum >= currentTab.getPageCount()) {
+					return;
+				}
+				currentTab.renderer.renderPageToGraphics(pageNum, (Graphics2D) g, scaleX, scaleY);
+			} catch (IOException e) {
+				throw new RuntimeException("Preview Rendering failed " + e, e);
+			}
 		}
 	}
 
 	class Preview extends JPanel {
-		JComponent current, prev, next;
+		PreviewComponent current, prev, next;
+		private int pageNumber;
+
 		Preview() {
 			setLayout(new TripartiteLayoutManager());
 
-			current = new PreviewComponent();
-			TitledBorder currentBorder = new TitledBorder("Current");
-			currentBorder.setTitleJustification(TitledBorder.CENTER);
-			current.setBorder(currentBorder);
-			add("current", current);
+			current = new PreviewComponent(0.6f, 0.6f);
+			add("main", current);
 
-			prev  = new PreviewComponent();
-			TitledBorder prevBorder = new TitledBorder("Previous");
-			prevBorder.setTitleJustification(TitledBorder.LEADING);
-			prev.setBorder(prevBorder);
-			add("prev", prev);
+			prev  = new PreviewComponent(0.35f, 0.35f);
+			prev.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					currentTab.gotoPage(pageNumber - 1);
+				}
+			});
+			add("left", prev);
 
-			next  = new PreviewComponent();
-			TitledBorder nextBorder = new TitledBorder("Next");
-			nextBorder.setTitleJustification(TitledBorder.TRAILING);
-			next.setBorder(nextBorder);
-			add("next", next);
+			next  = new PreviewComponent(0.35f, 0.35f);
+			next.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					currentTab.gotoPage(pageNumber + 1);
+				}
+			});
+			add("right", next);
+		}
 
-
+		void setPageNumber(int pageNum) {
+			this.pageNumber = pageNum;
+			pageNum--; // 1-based to 0-based
+			current.setPageNum(pageNum);
+			prev.setPageNum(pageNum - 1);
+			next.setPageNum(pageNum + 1);
+			repaint();
 		}
 	}
 }
