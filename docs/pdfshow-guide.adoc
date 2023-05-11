@@ -46,7 +46,7 @@ If you have one monitor, you get the standard view window.
 If you have two, the program will automatically put the control screen on the first monitor
 and take the second monitor entirely for the slideshow.
 
-image::../images/controlView.png[width="600"]
+image::../images/control-view.png[width="600"]
 
 === Navigation
 
