@@ -2,6 +2,14 @@
 
 The release notes for current and past releases are in the github under releases.
 
-== Version 1.0.4, 2022-??
+== Version 1.0.4, 2023-05
 
-To Be Announced. Contributions welcome.
+v1.0.4 "Double Header" is the first release supporting two monitors, as conventional slide show programs do.
+The "control" screen has the control buttons and the "view" screen goes full-screen on the second monitor.
+This is beta and has not been extensively tested, so comments would be welcome!
+
+Of course it still works on a single monitor.
+
+I suspect the #1 feature request will be the ability to choose which monitor to have which screen on.
+My first idea is to just open the control screen on whichever screen you start the program on,
+and the view screen on the other. Other ideas?

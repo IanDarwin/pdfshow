@@ -1,18 +1,25 @@
 = Making A Release
 
-* Test the **** out of it!
+* Make all changes for the milestone. Make sure all tests needed are written and passing.
+Test the **** out of it!
+* Pick a sillyName (cutesly release name) for the release.
+* Bump the build number and sillyName, and commit and push, in:
+
+** ver: pom.xml mkinstaller install-aux/winget-manifest.yaml
+** ver and sillyName: README.adoc 
+
 * Bump the version number both in pom.xml AND in mkinstaller
 * Commit both.
 * git tag -a -m 'Version x.y.z' vx.y.z
 * git push --tag
 * For each supported platform:
 ** sh mkinstaller
-** Upload the binaries to github:
+* Upload the binaries to github:
 *** Signon if needed
 *** On first machine:
 **** Under Releases at right, Create New Release (first) 
 **** Set tag to same as vx.y.z used in tag (from dropdown)
-**** Pick a cutesy release name.
+**** Install the sillyname
 **** Write a bit about this release
 **** Drag the `with-dependencies- jar from one machine.
 **** Wait for that to upload. Then upload your newly-minted installer.
@@ -23,3 +30,5 @@
 
 Note that the WinGet (windows CLI installer) support is not working;
 `jpackage` seems to have some incompatibility.
+Update the version in our entry in winget, push, send pull request.
+XXX Do we need to update InstallerSha256 manually?

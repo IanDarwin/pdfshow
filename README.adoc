@@ -30,7 +30,7 @@ Or the MagicPoint-based https://mg.pov.lt/mgp2pdf/[MagicPoint to PDF Converter].
 Whatever the reason you need to present with just the PDF of the slides,
 `PdfShow` is for you!
 
-image::samples/SampleShow.png[width="800"]
+image::images/SampleShow.png[width="800"]
 
 `PdfShow` has fewer features than other tools, due to
 its relative youth and, more importantly, its design goals.
