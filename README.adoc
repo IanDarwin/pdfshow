@@ -25,7 +25,7 @@ Or maybe you want to re-give somebody else's preso from the PDF-only version the
 Or yet again, maybe you use the open-source
 https://staff.fnwi.uva.nl/b.diertens/useful/gpresent/[gpresent],
 which doesn't actually present shows but generates the PDF and leaves it to others to present.
-Or the Markdown-based https://marp.app/[MARP], which can generate PDFs directly.
+Or the Markdown-based https://marp.app/[MARP], which can generate PDFs directly from markdown files.
 Or the MagicPoint-based https://mg.pov.lt/mgp2pdf/[MagicPoint to PDF Converter].
 Whatever the reason you need to present with just the PDF of the slides,
 `PdfShow` is for you!
@@ -94,7 +94,7 @@ You can rebuild that from source with `mvn package assembly:single`; see <<build
 The program is intuitive and easy to use. Of course they all say that.
 Just run it and use `File->Open` (or `CTRL/CMD O`), or run it with a filename argument.
 There's a "recent files" menu for subsequent days of your course, for example.
-There is more documentation in the `docs` folder.
+There is more documentation in the link:docs[] folder.
 
 [[building]]
 == Building PdfShow From Source
