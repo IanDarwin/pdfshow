@@ -102,7 +102,7 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.6.0</version>
 				<configuration>
-					<mainClass>net.rejmi.pdfshow.PdfShow</mainClass>
+					<mainClass>net.rejmi.pdfshow.Main</mainClass>
 				</configuration>
 			</plugin>
 

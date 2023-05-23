@@ -18,7 +18,6 @@ abstract class State {
 	final PdfShow parent;
 	final JButton button;
 	final Border active = BorderFactory.createLineBorder(Color.BLUE, 3);
-	final Logger logger = PdfShow.logger;
 
 	public State(PdfShow parent, JButton button) {
 		this.parent = parent;
@@ -27,19 +26,19 @@ abstract class State {
 
 	/** Anything to be done on entering a given state */
 	public void enterState() {
-		logger.fine(String.format("enterState of %s, button is %s", getClass(), button));
+		PdfShow.logger.fine(String.format("enterState of %s, button is %s", getClass(), button));
 		if (button != null)
 			button.setBorder(active);
 	}
 
 	public void leaveState() {
-		logger.fine("leaveState of " + getClass());
+		PdfShow.logger.fine("leaveState of " + getClass());
 		if (button != null)
 			button.setBorder(null);
 	}
 
 	public void keyPressed(KeyEvent e) {
-		logger.fine("PdfShow.State.keyPressed(" + e + ")");
+		PdfShow.logger.fine("PdfShow.State.keyPressed(" + e + ")");
 		switch(e.getKeyChar()) {
 		case 'j':
 		case '\r':
@@ -72,7 +71,7 @@ abstract class State {
 			}
 				
 		}
-		logger.warning("Unhandled key event: " + e);
+		PdfShow.logger.warning("Unhandled key event: " + e);
 	}
 
 	public void mouseClicked(MouseEvent e) {
@@ -105,7 +104,7 @@ abstract class State {
 		}
 		final List<GObject> currentPageAddIns = parent.currentTab.getCurrentAddIns();
 		if (currentPageAddIns.isEmpty()) {
-			logger.fine("No annotations");
+			PdfShow.logger.fine("No annotations");
 			return;
 		}
 		currentPageAddIns.forEach(gobj -> consumer.accept(gobj));
@@ -126,7 +125,7 @@ class ViewState extends State {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		int mx = e.getX(), my = e.getY();
-		logger.info(String.format(
+		PdfShow.logger.info(String.format(
 				"PdfShow.ViewState.mouseClicked() x %d y %d", mx, my));
 		changed = found = false;
 		// Avoid old selection
@@ -141,12 +140,12 @@ class ViewState extends State {
 				changed = true;
 			}
 			if (gobj.contains(mx, my)) {
-				logger.fine("HIT: " + gobj);
+				PdfShow.logger.fine("HIT: " + gobj);
 				gobj.isSelected = true;
 				changed = true;
 				found = true;
 			} else {
-				logger.fine("MISS: " + gobj);
+				PdfShow.logger.fine("MISS: " + gobj);
 			}
 		});
 		if (changed) {
@@ -297,7 +296,7 @@ class PolyLineDrawState extends State {
 	GPolyLine line;
 	@Override
 	public void mousePressed(MouseEvent e) {
-		logger.fine("PdfShow.PolyLineDrawState.mousePressed()");
+		PdfShow.logger.fine("PdfShow.PolyLineDrawState.mousePressed()");
 		n = 0;
 		line = new GPolyLine(lastx = e.getX(), lasty = e.getY());
 		ix = parent.currentTab.addIn(line);
@@ -319,7 +318,7 @@ class PolyLineDrawState extends State {
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		logger.fine("PdfShow.PolyLineDrawState.mouseReleased()");
+		PdfShow.logger.fine("PdfShow.PolyLineDrawState.mouseReleased()");
 		parent.currentTab.repaint();
 		line = null;	// We are done with it.
 	}

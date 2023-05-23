@@ -231,7 +231,7 @@ class DocTab extends JPanel {
 					obj.draw(g);
 				}
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(PdfShow.controlFrame, "Failure: " + e);
+				JOptionPane.showMessageDialog(PdfShow.instance.controlFrame, "Failure: " + e);
 			}
 		}
 	}

@@ -34,27 +34,6 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 public class PdfShow {
 	
 	static Logger logger;
-
-	public static void main(String[] args) throws Exception {
-
-		// Configure logging
-		LoggerSetup.init();
-		logger = Logger.getLogger("net.rejmi.pdfshow");
-		logger.info("PdfShow Starting.");
-		
-		// Instantiate main program
-		PdfShow.instance = new PdfShow();
-
-		// Open files from command line, if any
-		for (String arg : args) {
-			final File file = new File(arg);
-			if (!file.canRead()) {
-				JOptionPane.showMessageDialog(controlFrame, "Can't open file " + file);
-				continue;
-			}
-			PdfShow.instance.recents.openFile(arg); // Include in Recents dropdown
-		}
-	}
 	
 	static PdfShow instance;
 
@@ -83,7 +62,8 @@ public class PdfShow {
 	boolean savePageNumbers = prefs.getBoolean(KEY_SAVE_PAGENUMS, true);
 
 	// GUI Controls - defined here since referenced throughout
-	static JFrame controlFrame, viewFrame;
+	JFrame controlFrame;
+	static JFrame viewFrame;
 	private final JTabbedPane tabPane = new DnDTabbedPane();
 	JInternalFrame jiffy;
 	JLabel emptyViewScreenLabel;
@@ -100,7 +80,7 @@ public class PdfShow {
 		ovalButton = new JButton(getMyImageIcon("Oval")),
 		rectangleButton = new JButton(getMyImageIcon("Rectangle"));
 	Preview previewer;
-	private RecentMenu recents;
+	RecentMenu recents;
 	private BreakTimer breakTimer;
 
 	// For slide show
@@ -114,7 +94,15 @@ public class PdfShow {
 	/**
 	 * MAIN CONSTRUCTOR
  	 */
-	private PdfShow() throws IOException {
+	PdfShow() throws IOException {
+
+		instance = this;
+
+		// Configure logging
+		LoggerSetup.init();
+		logger = Logger.getLogger("net.rejmi.pdfshow");
+		logger.info("PdfShow Starting.");
+
 		DisplayMode dm = null;
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice[] gs = ge.getScreenDevices();
