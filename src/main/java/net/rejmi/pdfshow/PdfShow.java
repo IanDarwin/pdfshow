@@ -107,10 +107,10 @@ public class PdfShow {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice[] gs = ge.getScreenDevices();
 		int numScreens = gs.length;
-		System.out.println("Found " + numScreens + " screen(s)");
+		logger.info("Found " + numScreens + " screen(s)");
 		for (GraphicsDevice curGs : gs) { // Informational
 			dm = curGs.getDisplayMode();
-			System.out.println(dm.getWidth() + " x " + dm.getHeight());
+			logger.info(dm.getWidth() + " x " + dm.getHeight());
 		}
 		GraphicsDevice screen1 = gs[0]; // must be >= 1
 		viewFrame = new JFrame("PDFShow Display");
@@ -177,7 +177,7 @@ public class PdfShow {
 						DocTab dt = (DocTab) tabComponent;
 						dt.computeScaling(dt.doc.getPage(0).getBBox(), (JComponent) tabComponent);
 					} else {
-						System.out.printf("Tab %d is %s, not DocTab\n", i, tabComponent.getClass());
+						logger.warning(String.format("Tab %d is %s, not DocTab\n", i, tabComponent.getClass()));
 					}
 				}
 			}

@@ -103,31 +103,14 @@
 				<version>1.6.0</version>
 				<configuration>
 					<mainClass>net.rejmi.pdfshow.Main</mainClass>
+						<arguments>
+							<!-- Twice, so we can test tabbing easily -->
+							<argument>samples/SampleShow.pdf</argument>
+							<argument>samples/SampleShow.pdf</argument>
+						</arguments>
 				</configuration>
 			</plugin>
 
-			<plugin>
-				<!-- run the app! -->
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.1.1</version>
-				<executions>
-					<execution>
-						<phase>integration-test</phase>
-						<goals>
-							<goal>java</goal>
-						</goals>
-						<configuration>
-							<mainClass>net.rejmi.pdfshow.PdfShow</mainClass>
-							<arguments>
-								<!-- Twice, so we can test tabbing easily -->
-								<argument>samples/SampleShow.pdf</argument>
-								<argument>samples/SampleShow.pdf</argument>
-							</arguments>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<!-- Use 'mvn package assembly:single' for runnable jar-with-depends created in 'target' -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -140,7 +123,7 @@
 					<archive>
 						<manifest>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-							<mainClass>net.rejmi.pdfshow.PdfShow</mainClass>
+							<mainClass>net.rejmi.pdfshow.Main</mainClass>
 							<!-- <manifestFile>manifest.stub</manifestFile> -->
 						</manifest>
 						<manifestEntries>
