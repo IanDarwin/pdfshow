@@ -155,9 +155,7 @@ If you use another IDE, the same goes.
 You can even submit a pull request with that IDE's config files, __as long as
 it doesn't require changing the directory structure__ (i.e., moving existing files around).
 
-To run the program in Maven, use `mvn integration-test`.
-I chose that since Maven doesn't offer a "run" phase, and I didn't want to pollute
-the "test" phase with interactivity.
+To run the program in Maven, use `mvn exec:java`.
 
 === Packaging
 
