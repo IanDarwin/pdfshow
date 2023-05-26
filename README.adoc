@@ -150,7 +150,7 @@ Using IntelliJ IDEA
 === Test Runs
 
 To test run the program in a supported Java IDE (Eclipse and IntelliJ IDEa),
-you just open and run `PdfShow.java`, the main-program file.
+you just open and run `Main.java`.
 If you use another IDE, the same goes.
 You can even submit a pull request with that IDE's config files, __as long as
 it doesn't require changing the directory structure__ (i.e., moving existing files around).
@@ -176,7 +176,7 @@ You can only build the Mac installer on macOS, the Windows installer on Windows,
 
 === Configuring a Linux rpm-based system and building PDFShow
 
-This may not be optimal, but should to work. Newer versions may be available.
+This may not be optimal, but should work. Newer versions may be available.
 
 ----
 sudo dnf install https://cdn.azul.com/zulu/bin/zulu17.32.13-ca-jdk17.0.2-linux.x86_64.rpm
