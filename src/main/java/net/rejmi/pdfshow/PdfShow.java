@@ -417,7 +417,7 @@ public class PdfShow {
 		navBox.add(lastButton);
 
 		// Row 2 - first page, # page, last page
-		pageNumTF = new JTextField("1");
+		pageNumTF = new JTextField("001");
 		pageNumTF.addMouseListener(new MouseAdapter() {
 			// If you click in it, we select all so that you can overtype
 			@Override
