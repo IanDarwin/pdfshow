@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Runs jpackage to create installables.
+# Note there are now two different 'jpackage-maven-plugin' plugins,
+# so this could eventually be moved into the Maven pom.xml file.
+
 RELEASE_VERSION=1.0.4	# DRY? Keep in sync with pom file
 
 USAGE="$0 [-t installer-type] [-v]"
