@@ -44,24 +44,23 @@ abstract class State {
 		case '\r':
 		case '\n':
 		case ' ':
-		case KeyEvent.VK_UP:
 			parent.currentTab.gotoNext();
 			return;
 		case 'k':
 		case '\b':
-		case KeyEvent.VK_DOWN:
 			parent.currentTab.gotoPrev();
 			return;
-		case KeyEvent.VK_DELETE:
-			parent.currentTab.deleteSelected();
-			return;
-		
+
+		// OK, not keychar, try keyCode
 		default:
 			switch(e.getKeyCode()) {
-			case KeyEvent.VK_DOWN:
-				parent.currentTab.gotoNext(); return;
-			case KeyEvent.VK_UP:
-				parent.currentTab.gotoPrev(); return;
+				case KeyEvent.VK_DOWN:
+					parent.currentTab.gotoNext(); return;
+				case KeyEvent.VK_UP:
+					parent.currentTab.gotoPrev(); return;
+				case KeyEvent.VK_DELETE:
+					parent.currentTab.deleteSelected();
+					return;
 			}
 			if (e.getKeyCode() == 'W') {
 				if (e.isControlDown() || e.isMetaDown()) {
