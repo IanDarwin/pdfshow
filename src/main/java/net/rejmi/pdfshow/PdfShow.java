@@ -302,6 +302,13 @@ public class PdfShow {
 		fm.add(infoButton);
 
 		fm.addSeparator();
+		JMenuItem miPrint = MenuUtils.mkMenuItem(rb, "file", "print");
+		miPrint.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
+				ActionEvent.CTRL_MASK));
+		miPrint.addActionListener(e -> JOptionPane.showMessageDialog(controlFrame, "Sorry, not implemented yet"));
+		fm.add(miPrint);
+
+		fm.addSeparator();
 		JMenuItem miQuit = MenuUtils.mkMenuItem(rb, "file", "exit");
 		miQuit.addActionListener(e -> checkAndQuit());
 		fm.add(miQuit);
