@@ -50,6 +50,7 @@ public class PdfShow {
 	final static String KEY_FEEDBACK_URL = "feedback_general",
 			KEY_BUG_ENHANCE = "feedback_bug_enhance",
 			KEY_FEEDBACK_EMAIL = "feedback_email",
+			KEY_ONESHOT = "one_shot_draw_tools",
 			KEY_SOURCE_URL = "source_url",
 			KEY_HOME_URL = "home_url",
 			KEY_VERSION = "version";
@@ -60,6 +61,7 @@ public class PdfShow {
 	final static String EMAIL_TEMPLATE = "mailto:%s?subject=PdfShow Feedback";
 	
 	boolean savePageNumbers = prefs.getBoolean(KEY_SAVE_PAGENUMS, true);
+	boolean oneShotDrawTools = prefs.getBoolean(KEY_ONESHOT, true);
 
 	// GUI Controls - defined here since referenced throughout
 	JFrame controlFrame;
@@ -112,7 +114,7 @@ public class PdfShow {
 			dm = curGs.getDisplayMode();
 			logger.info(dm.getWidth() + " x " + dm.getHeight());
 		}
-		GraphicsDevice screen1 = gs[0]; // must be >= 1
+		// GraphicsDevice screen1 = gs[0]; // must be >= 1
 		viewFrame = new JFrame("PDFShow Display");
 		viewFrame.setSize(dm.getWidth(), dm.getHeight());
 
@@ -168,7 +170,7 @@ public class PdfShow {
 		progressDialog.add(progressBar);
 
 		// If view gets resized, must re-calc scaling
-		viewFrame.addComponentListener(new ComponentAdapter() {
+		viewFrame.addComponentListener(new ComponentAdapter() { // cannot lambdafy
 			public void componentResized(ComponentEvent e) {
 				int nt = tabPane.getTabCount();
 				for (int i = 0; i < nt; i++) {
