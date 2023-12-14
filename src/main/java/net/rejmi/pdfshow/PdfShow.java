@@ -50,13 +50,13 @@ public class PdfShow {
 	final static String KEY_FEEDBACK_URL = "feedback_general",
 			KEY_BUG_ENHANCE = "feedback_bug_enhance",
 			KEY_FEEDBACK_EMAIL = "feedback_email",
-			KEY_ONESHOT = "one_shot_draw_tools",
 			KEY_SOURCE_URL = "source_url",
 			KEY_HOME_URL = "home_url",
 			KEY_VERSION = "version";
 	// For Prefs
 	final static String
 			KEY_SAVE_PAGENUMS = "save pagenums",
+			KEY_ONESHOT = "one_shot_draw_tools",
 			KEY_FILECHOOSER_DIR = "file_chooser_dir";
 	final static String EMAIL_TEMPLATE = "mailto:%s?subject=PdfShow Feedback";
 	
