@@ -255,7 +255,7 @@ public class PdfShow {
 		menuBar.add(fm);
 		JMenuItem miOpen = MenuUtils.mkMenuItem(rb, "file", "open");
 		miOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
-				ActionEvent.CTRL_MASK));
+                InputEvent.CTRL_MASK));
 		fm.add(miOpen);
 		recents = new RecentMenu(prefs, 10) {
 			@Serial
@@ -359,7 +359,32 @@ public class PdfShow {
 		ssAcrossTabsButton.addActionListener(slideshowAcrossTabsAction);
 		slideshowMenu.add(ssAcrossTabsButton);
 		final JMenuItem ssCustomButton = MenuUtils.mkMenuItem(rb, "slideshow", "custom");
-		ssCustomButton.setEnabled(false);
+		ssCustomButton.addActionListener(e -> {
+			if (currentTab == null) {
+				JOptionPane.showMessageDialog(controlFrame, "Must be in an open tab",
+						"Try again", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			JTextField firstSlide = new JTextField(10),
+					lastSlide = new JTextField(5)
+;			Object[] msg = {"Start:", firstSlide, "End:", lastSlide};
+
+			var result = JOptionPane.showConfirmDialog(
+					controlFrame,
+					msg,
+					"Custom Slide Show Pages",
+					JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.PLAIN_MESSAGE);
+
+			if (result == JOptionPane.YES_OPTION) {
+				int start = Integer.parseInt(firstSlide.getText());
+				int end = Integer.parseInt(lastSlide.getText());
+				System.out.printf(STR."SlideShow from \{start} to \{end}");
+				runSlideShow(start, end);
+			} else {
+				System.out.println("Custom Show Canceled");
+			}
+		});
 		// XXX: a list of open files with a Pages textfield in each (1, 1-5, or "1,5,6")
 		slideshowMenu.add(ssCustomButton);
 
@@ -585,11 +610,16 @@ public class PdfShow {
         });
     };
 
-    /** Runs a show within the current tab, starting at page 'n' */
+	/** Runs a show within the current tab, starting at page 'start' to the end, wrap around */
 	void runSlideShow(int n) {
+		runSlideShow(n, currentTab.getPageCount());
+
+	}
+	/** Runs a show within the current tab, from page 'start' to 'end', wrap around */
+	void runSlideShow(int start, int end) {
         done = false;
         pool.submit(() -> {
-            int slideShowPageNumber = n;
+            int slideShowPageNumber = start;
             DocTab tab = currentTab;
             while (!done) {
                 if (tab != currentTab) {
@@ -603,7 +633,7 @@ public class PdfShow {
                     done = true;
                     return;
                 }
-                slideShowPageNumber = (slideShowPageNumber % tab.getPageCount()) + 1;
+                slideShowPageNumber = (slideShowPageNumber % end) + 1;
                 tab.gotoPage(slideShowPageNumber);
             }
         });
