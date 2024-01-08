@@ -92,6 +92,7 @@ public class PdfShow {
 
 	// For "busy" popup
 	private final JDialog progressDialog;
+	private MonitorMode monitorMode = MonitorMode.SINGLE;
 
 	/**
 	 * MAIN CONSTRUCTOR
@@ -105,46 +106,51 @@ public class PdfShow {
 		logger = Logger.getLogger("net.rejmi.pdfshow");
 		logger.info("PdfShow Starting.");
 
-		DisplayMode dm = null;
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice[] gs = ge.getScreenDevices();
-		int numScreens = gs.length;
-		logger.info("Found " + numScreens + " screen(s)");
-		for (GraphicsDevice curGs : gs) { // Informational
-			dm = curGs.getDisplayMode();
-			logger.info(dm.getWidth() + " x " + dm.getHeight());
-		}
-		// GraphicsDevice screen1 = gs[0]; // must be >= 1
-		viewFrame = new JFrame("PDFShow Display");
-		viewFrame.setSize(dm.getWidth(), dm.getHeight());
+		switch(monitorMode) {
+			case SINGLE:
+				controlFrame = viewFrame = new JFrame("PDFShow");
+			case MULTI:
+				DisplayMode dm = null;
+				GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+				GraphicsDevice[] gs = ge.getScreenDevices();
+				int numScreens = gs.length;
+				logger.info("Found " + numScreens + " screen(s)");
+				for (GraphicsDevice curGs : gs) { // Informational
+					dm = curGs.getDisplayMode();
+					logger.info(dm.getWidth() + " x " + dm.getHeight());
+				}
+				// GraphicsDevice screen1 = gs[0]; // must be >= 1
+				viewFrame = new JFrame("PDFShow Display");
+				viewFrame.setSize(dm.getWidth(), dm.getHeight());
 
-		switch (numScreens) {
-			case 1 -> {
-				// Configure for macOS if possible/applicable -
-				// ignored on other platforms
-				System.setProperty("apple.laf.useScreenMenuBar", "true");
-				System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-						PdfShow.class.getSimpleName());
-				// screen1.setFullScreenWindow(viewFrame);
-				controlFrame = viewFrame;
-			}
-			case 2 -> {
-				controlFrame = new JFrame("PDFShow Control");
-				previewer = new Preview();
-				controlFrame.add(previewer, BorderLayout.CENTER);
-				controlFrame.setSize(800, 800);
-				controlFrame.setVisible(true);
-				GraphicsDevice screen2 = gs[1];
-				emptyViewScreenLabel = new JLabel("<html><b>PDFShow Display</b><br/>" +
-						"Open a file from the Control window to view.",
-						JLabel.CENTER);
-				viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
-				screen2.setFullScreenWindow(viewFrame);
-			}
-			default -> {
-				JOptionPane.showMessageDialog(null, "Cant handle >2 screens ATM");
-				System.exit(1);
-			}
+				switch (numScreens) {
+					case 1 -> {
+						// Configure for macOS if possible/applicable -
+						// ignored on other platforms
+						System.setProperty("apple.laf.useScreenMenuBar", "true");
+						System.setProperty("com.apple.mrj.application.apple.menu.about.name",
+								PdfShow.class.getSimpleName());
+						// screen1.setFullScreenWindow(viewFrame);
+						controlFrame = viewFrame;
+					}
+					case 2 -> {
+						controlFrame = new JFrame("PDFShow Control");
+						previewer = new Preview();
+						controlFrame.add(previewer, BorderLayout.CENTER);
+						controlFrame.setSize(800, 800);
+						controlFrame.setVisible(true);
+						GraphicsDevice screen2 = gs[1];
+						emptyViewScreenLabel = new JLabel("<html><b>PDFShow Display</b><br/>" +
+								"Open a file from the Control window to view.",
+								JLabel.CENTER);
+						viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
+						screen2.setFullScreenWindow(viewFrame);
+					}
+					default -> {
+						JOptionPane.showMessageDialog(null, "Cant handle >2 screens ATM");
+						System.exit(1);
+					}
+				}
 		}
 		
 		gotoState(viewState);
@@ -950,6 +956,10 @@ public class PdfShow {
 	/** Hide the indefinite progress bar */
 	void stopIndefiniteProgressBar() {
 		progressDialog.setVisible(false);
+	}
+
+	public void setMonitorMode(MonitorMode monitorMode) {
+		this.monitorMode = monitorMode;
 	}
 
 	private class PreviewComponent extends JComponent {
