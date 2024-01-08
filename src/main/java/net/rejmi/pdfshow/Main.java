@@ -12,6 +12,16 @@ public class Main {
 
         // Open files from command line, if any
         for (String arg : args) {
+            if (arg.startsWith("-")) {
+                switch(arg) {
+                    case "-s":
+                        instance.setMonitorMode(MonitorMode.SINGLE);
+                        break;
+                    case "-m":
+                        instance.setMonitorMode(MonitorMode.MULTI);
+                        break;
+                }
+            }
             final File file = new File(arg);
             if (!file.canRead()) {
                 JOptionPane.showMessageDialog(instance.controlFrame,
