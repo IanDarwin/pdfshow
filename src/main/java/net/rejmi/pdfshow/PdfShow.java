@@ -119,7 +119,6 @@ public class PdfShow {
 					dm = curGs.getDisplayMode();
 					logger.info(dm.getWidth() + " x " + dm.getHeight());
 				}
-				// GraphicsDevice screen1 = gs[0]; // must be >= 1
 				viewFrame = new JFrame("PDFShow Display");
 				viewFrame.setSize(dm.getWidth(), dm.getHeight());
 
@@ -130,7 +129,6 @@ public class PdfShow {
 						System.setProperty("apple.laf.useScreenMenuBar", "true");
 						System.setProperty("com.apple.mrj.application.apple.menu.about.name",
 								PdfShow.class.getSimpleName());
-						// screen1.setFullScreenWindow(viewFrame);
 						controlFrame = viewFrame;
 					}
 					case 2 -> {
@@ -144,8 +142,7 @@ public class PdfShow {
 								"Open a file from the Control window to view.",
 								JLabel.CENTER);
 						viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
-						//viewFrame.setUndecorated(false);
-						viewFrame.setLocation(screen1.getDefaultConfiguration().getBounds().x, controlFrame.getY());
+						viewFrame.setLocation(screen2.getDefaultConfiguration().getBounds().x, controlFrame.getY());
 					}
 					default -> {
 						JOptionPane.showMessageDialog(null, "Cant handle >2 screens ATM");
