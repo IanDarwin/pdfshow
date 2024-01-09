@@ -109,6 +109,7 @@ public class PdfShow {
 		switch(monitorMode) {
 			case SINGLE:
 				controlFrame = viewFrame = new JFrame("PDFShow");
+				break;
 			case MULTI:
 				DisplayMode dm = null;
 				GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
