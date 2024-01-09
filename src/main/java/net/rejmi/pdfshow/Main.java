@@ -11,17 +11,24 @@ public class Main {
         PdfShow instance = new PdfShow();
 
         // Open files from command line, if any
+        int argsUsed = 0;
         for (String arg : args) {
             if (arg.startsWith("-")) {
-                switch(arg) {
+                switch (arg) {
                     case "-s":
                         instance.setMonitorMode(MonitorMode.SINGLE);
+                        ++argsUsed;
                         break;
                     case "-m":
                         instance.setMonitorMode(MonitorMode.MULTI);
+                        ++argsUsed;
                         break;
                 }
             }
+        }
+        String[] argsLeft = new String[args.length - argsUsed];
+        System.arraycopy(args, argsUsed, argsLeft, 0, argsLeft.length);
+        for (String arg : argsLeft) {
             final File file = new File(arg);
             if (!file.canRead()) {
                 JOptionPane.showMessageDialog(instance.controlFrame,
