@@ -101,6 +101,10 @@ class DocTab extends JPanel {
 	void gotoPage(int page) {
 		pageNumber = page;
 		sbar.setValue(pageNumber);
+		if (pageNumber > doc.getNumberOfPages()) { // both 1-based
+			JOptionPane.showMessageDialog(null, new EndOfShowPane());
+			return;
+		}
 		pdfComponent.repaint();
 		PdfShow.instance.updatePageNumbersDisplay();
 		if (PdfShow.instance.previewer != null) {
@@ -176,7 +180,7 @@ class DocTab extends JPanel {
 	void removeLastIn() {
 		List<GObject> l = getCurrentAddIns();
 		if (l != null && !l.isEmpty())
-			l.remove(l.size() - 1);
+			l.removeLast();
 	}
 
 	void removeIn(int ix) {

@@ -104,31 +104,32 @@ public class PdfShow {
 		// Configure logging
 		LoggerSetup.init();
 		logger = Logger.getLogger("net.rejmi.pdfshow");
-		logger.info("PdfShow Starting.");
+
+		// Start of GUI code
+
+		// Configure for macOS if possible/applicable - before JFrame() -
+		// ignored on other platforms
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
+		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
+				PdfShow.class.getSimpleName());
+
+		DisplayMode dm = null;
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice[] gs = ge.getScreenDevices();
+		int numScreens = gs.length;
+		logger.info(STR."PdfShow Starting. Found \{numScreens} screen(s)");
+		for (GraphicsDevice curGs : gs) { // Informational
+			dm = curGs.getDisplayMode();
+			logger.info(dm.getWidth() + " x " + dm.getHeight());
+		}
+		viewFrame = new JFrame("PDFShow Display");
+		viewFrame.setSize(dm.getWidth(), dm.getHeight());
 
 		switch(monitorMode) {
 			case SINGLE:
-				controlFrame = viewFrame = new JFrame("PDFShow");
-				// Configure for macOS if possible/applicable -
-				// ignored on other platforms
-				System.setProperty("apple.laf.useScreenMenuBar", "true");
-				System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-						PdfShow.class.getSimpleName());
 				controlFrame = viewFrame;
 				break;
 			case MULTI:
-				DisplayMode dm = null;
-				GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-				GraphicsDevice[] gs = ge.getScreenDevices();
-				int numScreens = gs.length;
-				logger.info("Found " + numScreens + " screen(s)");
-				for (GraphicsDevice curGs : gs) { // Informational
-					dm = curGs.getDisplayMode();
-					logger.info(dm.getWidth() + " x " + dm.getHeight());
-				}
-				viewFrame = new JFrame("PDFShow Display");
-				viewFrame.setSize(dm.getWidth(), dm.getHeight());
-
 				switch (numScreens) {
 					case 1 -> {
 						JOptionPane.showMessageDialog(controlFrame,
