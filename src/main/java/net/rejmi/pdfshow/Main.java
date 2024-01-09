@@ -16,10 +16,12 @@ public class Main {
             if (arg.startsWith("-")) {
                 switch (arg) {
                     case "-s":
+                    case "--single":
                         instance.setMonitorMode(MonitorMode.SINGLE);
                         ++argsUsed;
                         break;
                     case "-m":
+                    case "--multi-monitor":
                         instance.setMonitorMode(MonitorMode.MULTI);
                         ++argsUsed;
                         break;
