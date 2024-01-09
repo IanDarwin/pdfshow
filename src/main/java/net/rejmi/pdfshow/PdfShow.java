@@ -124,6 +124,9 @@ public class PdfShow {
 		}
 		viewFrame = new JFrame("PDFShow Display");
 		viewFrame.setSize(dm.getWidth(), dm.getHeight());
+		emptyViewScreenLabel = new JLabel("<html><b>PDFShow Display</b><br/>" +
+				"Open a file from the Control window to view.",
+				JLabel.CENTER);
 
 		switch(monitorMode) {
 			case SINGLE:
@@ -143,9 +146,6 @@ public class PdfShow {
 						controlFrame.setSize(800, 800);
 						controlFrame.setVisible(true);
 						GraphicsDevice screen1 = gs[0], screen2 = gs[1];
-						emptyViewScreenLabel = new JLabel("<html><b>PDFShow Display</b><br/>" +
-								"Open a file from the Control window to view.",
-								JLabel.CENTER);
 						viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
 						viewFrame.setLocation(screen2.getDefaultConfiguration().getBounds().x, controlFrame.getY());
 					}
