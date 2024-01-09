@@ -139,12 +139,13 @@ public class PdfShow {
 						controlFrame.add(previewer, BorderLayout.CENTER);
 						controlFrame.setSize(800, 800);
 						controlFrame.setVisible(true);
-						GraphicsDevice screen2 = gs[1];
+						GraphicsDevice screen1 = gs[0], screen2 = gs[1];
 						emptyViewScreenLabel = new JLabel("<html><b>PDFShow Display</b><br/>" +
 								"Open a file from the Control window to view.",
 								JLabel.CENTER);
 						viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
-						screen2.setFullScreenWindow(viewFrame);
+						//viewFrame.setUndecorated(false);
+						viewFrame.setLocation(screen1.getDefaultConfiguration().getBounds().x, controlFrame.getY());
 					}
 					default -> {
 						JOptionPane.showMessageDialog(null, "Cant handle >2 screens ATM");
