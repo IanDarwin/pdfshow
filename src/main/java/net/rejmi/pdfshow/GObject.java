@@ -103,7 +103,7 @@ abstract class GObject {
 		if (g.width == 0 && g.height == 0) {
 			return false; // Too small to contain anything
 		}
-		logger.info(String.format("contains(%s, mx %d, my %d)\n", g, mx, my));
+		logger.info(String.format("contains(%s, mx %d, my %d)", g, mx, my));
 		int quad = 0;
 		if (g.width < 0 && g.height < 0) {	// 1
 			// UL upper left quadrant: width negative, height negative
@@ -134,7 +134,7 @@ abstract class GObject {
 			lrx = g.x + g.width;
 			lry = g.y + g.height;
 		}
-		logger.info(String.format("BBOX ulx %d uly %d; lrx %d lry %d; Quadrant %d\n", ulx, uly, lrx, lry, quad));
+		logger.info(String.format("BBOX ulx %d uly %d; lrx %d lry %d; Quadrant %d", ulx, uly, lrx, lry, quad));
 		if (ulx > lrx)
 			throw new IllegalArgumentException("ulx > lrx for " + g);
 		if (uly > lry)

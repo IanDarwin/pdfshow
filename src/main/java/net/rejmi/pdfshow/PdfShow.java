@@ -183,7 +183,7 @@ public class PdfShow {
 						DocTab dt = (DocTab) tabComponent;
 						dt.computeScaling(dt.doc.getPage(0).getBBox(), (JComponent) tabComponent);
 					} else {
-						logger.warning(String.format("Tab %d is %s, not DocTab\n", i, tabComponent.getClass()));
+						logger.warning(String.format("Tab %d is %s, not DocTab", i, tabComponent.getClass()));
 					}
 				}
 			}
