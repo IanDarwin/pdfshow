@@ -109,6 +109,12 @@ public class PdfShow {
 		switch(monitorMode) {
 			case SINGLE:
 				controlFrame = viewFrame = new JFrame("PDFShow");
+				// Configure for macOS if possible/applicable -
+				// ignored on other platforms
+				System.setProperty("apple.laf.useScreenMenuBar", "true");
+				System.setProperty("com.apple.mrj.application.apple.menu.about.name",
+						PdfShow.class.getSimpleName());
+				controlFrame = viewFrame;
 				break;
 			case MULTI:
 				DisplayMode dm = null;
@@ -125,12 +131,9 @@ public class PdfShow {
 
 				switch (numScreens) {
 					case 1 -> {
-						// Configure for macOS if possible/applicable -
-						// ignored on other platforms
-						System.setProperty("apple.laf.useScreenMenuBar", "true");
-						System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-								PdfShow.class.getSimpleName());
-						controlFrame = viewFrame;
+						JOptionPane.showMessageDialog(controlFrame,
+							"You asked for multi-monitor mode but we only found one screen!",
+							"Who's confused?", JOptionPane.WARNING_MESSAGE);
 					}
 					case 2 -> {
 						controlFrame = new JFrame("PDFShow Control");
