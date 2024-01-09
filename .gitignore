@@ -10,3 +10,4 @@ target
 *.deb
 *.html
 pdfshow-runtime 
+*.iml
