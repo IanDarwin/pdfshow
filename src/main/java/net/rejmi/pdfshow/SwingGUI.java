@@ -91,13 +91,13 @@ public class SwingGUI {
     boolean done = false;
 
 	// For "busy" popup
-	private final JDialog progressDialog;
+	private JDialog progressDialog;
 	private MonitorMode monitorMode = MonitorMode.SINGLE;
 
 	/**
 	 * MAIN CONSTRUCTOR
  	 */
-	SwingGUI() throws IOException, IllegalStateException {
+	SwingGUI() {
 
 		instance = this;
 
@@ -129,7 +129,7 @@ public class SwingGUI {
 				"Open a file from the Control window to view.",
 				JLabel.CENTER);
 
-		switch(monitorMode) {
+		switch (monitorMode) {
 			case SINGLE:
 				controlFrame = viewFrame;
 				break;
@@ -137,8 +137,8 @@ public class SwingGUI {
 				switch (numScreens) {
 					case 1:
 						JOptionPane.showMessageDialog(controlFrame,
-							"You asked for multi-monitor mode but we only found one screen!",
-							"Who's confused?", JOptionPane.WARNING_MESSAGE);
+								"You asked for multi-monitor mode but we only found one screen!",
+								"Who's confused?", JOptionPane.WARNING_MESSAGE);
 						break;
 					case 2:
 						controlFrame = new JFrame("PDFShow Control");
@@ -146,7 +146,7 @@ public class SwingGUI {
 						controlFrame.add(previewer, BorderLayout.CENTER);
 						controlFrame.setSize(800, 800);
 						controlFrame.setVisible(true);
-						GraphicsDevice screen1 = gs[0], screen2 = gs[1];
+						GraphicsDevice screen2 = gs[1];
 						viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
 						viewFrame.setLocation(screen2.getDefaultConfiguration().getBounds().x, controlFrame.getY());
 						break;
@@ -155,11 +155,11 @@ public class SwingGUI {
 						System.exit(1);
 				}
 		}
-		
+
 		gotoState(viewState);
 
 		try {
-			desktop=Desktop.getDesktop();
+			desktop = Desktop.getDesktop();
 		} catch (UnsupportedOperationException ex) {
 			JOptionPane.showMessageDialog(controlFrame, "Java Desktop unsupported, help &c may not work.");
 			// Leave it null; check before use
@@ -171,6 +171,10 @@ public class SwingGUI {
 		logger.fine(STR."SwingGUI.SwingGUI(): \{iconImage}");
 		controlFrame.setIconImage(iconImage);
 
+		createGuiAndListeners();
+		controlFrame.setJMenuBar(makeMenus());
+	}
+	void createGuiAndListeners() {
 		final JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
 		progressBar.setIndeterminate(true);
 		JOptionPane pane = new JOptionPane();
@@ -193,6 +197,7 @@ public class SwingGUI {
 				}
 			}
 		});
+
 		// ControlFrame close -> exit
 		controlFrame.addWindowListener(new WindowAdapter() {
 			@Override
@@ -202,18 +207,19 @@ public class SwingGUI {
 		});
 
 		programProps = new Properties();
-		InputStream propwash = getClass().getResourceAsStream(PROPS_FILE_NAME);
-		if (propwash == null) {
-			throw new IllegalStateException(STR."Unable to load \{PROPS_FILE_NAME}");
+		try (InputStream propwash = getClass().getResourceAsStream(PROPS_FILE_NAME)) {
+			if (propwash == null) {
+				throw new IllegalStateException(STR."Unable to load \{PROPS_FILE_NAME}");
+			}
+			programProps.load(propwash);
+		} catch (IOException ex) {
+			JOptionPane.showMessageDialog(controlFrame,
+					STR."Failed to load Application Properties \{ex}");
+			System.exit(1);
 		}
-		programProps.load(propwash);
-		propwash.close();
 		logger.info(STR."SwingGUI(): Properties \{programProps}");
 
 		makeTabbedPane(viewFrame);
-
-		JMenuBar menuBar = makeMenus();
-		controlFrame.setJMenuBar(menuBar);
 
 		JPanel sidePanel = new JPanel();
 		sidePanel.setPreferredSize(new Dimension(200, 800));
@@ -727,12 +733,13 @@ public class SwingGUI {
 
 	void showFileProps() {
 		final PDDocumentInformation docInfo = currentTab.doc.getDocumentInformation();
-		var sb = new StringBuilder();
-		sb.append("Title: ").append(docInfo.getTitle()).append('\n');
-		sb.append("Author: ").append(docInfo.getAuthor()).append('\n');
-		sb.append("Producer: ").append(docInfo.getProducer()).append('\n');
-		sb.append("Subject: ").append(docInfo.getSubject()).append('\n');
-		JOptionPane.showMessageDialog(controlFrame, sb.toString(),
+		String str = STR."""
+			Title: \{docInfo.getTitle()}\n
+			Author: \{docInfo.getAuthor()}\n
+			Producer: "\{docInfo.getProducer()}\n
+			Subject: "\{docInfo.getSubject()}\n
+			""";
+		JOptionPane.showMessageDialog(controlFrame, str,
 			currentTab.file.getName(), JOptionPane.INFORMATION_MESSAGE);
 	}
 
