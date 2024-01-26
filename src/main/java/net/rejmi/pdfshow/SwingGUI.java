@@ -135,12 +135,12 @@ public class SwingGUI {
 				break;
 			case MULTI:
 				switch (numScreens) {
-					case 1 -> {
+					case 1:
 						JOptionPane.showMessageDialog(controlFrame,
 							"You asked for multi-monitor mode but we only found one screen!",
 							"Who's confused?", JOptionPane.WARNING_MESSAGE);
-					}
-					case 2 -> {
+						break;
+					case 2:
 						controlFrame = new JFrame("PDFShow Control");
 						previewer = new Preview();
 						controlFrame.add(previewer, BorderLayout.CENTER);
@@ -149,11 +149,10 @@ public class SwingGUI {
 						GraphicsDevice screen1 = gs[0], screen2 = gs[1];
 						viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
 						viewFrame.setLocation(screen2.getDefaultConfiguration().getBounds().x, controlFrame.getY());
-					}
-					default -> {
+						break;
+					default:
 						JOptionPane.showMessageDialog(null, "Cant handle >2 screens ATM");
 						System.exit(1);
-					}
 				}
 		}
 		
