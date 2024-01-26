@@ -105,14 +105,20 @@ public class SwingGUI {
 		LoggerSetup.init();
 		logger = Logger.getLogger("net.rejmi.pdfshow");
 
-		// Start of GUI code
-
 		// Configure for macOS if possible/applicable - before JFrame() -
 		// ignored on other platforms
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
 				SwingGUI.class.getSimpleName());
 
+		pickAScreenOrTwo();
+		createGuiAndListeners();
+		controlFrame.setJMenuBar(makeMenus());
+
+		gotoState(viewState);
+	}
+
+	private void pickAScreenOrTwo() {
 		DisplayMode dm = null;
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice[] gs = ge.getScreenDevices();
@@ -156,8 +162,6 @@ public class SwingGUI {
 				}
 		}
 
-		gotoState(viewState);
-
 		try {
 			desktop = Desktop.getDesktop();
 		} catch (UnsupportedOperationException ex) {
@@ -170,10 +174,8 @@ public class SwingGUI {
 		final Image iconImage = getImage("/images/logo.png");
 		logger.fine(STR."SwingGUI.SwingGUI(): \{iconImage}");
 		controlFrame.setIconImage(iconImage);
-
-		createGuiAndListeners();
-		controlFrame.setJMenuBar(makeMenus());
 	}
+
 	void createGuiAndListeners() {
 		final JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
 		progressBar.setIndeterminate(true);
