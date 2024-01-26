@@ -106,9 +106,9 @@ class DocTab extends JPanel {
 			return;
 		}
 		pdfComponent.repaint();
-		PdfShow.instance.updatePageNumbersDisplay();
-		if (PdfShow.instance.previewer != null) {
-			PdfShow.instance.previewer.setPageNumber(pageNumber);
+		SwingGUI.instance.updatePageNumbersDisplay();
+		if (SwingGUI.instance.previewer != null) {
+			SwingGUI.instance.previewer.setPageNumber(pageNumber);
 		}
 	}
 
@@ -235,7 +235,7 @@ class DocTab extends JPanel {
 					obj.draw(g);
 				}
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(PdfShow.instance.controlFrame, "Failure: " + e);
+				JOptionPane.showMessageDialog(SwingGUI.instance.controlFrame, "Failure: " + e);
 			}
 		}
 	}

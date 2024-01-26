@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
 
 /** 
  * GUI State class hierarchy - can control interactions differently in each state.
@@ -15,30 +14,30 @@ import java.util.logging.Logger;
  * interface default methods).
  */
 abstract class State {
-	final PdfShow parent;
+	final SwingGUI parent;
 	final JButton button;
 	final Border active = BorderFactory.createLineBorder(Color.BLUE, 3);
 
-	public State(PdfShow parent, JButton button) {
+	public State(SwingGUI parent, JButton button) {
 		this.parent = parent;
 		this.button = button;
 	}
 
 	/** Anything to be done on entering a given state */
 	public void enterState() {
-		PdfShow.logger.fine(String.format("enterState of %s, button is %s", getClass(), button));
+		SwingGUI.logger.fine(String.format("enterState of %s, button is %s", getClass(), button));
 		if (button != null)
 			button.setBorder(active);
 	}
 
 	public void leaveState() {
-		PdfShow.logger.fine("leaveState of " + getClass());
+		SwingGUI.logger.fine("leaveState of " + getClass());
 		if (button != null)
 			button.setBorder(null);
 	}
 
 	public void keyPressed(KeyEvent e) {
-		PdfShow.logger.fine("PdfShow.State.keyPressed(" + e + ")");
+		SwingGUI.logger.fine("SwingGUI.State.keyPressed(" + e + ")");
 		switch(e.getKeyChar()) {
 		case 'j':
 		case '\r':
@@ -70,7 +69,7 @@ abstract class State {
 			}
 				
 		}
-		PdfShow.logger.warning("Unhandled key event: " + e);
+		SwingGUI.logger.warning("Unhandled key event: " + e);
 	}
 
 	public void mouseClicked(MouseEvent e) {
@@ -103,7 +102,7 @@ abstract class State {
 		}
 		final List<GObject> currentPageAddIns = parent.currentTab.getCurrentAddIns();
 		if (currentPageAddIns.isEmpty()) {
-			PdfShow.logger.fine("No annotations");
+			SwingGUI.logger.fine("No annotations");
 			return;
 		}
 		currentPageAddIns.forEach(gobj -> consumer.accept(gobj));
@@ -116,7 +115,7 @@ class ViewState extends State {
 	boolean changed = false, found = false;
 
 	// Default State
-	ViewState(PdfShow parent, JButton button) {
+	ViewState(SwingGUI parent, JButton button) {
 		super(parent, button);
 	}
 
@@ -124,8 +123,8 @@ class ViewState extends State {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		int mx = e.getX(), my = e.getY();
-		PdfShow.logger.info(String.format(
-				"PdfShow.ViewState.mouseClicked() x %d y %d", mx, my));
+		SwingGUI.logger.info(String.format(
+				"SwingGUI.ViewState.mouseClicked() x %d y %d", mx, my));
 		changed = found = false;
 		// Avoid old selection
 		visitCurrentPageGObjs(gobj -> gobj.isSelected = false);
@@ -139,12 +138,12 @@ class ViewState extends State {
 				changed = true;
 			}
 			if (gobj.contains(mx, my)) {
-				PdfShow.logger.fine("HIT: " + gobj);
+				SwingGUI.logger.fine("HIT: " + gobj);
 				gobj.isSelected = true;
 				changed = true;
 				found = true;
 			} else {
-				PdfShow.logger.fine("MISS: " + gobj);
+				SwingGUI.logger.fine("MISS: " + gobj);
 			}
 		});
 		if (changed) {
@@ -187,7 +186,7 @@ class ViewState extends State {
 
 /** State for adding text annotations */
 class TextDrawState extends State {
-	TextDrawState(PdfShow parent, JButton button) {
+	TextDrawState(SwingGUI parent, JButton button) {
 		super(parent, button);
 	}
 	boolean dialogClosed = false;
@@ -197,7 +196,7 @@ class TextDrawState extends State {
 			JOptionPane.QUESTION_MESSAGE,
 			JOptionPane.DEFAULT_OPTION);
 		pane.setWantsInput(true);
-		JDialog dialog = pane.createDialog(PdfShow.viewFrame, "Text?");
+		JDialog dialog = pane.createDialog(SwingGUI.viewFrame, "Text?");
 		dialog.setLocation(e.getX(), e.getY());
 		dialogClosed = false;
 		dialog.addWindowListener(new WindowAdapter() {
@@ -220,7 +219,7 @@ class TextDrawState extends State {
 /** Marker: straight line: click start, click end. */
 class MarkingState extends State {
 	
-	MarkingState(PdfShow parent, JButton button) {
+	MarkingState(SwingGUI parent, JButton button) {
 		super(parent, button);
 	}
 	
@@ -252,7 +251,7 @@ class MarkingState extends State {
 /** For now, crude line-drawing: click start, drag to end. */
 class LineDrawState extends State {
 
-	LineDrawState(PdfShow parent, JButton button) {
+	LineDrawState(SwingGUI parent, JButton button) {
 		super(parent, button);
 	}
 
@@ -286,7 +285,7 @@ class LineDrawState extends State {
  */
 class PolyLineDrawState extends State {
 	
-	PolyLineDrawState(PdfShow parent, JButton button) {
+	PolyLineDrawState(SwingGUI parent, JButton button) {
 		super(parent, button);
 	}
 	
@@ -295,7 +294,7 @@ class PolyLineDrawState extends State {
 	GPolyLine line;
 	@Override
 	public void mousePressed(MouseEvent e) {
-		PdfShow.logger.fine("PdfShow.PolyLineDrawState.mousePressed()");
+		SwingGUI.logger.fine("SwingGUI.PolyLineDrawState.mousePressed()");
 		n = 0;
 		line = new GPolyLine(lastx = e.getX(), lasty = e.getY());
 		ix = parent.currentTab.addIn(line);
@@ -317,7 +316,7 @@ class PolyLineDrawState extends State {
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		PdfShow.logger.fine("PdfShow.PolyLineDrawState.mouseReleased()");
+		SwingGUI.logger.fine("SwingGUI.PolyLineDrawState.mouseReleased()");
 		parent.currentTab.repaint();
 		line = null;	// We are done with it.
 	}
@@ -325,7 +324,7 @@ class PolyLineDrawState extends State {
 
 class RectangleState extends State {
 	
-	RectangleState(PdfShow parent, JButton button) {
+	RectangleState(SwingGUI parent, JButton button) {
 		super(parent, button);
 	}
 	
@@ -358,7 +357,7 @@ class RectangleState extends State {
 
 class OvalState extends State {
 	
-	OvalState(PdfShow parent, JButton button) {
+	OvalState(SwingGUI parent, JButton button) {
 		super(parent, button);
 	}
 	

@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         // Instantiate main class
-        PdfShow instance = new PdfShow();
+        SwingGUI instance = new SwingGUI();
 
         // Open files from command line, if any
         int argsUsed = 0;

@@ -31,11 +31,11 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
  * DocTab's API is also one-based; it does the "subtract 1" dance internally.
  * @author Ian Darwin
  */
-public class PdfShow {
+public class SwingGUI {
 	
 	static Logger logger;
 	
-	static PdfShow instance;
+	static SwingGUI instance;
 
 	/** Notify code that the current tab has been changed */
 	ObservableHelper tabChangeNotifier = new ObservableHelper();
@@ -44,7 +44,7 @@ public class PdfShow {
 
 	Desktop desktop;
 	Properties programProps;
-	Preferences prefs = Preferences.userNodeForPackage(PdfShow.class);
+	Preferences prefs = Preferences.userNodeForPackage(SwingGUI.class);
 	final static String PROPS_FILE_NAME = "/pdfshow.properties";
 	// For programProps
 	final static String KEY_FEEDBACK_URL = "feedback_general",
@@ -97,7 +97,7 @@ public class PdfShow {
 	/**
 	 * MAIN CONSTRUCTOR
  	 */
-	PdfShow() throws IOException {
+	SwingGUI() throws IOException {
 
 		instance = this;
 
@@ -111,7 +111,7 @@ public class PdfShow {
 		// ignored on other platforms
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-				PdfShow.class.getSimpleName());
+				SwingGUI.class.getSimpleName());
 
 		DisplayMode dm = null;
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -168,7 +168,7 @@ public class PdfShow {
 		controlFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		controlFrame.setFocusable(true);
 		final Image iconImage = getImage("/images/logo.png");
-		logger.fine("PdfShow.PdfShow(): " + iconImage);
+		logger.fine("SwingGUI.SwingGUI(): " + iconImage);
 		controlFrame.setIconImage(iconImage);
 
 		final JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
@@ -208,7 +208,7 @@ public class PdfShow {
 		}
 		programProps.load(propwash);
 		propwash.close();
-		logger.info("PdfShow(): Properties " + programProps);
+		logger.info("SwingGUI(): Properties " + programProps);
 
 		makeTabbedPane(viewFrame);
 
@@ -402,10 +402,10 @@ public class PdfShow {
 		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
 		aboutButton.addActionListener(e->
 				JOptionPane.showMessageDialog(controlFrame,
-						String.format("PdfShow(tm) %s\n(c) 2021 Ian Darwin\n%s\n",
+						String.format("SwingGUI(tm) %s\n(c) 2021 Ian Darwin\n%s\n",
 								programProps.getProperty(KEY_VERSION),
 								programProps.getProperty(KEY_HOME_URL)),
-						"About PdfShow(tm)",
+						"About SwingGUI(tm)",
 						JOptionPane.INFORMATION_MESSAGE));
 		helpMenu.add(aboutButton);
 		final JMenuItem helpButton = MenuUtils.mkMenuItem(rb, "help", "help");
@@ -495,7 +495,7 @@ public class PdfShow {
 	/** Create the drawing-tool toolBox */
 	private JPanel makeToolbox() {
 
-		logger.info("PdfShow(): Building Toolbox");
+		logger.info("SwingGUI(): Building Toolbox");
 		JPanel toolBox = new JPanel();
 		toolBox.setBorder(BorderFactory.createTitledBorder("Toolbox"));
 		toolBox.setLayout(new GridLayout(0, 2));
@@ -806,7 +806,7 @@ public class PdfShow {
 
 	private File chooseFile() {
 		String prevDir = prefs.get(KEY_FILECHOOSER_DIR, null);
-		logger.fine("PdfShow.chooseFile(): prevDir = " + prevDir);
+		logger.fine("SwingGUI.chooseFile(): prevDir = " + prevDir);
 		String dir = prevDir != null ? prevDir :
 				System.getProperty("user.home");
 		JFileChooser fc = new JFileChooser(dir);
@@ -836,7 +836,7 @@ public class PdfShow {
 		fc.showOpenDialog(controlFrame);
 		final File selectedFile = fc.getSelectedFile();
 		if (selectedFile != null) {
-			logger.fine("PdfShow.chooseFile(): put: " + selectedFile.getParent());
+			logger.fine("SwingGUI.chooseFile(): put: " + selectedFile.getParent());
 			prefs.put(KEY_FILECHOOSER_DIR, selectedFile.getParent());
 			try {
 				prefs.flush();
