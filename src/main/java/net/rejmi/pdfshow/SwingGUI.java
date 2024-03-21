@@ -238,11 +238,12 @@ public class SwingGUI {
         // SETTINGS
 		sidePanel.add(new Settings(
 				controlFrame,
-				GObject.getFont(), GObject::setFont,
-				GObject.getColor(), GObject::setColor,
-				GObject.getLineThickness(), GObject::setLineThickness,
-				slideTime, this::setSlideTime,
-				savePageNumbers, this::setSavePageNumbers
+				new SettingHandler("fontButton", SettingType.FONT, GObject.getFont(), GObject::setFont),
+				new SettingHandler("lineColorButton", SettingType.COLOR, GObject.getLineColor(), GObject::setLineColor),
+				new SettingHandler("fillColorButton", SettingType.COLOR, GObject.getFillColor(), GObject::setFillColor),
+				new SettingHandler("lineWidthButton", SettingType.INTEGER, GObject.getLineThickness(), GObject::setLineThickness),
+				new SettingHandler("slideDelayButton", SettingType.INTEGER, slideTime, this::setSlideTime),
+				new SettingHandler("memoryBox.label", SettingType.BOOLEAN, savePageNumbers, this::setSavePageNumbers)
 			));
 
 		controlFrame.add(BorderLayout.WEST, sidePanel);
@@ -580,14 +581,14 @@ public class SwingGUI {
 	}
 
 	/** Adjusts the slide show time interval */
-	void setSlideTime(int n) {
-	    slideTime = n;
+	void setSlideTime(Object n) {
+	    slideTime = (int) n;
     }
 
 	/** Controls saving page numbers when closing file / exiting app */
-	void setSavePageNumbers(boolean b) {
-		prefs.putBoolean(KEY_SAVE_PAGENUMS, b);
-		savePageNumbers = b;
+	void setSavePageNumbers(Object b) {
+		prefs.putBoolean(KEY_SAVE_PAGENUMS, (boolean)b);
+		savePageNumbers = (boolean) b;
 	}
 
 	ActionListener showBreakTimer = _ ->  {

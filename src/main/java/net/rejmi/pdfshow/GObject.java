@@ -40,12 +40,13 @@ abstract class GObject {
 
 	// Class Drawing Parameters - constructors should save what they need!
 	// Color starts with neutral blue - save Red for important stuff
-	static Color curColor = new Color(0x3399FF);
+	static Color curLineColor = new Color(0x3399FF),
+		curFillColor = new Color(0x00000000);	// Transparent(?)
 	static Font curFont = new Font("Sans", Font.PLAIN, 24);
 	static int curLineThickness = 3;
 
-	// These ones we do for you
-	Color color;
+	// These are acquired at construction time
+	Color lineColor, fillColor;
 	int lineThickness;
 
 	GObject(int x, int y) {
@@ -55,27 +56,36 @@ abstract class GObject {
 	GObject(int x, int y, int width, int height) {
 		this.x = x; this.y = y;
 		this.width = width; this.height = height;
-		color = curColor;
+		lineColor = curLineColor;
+		fillColor = curFillColor;
 		lineThickness = curLineThickness;
 	}
 
-	public static Color getColor() {
-		return curColor;
+	public static Color getLineColor() {
+		return curLineColor;
 	}
-	public static void setColor(Color color) {
-		GObject.curColor = color;
+	public static void setLineColor(Object color) {
+		GObject.curLineColor = (Color)color;
 	}
+
+	public static Color getFillColor() {
+		return curFillColor;
+	}
+	public static void setFillColor(Object color) {
+		GObject.curFillColor = (Color)color;
+	}
+
 	public static Font getFont() {
 		return curFont;
 	}
-	public static void setFont(Font font) {
-		GObject.curFont = font;
+	public static void setFont(Object font) {
+		GObject.curFont = (Font)font;
 	}
 	public static int getLineThickness() {
 		return curLineThickness;
 	}
-	public static void setLineThickness(int lineWidth) {
-		GObject.curLineThickness = lineWidth;
+	public static void setLineThickness(Object lineWidth) {
+		GObject.curLineThickness = (int) lineWidth;
 	}
 	abstract void render(Graphics g);
 	
@@ -92,7 +102,6 @@ abstract class GObject {
 	/**
 	 * Determine if the given object contains the given point
 	 * (which is usually a mouse click location).
-	 * @param g The GObject that may contain the point
 	 * @param mx The point's X coordinate
 	 * @param my The point's Y coordinate
 	 * @return True if the point is contained within the given GObject's bbox
@@ -159,7 +168,7 @@ class GText extends GObject {
 		font = curFont;
 	}
 	void render(Graphics g) {
-		g.setColor(color);
+		g.setColor(curLineColor);
 		g.setFont(font);
 		g.drawString(text, x, y);
 	}
@@ -177,7 +186,7 @@ class GLine extends GObject {
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setStroke(new BasicStroke(lineThickness));
-		g.setColor(color);
+		g.setColor(lineColor);
 		g.drawLine(x, y, x + width, y + height);
 	}
 	@Override
@@ -192,7 +201,7 @@ class GMarker extends GLine {
 	GMarker(int x, int y, int endx, int endy) {
 		super(x, y, endx, endy);
 		lineThickness = 20;
-		color = new Color(255, 255, 0, MARKER_TRANS_ALPHA); // Yellow w/ reduced alpha
+		lineColor = new Color(255, 255, 0, MARKER_TRANS_ALPHA); // Yellow w/ reduced alpha
 	}
 }
 
@@ -218,7 +227,7 @@ class GPolyLine extends GObject {
 	
 	void render(Graphics g) {
 		((Graphics2D)g).setStroke(new BasicStroke(lineThickness));
-		g.setColor(color);
+		g.setColor(curLineColor);
 		// Translate
 		int lastX = x, lastY = y;
 		for (int i = 0; i < nPoints; i++) {
@@ -255,7 +264,7 @@ class GRectangle extends GObject {
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setStroke(new BasicStroke(lineThickness));
-		g.setColor(color);
+		g.setColor(curLineColor);
 		g.drawRect(x, y, width, height);
 	}
 }
@@ -268,7 +277,7 @@ class GOval extends GObject {
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setStroke(new BasicStroke(lineThickness));
-		g.setColor(color);
+		g.setColor(curLineColor);
 		g.drawOval(x, y, width, height);
 	}
 }

@@ -3,6 +3,7 @@ package net.rejmi.pdfshow;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.io.Serial;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -17,92 +18,100 @@ import javax.swing.JPanel;
 import com.darwinsys.swingui.FontChooser;
 import com.darwinsys.swingui.I18N;
 
+enum SettingType { STRING, INTEGER, BOOLEAN, FONT, COLOR }
+
+record SettingHandler(String buttonName,
+					  SettingType type,
+					  Object value,
+					  Consumer<Object> callback){}
+
 /**
  * The Settings panel 
  */
 public class Settings extends JPanel {
+	@Serial
 	private static final long serialVersionUID = 1L;
 	Color curColor;
 
-    public Settings(JFrame jf,
-                    Font curFont, Consumer<Font> setFont,
-                    Color curColor, Consumer<Color> setColor,
-                    int curThickness, Consumer<Integer> setLineThickness,
-                    int curSlideTime, Consumer<Integer> setSlideTime,
-					boolean curSavePageNumbers, Consumer<Boolean> setSavePageNumbers) {
+	/**
+	 * Create the GUI for the Settings pane
+	 * @param jf The JFrame ready to receive the items
+	 * @param handlers Array of SettingHandlers
+	 */
+	public Settings(JFrame jf, SettingHandler... handlers) {
 
-    	// Save state for re-use (in case user runs eg Color twice w/o closing dialog)
-    	this.curColor = curColor;
-    	
-		// GUI & Actions
-    	setBorder(BorderFactory.createTitledBorder("Settings"));
-    	ResourceBundle rb = ResourceBundle.getBundle("Menus");
+		setBorder(BorderFactory.createTitledBorder("Settings"));
+		ResourceBundle rb = ResourceBundle.getBundle("Menus");
 		setLayout(new GridLayout(0, 1));
-        JButton fontButton = I18N.mkButton(rb, "fontButton");
-		fontButton.addActionListener(e -> {
-			FontChooser fontChooser = new FontChooser(jf);
-			fontChooser.setSelectedFont(curFont);
-			fontChooser.setVisible(true);
-			Font myNewFont = fontChooser.getSelectedFont();
-			if (myNewFont != null) {
-				setFont.accept(myNewFont);
-			};
-			fontChooser.dispose();
-		});
-		add(fontButton);
-		JButton colorButton = I18N.mkButton(rb, "colorButton");
-		colorButton.addActionListener(e -> {
-			Color ch = JColorChooser.showDialog(
-				jf,             // parent
-				"Pick a Drawing Color",   // title
-				this.curColor);
-			if (ch != null) {
-				setColor.accept(this.curColor = ch);
+
+		for (SettingHandler handler : handlers) {
+			if (handler instanceof SettingHandler(
+					String name, SettingType type,
+					Object value, Consumer<Object> mHandler)) {
+				switch (type) {
+					case STRING -> {
+						throw new UnsupportedOperationException("Not written yet");
+					}
+					case INTEGER -> {
+						JButton lineWidthButton = I18N.mkButton(rb, name);
+						// XXX This could be done better - a slider with a live preview?
+						lineWidthButton.addActionListener(_ -> {
+							String ret = JOptionPane.showInputDialog("Line Thickness");
+							if (ret == null)
+								return;
+							try {
+								 mHandler.accept(Integer.decode(ret.trim()));
+							} catch (NumberFormatException nfe) {
+								JOptionPane.showMessageDialog(this,
+										String.format(
+												"Could not interpret '%s' as a number, alas.", ret),
+										"Oops",
+										JOptionPane.ERROR_MESSAGE);
+							}
+						});
+						add(lineWidthButton);
+					}
+					case BOOLEAN -> {
+						final JCheckBox memoryBox = new JCheckBox(I18N.getString(rb, name, "Boolean"));
+						memoryBox.setSelected((Boolean)value);
+						memoryBox.addItemListener(_ ->  {
+							mHandler.accept(memoryBox.isSelected());
+						});
+						add(memoryBox);
+					}
+					case FONT -> {
+						JButton fontButton = I18N.mkButton(rb, name);
+						fontButton.addActionListener(_ -> {
+							FontChooser fontChooser = new FontChooser(jf);
+							fontChooser.setSelectedFont((Font) handler.value());
+							fontChooser.setVisible(true);
+							Font myNewFont = fontChooser.getSelectedFont();
+							if (myNewFont != null) {
+								 mHandler.accept(myNewFont);
+							}
+							fontChooser.dispose();
+						});
+						add(fontButton);
+					}
+					case COLOR -> {
+						JButton colorButton = I18N.mkButton(rb, name);
+						colorButton.addActionListener(_ -> {
+							Color ch = JColorChooser.showDialog(
+									jf,             // parent
+									"Pick a Drawing Color",   // title
+									this.curColor);
+							if (ch != null) {
+								 mHandler.accept(ch);
+							}
+						});
+						add(colorButton);
+					}
+					default -> {
+						throw new IllegalStateException(STR."Unknown Handler Type \{handler.type()}");
+					}
+				}
 			}
-		});
-		add(colorButton);
+		}
 
-		JButton linewidthButton = I18N.mkButton(rb, "lineWidthButton");
-		// XXX This could be much better - a slider with a live line preview
-		linewidthButton.addActionListener(e -> {
-			String ret = JOptionPane.showInputDialog("Line Thickness");
-			if (ret == null)
-				return;
-			try {
-				setLineThickness.accept(Integer.parseInt(ret.trim()));
-			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(this,
-					String.format(
-						"Could not interpret '%s' as a number, alas.", ret),
-					"Oops",
-					JOptionPane.ERROR_MESSAGE);
-			}
-		});
-		add(linewidthButton);
-
-        JButton slideDelayButton = I18N.mkButton(rb, "slideDelayButton");
-        // XXX This could be much better - a slider
-        slideDelayButton.addActionListener(e -> {
-            String ret = JOptionPane.showInputDialog("Slide Show Interval (seconds)");
-            if (ret == null)
-                return;
-            try {
-                setSlideTime.accept(Integer.parseInt(ret.trim()));
-            } catch (NumberFormatException nfe) {
-                JOptionPane.showMessageDialog(this,
-                        String.format(
-                                "Could not interpret '%s' as a number, alas.", ret),
-                        "Oops",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        add(slideDelayButton);
-
-		final JCheckBox memoryBox = new JCheckBox("Restart where left off");
-		memoryBox.setSelected(curSavePageNumbers);
-		memoryBox.addItemListener(e ->  {
-			setSavePageNumbers.accept(memoryBox.isSelected());
-		});
-		add(memoryBox);
 	}
 }
