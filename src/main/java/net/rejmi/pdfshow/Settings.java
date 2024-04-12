@@ -38,7 +38,7 @@ public class Settings extends JPanel {
 	 * @param jf The JFrame ready to receive the items
 	 * @param handlers Array of SettingHandlers
 	 */
-	public Settings(JFrame jf, SettingHandler... handlers) {
+	Settings(JFrame jf, SettingHandler... handlers) {
 
 		setBorder(BorderFactory.createTitledBorder("Settings"));
 		ResourceBundle rb = ResourceBundle.getBundle("Menus");
@@ -49,10 +49,9 @@ public class Settings extends JPanel {
 					String name, SettingType type,
 					Object value, Consumer<Object> mHandler)) {
 				switch (type) {
-					case STRING -> {
+					case STRING:
 						throw new UnsupportedOperationException("Not written yet");
-					}
-					case INTEGER -> {
+					case INTEGER:
 						JButton lineWidthButton = I18N.mkButton(rb, name);
 						// XXX This could be done better - a slider with a live preview?
 						lineWidthButton.addActionListener(_ -> {
@@ -70,16 +69,14 @@ public class Settings extends JPanel {
 							}
 						});
 						add(lineWidthButton);
-					}
-					case BOOLEAN -> {
+						break;
+					case BOOLEAN:
 						final JCheckBox memoryBox = new JCheckBox(I18N.getString(rb, name, "Boolean"));
 						memoryBox.setSelected((Boolean)value);
-						memoryBox.addItemListener(_ ->  {
-							mHandler.accept(memoryBox.isSelected());
-						});
+						memoryBox.addItemListener(_ -> mHandler.accept(memoryBox.isSelected()));
 						add(memoryBox);
-					}
-					case FONT -> {
+						break;
+					case FONT:
 						JButton fontButton = I18N.mkButton(rb, name);
 						fontButton.addActionListener(_ -> {
 							FontChooser fontChooser = new FontChooser(jf);
@@ -92,8 +89,8 @@ public class Settings extends JPanel {
 							fontChooser.dispose();
 						});
 						add(fontButton);
-					}
-					case COLOR -> {
+						break;
+					case COLOR:
 						JButton colorButton = I18N.mkButton(rb, name);
 						colorButton.addActionListener(_ -> {
 							Color ch = JColorChooser.showDialog(
@@ -105,13 +102,12 @@ public class Settings extends JPanel {
 							}
 						});
 						add(colorButton);
-					}
-					default -> {
+						break;
+					default:
 						throw new IllegalStateException(STR."Unknown Handler Type \{handler.type()}");
-					}
+
 				}
 			}
 		}
-
 	}
 }
