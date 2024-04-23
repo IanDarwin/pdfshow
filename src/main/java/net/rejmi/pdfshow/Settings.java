@@ -105,7 +105,6 @@ public class Settings extends JPanel {
 						break;
 					default:
 						throw new IllegalStateException(STR."Unknown Handler Type \{handler.type()}");
-
 				}
 			}
 		}

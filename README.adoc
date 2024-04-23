@@ -3,7 +3,7 @@ ifndef::ver[]
 endif::[]
 :sillyName: Double Header
 ifndef::current-java-ver[]
-:current-java-ver: Java 17
+:current-java-ver: Java 21
 endif::[]
 :gh-url: https://github.com/IanDarwin/pdfshow
 :releases-link: {gh-url}/releases
