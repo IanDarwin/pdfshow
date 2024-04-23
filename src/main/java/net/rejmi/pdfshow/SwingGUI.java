@@ -736,13 +736,12 @@ public class SwingGUI {
 
 	void showFileProps() {
 		final PDDocumentInformation docInfo = currentTab.doc.getDocumentInformation();
-		String str = STR."""
-			Title: \{docInfo.getTitle()}
-			Author: \{docInfo.getAuthor()}
-			Producer: "\{docInfo.getProducer()}
-			Subject: "\{docInfo.getSubject()}
-			""";
-		JOptionPane.showMessageDialog(controlFrame, str,
+		var sb = new StringBuilder();
+		sb.append("Title: ").append(docInfo.getTitle()).append('\n');
+		sb.append("Author: ").append(docInfo.getAuthor()).append('\n');
+		sb.append("Producer: ").append(docInfo.getProducer()).append('\n');
+		sb.append("Subject: ").append(docInfo.getSubject()).append('\n');
+		JOptionPane.showMessageDialog(controlFrame, sb.toString(),
 			currentTab.file.getName(), JOptionPane.INFORMATION_MESSAGE);
 	}
 
