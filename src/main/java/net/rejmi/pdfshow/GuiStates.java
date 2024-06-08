@@ -107,6 +107,10 @@ abstract class State {
 		}
 		currentPageAddIns.forEach(gobj -> consumer.accept(gobj));
 	}
+
+	void returnToViewState() {
+		SwingGUI.gotoState(parent.viewState);
+	}
 }
 
 
@@ -206,13 +210,18 @@ class TextDrawState extends State {
 			}
 		});
 		dialog.setVisible(true); // BLOCKING WAIT
-		if (dialogClosed)
+		if (dialogClosed) {
+			returnToViewState();
 			return;
+		}
 		String text = pane.getInputValue().toString();
-		if (text == null)
+		if (text == null) {
+			returnToViewState();
 			return;
+		}
 		parent.currentTab.addIn(new GText(e.getX(), e.getY(), text));
 		parent.currentTab.repaint();
+		returnToViewState();
 	}
 }
 
