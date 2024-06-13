@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 /** 
  * GUI State class hierarchy - can control interactions differently in each state.
- * State is a class, not an interface, so it can have fields and so subclasses don't
+ * State is a class, not an interface, so it can have state and so subclasses don't
  * have to implement every method (though the latter could now be done with 
  * interface default methods).
  */
@@ -106,10 +106,6 @@ abstract class State {
 			return;
 		}
 		currentPageAddIns.forEach(gobj -> consumer.accept(gobj));
-	}
-
-	void returnToViewState() {
-		SwingGUI.gotoState(parent.viewState);
 	}
 }
 
@@ -211,17 +207,17 @@ class TextDrawState extends State {
 		});
 		dialog.setVisible(true); // BLOCKING WAIT
 		if (dialogClosed) {
-			returnToViewState();
+			parent.returnToViewState();
 			return;
 		}
 		String text = pane.getInputValue().toString();
-		if (text == null) {
-			returnToViewState();
+		if (text == null || text.isEmpty()) {
+			parent.returnToViewState();
 			return;
 		}
 		parent.currentTab.addIn(new GText(e.getX(), e.getY(), text));
 		parent.currentTab.repaint();
-		returnToViewState();
+		parent.returnToViewState();
 	}
 }
 

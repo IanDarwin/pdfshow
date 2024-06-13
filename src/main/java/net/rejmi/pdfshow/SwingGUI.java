@@ -732,6 +732,10 @@ public class SwingGUI {
 		currentState.enterState();
 	}
 
+	void returnToViewState() {
+		SwingGUI.gotoState(viewState);
+	}
+
 	// Everything Else
 
 	void showFileProps() {
