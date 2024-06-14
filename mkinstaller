@@ -15,7 +15,7 @@ usage() {		# give usage message, and exit
 
 # Check for known OS and set os-specific options
 case $(uname) in
-	MSYS_NT-10*)	inst_format=msi
+	M*_NT-10*)	inst_format=msi
 			icon_format=ico
 			OS_SPECIFIC="--win-menu --win-shortcut"
 			;;
