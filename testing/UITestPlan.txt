@@ -4,7 +4,7 @@ Please run all tests in order. Many of them depend on earlier actions.
 While running these tests, keep the console open so that you can see
 if any stack traces are issued.
 Ignore any debug outputs.
-In Eclipse, stack traces and errors are in red while debug outputs are in black.
+In some IDEs, stack traces and errors are in red while debug outputs are in black.
 
 == Open/Close/Recent
 
@@ -55,3 +55,18 @@ in the correct styling.
 * Drag the scrollbar to the top and ensure that the title page is now showing.
 * Drag the scrollbar to the bottom and ensure that the last page is now showing.
 * Drag the scrollbar to the middle and ensure that it displays a page from the middle with the correct page number.
+
+== Slideshow
+
+=== "Horizontal" slideshow
+
+* Select different pages in two tabs
+* Click Slide Show -> Show Current Page from each Tab
+* Verify that it alternates between the pages.
+
+=== Custom Slideshow.
+
+* Click Slide Show -> Custom Slide Show
+* Enter numbers 2 and 3 in the dialog, click OK
+* Verify that it alternates between pages 2 and 3 of the current tab.
+
