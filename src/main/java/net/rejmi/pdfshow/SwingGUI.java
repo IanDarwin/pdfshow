@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.Serial;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -17,6 +18,7 @@ import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import java.util.stream.IntStream;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
@@ -232,7 +234,10 @@ public class SwingGUI {
 		JPanel toolBox = makeToolbox();
 		sidePanel.add(toolBox);
 
-		JComponent stopButton = makeStopShowButton();
+		JButton stop_show = new JButton("Stop slide show");
+		// toolBox.add(stop_show);
+		stop_show.addActionListener(_ -> done = true);
+		JComponent stopButton = stop_show;
 		sidePanel.add(stopButton);
 		
         // SETTINGS
@@ -359,7 +364,11 @@ public class SwingGUI {
 		viewMenu.add(favoritesMI);
 
 		jiffy = new JInternalFrame("Timer", true, true, true, true);
-		breakTimer = new BreakTimer(jiffy);
+		List<String> all = IntStream.rangeClosed(1,9)
+				.mapToObj(n->"images/break-background"+n+".png")
+				.filter(s-> Path.of(s).toFile().canRead())
+				.toList();
+		breakTimer = new BreakTimer(jiffy, all);
 
 		JMenuItem breakTimerMI = MenuUtils.mkMenuItem(rb, "view","break_timer");
 
@@ -573,13 +582,6 @@ public class SwingGUI {
 		return toolBox;
 	}
 
-	private JComponent makeStopShowButton() {
-		JButton stop_show = new JButton("Stop slide show");
-		// toolBox.add(stop_show);
-		stop_show.addActionListener(_ -> done = true);
-		return stop_show;
-	}
-
 	/** Adjusts the slide show time interval */
 	void setSlideTime(Object n) {
 	    slideTime = (int) n;
@@ -636,7 +638,8 @@ public class SwingGUI {
         pool.submit(() -> {
             int slideShowPageNumber = start;
             DocTab tab = currentTab;
-            while (!done) {
+			tab.gotoPage(slideShowPageNumber);
+			while (!done) {
                 if (tab != currentTab) {
                     // User manually changed it, so "the show must go off"!
                 	done = true;
@@ -648,7 +651,8 @@ public class SwingGUI {
                     done = true;
                     return;
                 }
-                slideShowPageNumber = (slideShowPageNumber % end) + 1;
+				if (++slideShowPageNumber > end)
+                	slideShowPageNumber = start;
                 tab.gotoPage(slideShowPageNumber);
             }
         });

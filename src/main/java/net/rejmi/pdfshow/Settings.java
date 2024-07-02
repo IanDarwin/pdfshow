@@ -55,7 +55,7 @@ public class Settings extends JPanel {
 						JButton lineWidthButton = I18N.mkButton(rb, name);
 						// XXX This could be done better - a slider with a live preview?
 						lineWidthButton.addActionListener(_ -> {
-							String ret = JOptionPane.showInputDialog("Line Thickness");
+							String ret = JOptionPane.showInputDialog(name);
 							if (ret == null)
 								return;
 							try {
