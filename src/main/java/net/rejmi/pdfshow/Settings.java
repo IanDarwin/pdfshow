@@ -55,7 +55,8 @@ public class Settings extends JPanel {
 						JButton lineWidthButton = I18N.mkButton(rb, name);
 						// XXX This could be done better - a slider with a live preview?
 						lineWidthButton.addActionListener(_ -> {
-							String ret = JOptionPane.showInputDialog(name);
+							String label = I18N.getString(rb, name + ".label", name);
+							String ret = JOptionPane.showInputDialog(label);
 							if (ret == null)
 								return;
 							try {
