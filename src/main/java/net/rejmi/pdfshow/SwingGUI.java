@@ -313,7 +313,7 @@ public class SwingGUI {
 		});
 		fm.add(recents);
 		JMenuItem miClearRecents = MenuUtils.mkMenuItem(rb, "file", "clear_recents");
-		miClearRecents.addActionListener(_ -> recents.clear());
+		miClearRecents.addActionListener(_ -> recentsClear());
 		fm.add(miClearRecents);
 		JMenuItem miClose = MenuUtils.mkMenuItem(rb, "file", "close");
 		miClose.addActionListener(_ -> {
@@ -330,8 +330,9 @@ public class SwingGUI {
 		fm.addSeparator();
 		JMenuItem miPrint = MenuUtils.mkMenuItem(rb, "file", "print");
 		miPrint.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
-				InputEvent.CTRL_MASK));
-		miPrint.addActionListener(_-> JOptionPane.showMessageDialog(controlFrame, "Sorry, not implemented yet"));
+			InputEvent.CTRL_MASK));
+		miPrint.addActionListener(_->
+			JOptionPane.showMessageDialog(controlFrame, "Sorry, not implemented yet"));
 		fm.add(miPrint);
 
 		fm.addSeparator();
@@ -348,6 +349,10 @@ public class SwingGUI {
 			currentTab.insertNewPage();
 		});
 		editMenu.add(newPageMI);
+		JMenuItem delPageMI = MenuUtils.mkMenuItem(rb, "edit","delpage");
+		delPageMI.setEnabled(false);
+		editMenu.add(delPageMI);
+		editMenu.addSeparator();
 		JMenuItem deleteItemMI = MenuUtils.mkMenuItem(rb, "edit","delete");
 		deleteItemMI.addActionListener(_ -> {
 			if (currentTab == null)
@@ -364,6 +369,7 @@ public class SwingGUI {
 		viewMenu.add(favoritesMI);
 
 		jiffy = new JInternalFrame("Timer", true, true, true, true);
+		// Find "any" (up to 9) background images for timer.
 		List<String> all = IntStream.rangeClosed(1,9)
 				.mapToObj(n->"images/break-background"+n+".png")
 				.filter(s-> Path.of(s).toFile().canRead())
@@ -456,6 +462,11 @@ public class SwingGUI {
 		helpMenu.add(feedbackMI);
 
 		return menuBar;
+	}
+
+	void recentsClear() {
+		recents.clear();
+		// XXX remove from preferences too!
 	}
 
 	/** Create the navigation box - arrows for pageup/down etc. */
@@ -598,7 +609,8 @@ public class SwingGUI {
 		if (glassify)
 			controlFrame.setGlassPane(jiffy);
 		else
-			controlFrame.add(jiffy);
+			controlFrame.add(jiffy); // Fails
+		jiffy.setSize(800,600);
 		jiffy.setVisible(true);
 	};
 
