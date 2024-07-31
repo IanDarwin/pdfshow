@@ -79,9 +79,11 @@ for fmt in ${inst_format}; do
 	--app-version ${RELEASE_VERSION} \
 	--license-file LICENSE.txt \
 	--vendor "Rejminet Group Inc." \
+	--about-url https://darwinsys.com/pdfshow \
 	--type "${fmt}" \
 	--icon src/main/resources/images/logo.${icon_format} \
 	--input target \
+	--java-options --enable-preview \
 	--main-jar pdfshow-${RELEASE_VERSION}-jar-with-dependencies.jar \
 	--runtime-image pdfshow-runtime \
 	${OS_SPECIFIC} || {

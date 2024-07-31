@@ -12,6 +12,7 @@ public class MyObserverTest {
     public void doFirst() {
         target = new ObservableHelper();
     }
+
     @Test
     public void testAddAndCall() {
         final boolean[] seen = {false};

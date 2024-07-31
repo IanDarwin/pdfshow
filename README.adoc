@@ -53,7 +53,7 @@ someday that'll be switchable via an option.
 * You can't draw on the miniature view (yet?), and it doesn't show your drawings.
 * If you unplug the second monitor, you have to re-start PDFshow, but that shouldn't be a problem.
 
-More bells and whistles will be added as time permits, but let's keep it relatively simple.
+More bells and whistles will likely be added as time permits, but let's keep it relatively simple.
 There is still some basic functionality that is imperfect or incomplete.
 Pull requests will be gratefully accepted as long as they fit
 within the general tone of the program - _minimalist, but functional._
