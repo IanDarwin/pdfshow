@@ -40,7 +40,7 @@
 		<maven.compiler.testSource>${javase.version}</maven.compiler.testSource>
 		<maven.compiler.testTarget>${javase.version}</maven.compiler.testTarget>
 		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-		<darwinsys-api-version>1.8.3-SNAPSHOT</darwinsys-api-version>
+		<darwinsys-api-version>1.9.0-SNAPSHOT</darwinsys-api-version>
 		<pdfbox-version>2.0.24</pdfbox-version>
 	</properties>
 

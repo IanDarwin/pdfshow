@@ -8,10 +8,10 @@ import java.io.InputStream;
 import java.io.Serial;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.*;
 import java.util.List;
-import java.util.Properties;
-import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.IntStream;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
@@ -369,11 +370,37 @@ public class SwingGUI {
 		viewMenu.add(favoritesMI);
 
 		jiffy = new JInternalFrame("Timer", true, true, true, true);
-		// Find "any" (up to 9) background images for timer.
-		List<String> all = IntStream.rangeClosed(1,9)
-				.mapToObj(n->"images/break-background"+n+".png")
-				.filter(s-> Path.of(s).toFile().canRead())
-				.toList();
+
+		// Find "any" (up to 9) background images for timer;
+		// images can be in ~/.pdfshow/images or on classpath (e.g., in Jar file).
+		List<Image> all = new ArrayList<>();
+		var tilde = System.getProperty("user.home");
+		if (Files.isDirectory(Path.of(tilde))) {
+			var myDir = tilde + "/" + ".pdfshow";
+			System.out.println("mydir = " + myDir);
+			IntStream.rangeClosed(1, 9)
+					.mapToObj(n ->
+							myDir + "/images/break-background" + n + ".png")
+					.filter(s -> Path.of(s).toFile().canRead())
+					.map(path -> new ImageIcon(path).getImage())
+					.forEach(all::add);
+		}
+		List<Image> res = new ArrayList<>();
+		IntStream.rangeClosed(1,9)
+				.mapToObj(n->"/images/break-background"+n+".png")
+				.map(fn->getClass().getResource(fn))
+				.filter(Objects::nonNull)
+				.forEach(url -> {
+                     try {
+						Image image = ImageIO.read(url);
+						res.add(image);
+					} catch (IOException e) {
+						System.out.println("Image didn't load!");
+					}
+				});
+		all.addAll(res);
+
+		System.out.println("Total BreakTimer Images = " + all.size());
 		breakTimer = new BreakTimer(jiffy, all);
 
 		JMenuItem breakTimerMI = MenuUtils.mkMenuItem(rb, "view","break_timer");
