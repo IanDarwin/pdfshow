@@ -1,7 +1,7 @@
 ifndef::ver[]
-:ver: 1.0.4
+:ver: 1.0.5
 endif::[]
-:sillyName: Double Header
+:sillyName: Clock watching
 ifndef::current-java-ver[]
 :current-java-ver: Java 21
 endif::[]
