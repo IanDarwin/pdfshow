@@ -375,8 +375,8 @@ public class SwingGUI {
 		// images can be in ~/.pdfshow/images or on classpath (e.g., in Jar file).
 		List<Image> all = new ArrayList<>();
 		var tilde = System.getProperty("user.home");
-		if (Files.isDirectory(Path.of(tilde))) {
-			var myDir = tilde + "/" + ".pdfshow";
+		var myDir = tilde + "/" + ".pdfshow";
+		if (Files.isDirectory(Path.of(myDir))) {
 			System.out.println("mydir = " + myDir);
 			IntStream.rangeClosed(1, 9)
 					.mapToObj(n ->
