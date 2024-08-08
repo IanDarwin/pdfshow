@@ -2,6 +2,16 @@
 
 The release notes for current and past releases are in the github under releases.
 
+== Version 1.0.5, 2024-08
+
+v1.0.5 "Clock Watcher" is a minor revision; changes include:
+
+* Adds background images to the break timer;
+* Corrects some minor bugs;
+* Adds Delete Page function (non-persistent);
+* Pointer mode pops back to View after adding Text item;
+* Custom slide show (contiguous range only);
+
 == Version 1.0.4, 2023-05
 
 v1.0.4 "Double Header" is the first release supporting two monitors, as conventional slide show programs do.
