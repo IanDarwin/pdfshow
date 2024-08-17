@@ -182,9 +182,7 @@ public class SwingGUI {
 	void createGuiAndListeners() {
 		final JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
 		progressBar.setIndeterminate(true);
-		JOptionPane pane = new JOptionPane();
-		pane.add(progressBar);
-		progressDialog = pane.createDialog(controlFrame, "Loading...");
+		JFrame progressDialog = new JFrame("Loading");
 		progressDialog.add(progressBar);
 
 		// If view gets resized, must re-calc scaling
