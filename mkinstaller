@@ -83,7 +83,6 @@ for fmt in ${inst_format}; do
 	--type "${fmt}" \
 	--icon src/main/resources/images/logo.${icon_format} \
 	--input target \
-	--java-options --enable-preview \
 	--main-jar pdfshow-${RELEASE_VERSION}-jar-with-dependencies.jar \
 	--runtime-image pdfshow-runtime \
 	${OS_SPECIFIC} || {

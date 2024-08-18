@@ -126,10 +126,10 @@ public class SwingGUI {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice[] gs = ge.getScreenDevices();
 		int numScreens = gs.length;
-		logger.info(STR."PdfShow Starting. Found \{numScreens} screen(s)");
+		logger.info("PdfShow Starting. Found %d screen(s)".formatted(numScreens));
 		for (GraphicsDevice curGs : gs) { // Informational
 			dm = curGs.getDisplayMode();
-			logger.info(STR."\{dm.getWidth()} x \{dm.getHeight()}");
+			logger.info(dm.getWidth() + " x " + dm.getHeight());
 		}
 		assert dm != null : "Could not find DM";
 		viewFrame = new JFrame("PDFShow Display");
@@ -175,7 +175,7 @@ public class SwingGUI {
 		controlFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		controlFrame.setFocusable(true);
 		final Image iconImage = getImage("/images/logo.png");
-		logger.fine(STR."SwingGUI.SwingGUI(): \{iconImage}");
+		logger.fine("SwingGUI.SwingGUI(): " + iconImage);
 		controlFrame.setIconImage(iconImage);
 	}
 
@@ -212,15 +212,15 @@ public class SwingGUI {
 		programProps = new Properties();
 		try (InputStream propwash = getClass().getResourceAsStream(PROPS_FILE_NAME)) {
 			if (propwash == null) {
-				throw new IllegalStateException(STR."Unable to load \{PROPS_FILE_NAME}");
+				throw new IllegalStateException("Unable to load " + PROPS_FILE_NAME);
 			}
 			programProps.load(propwash);
 		} catch (IOException ex) {
 			JOptionPane.showMessageDialog(controlFrame,
-					STR."Failed to load Application Properties \{ex}");
+					"Failed to load Application Properties " + ex);
 			System.exit(1);
 		}
-		logger.info(STR."SwingGUI(): Properties \{programProps}");
+		logger.info("SwingGUI(): Properties " + programProps);
 
 		makeTabbedPane(viewFrame);
 
@@ -235,7 +235,7 @@ public class SwingGUI {
 
 		JButton stop_show = new JButton("Stop slide show");
 		// toolBox.add(stop_show);
-		stop_show.addActionListener(_ -> done = true);
+		stop_show.addActionListener(e -> done = true);
 		JComponent stopButton = stop_show;
 		sidePanel.add(stopButton);
 		
@@ -259,7 +259,7 @@ public class SwingGUI {
 	/** Create a DnDTabbedPane: the main window for viewing PDFs */
 	private void makeTabbedPane(JFrame frame) {
 
-		tabPane.addChangeListener(_ -> {
+		tabPane.addChangeListener(e -> {
 			currentTab = (DocTab)tabPane.getSelectedComponent();
 			if (currentTab != null) { // Avoid NPE on removal
 				updatePageNumbersDisplay();
@@ -291,15 +291,15 @@ public class SwingGUI {
 							openPdfFile(file);
 						} catch(IOException ex) {
 							JOptionPane.showMessageDialog(controlFrame,
-                                    STR."Failed to open file: \{ex}");
+                                    "Failed to open file: " + ex);
 						}
 					});
 				} else {
-					throw new IOException(STR."Can't read file \{file}");
+					throw new IOException("Can't read file " + file);
 				}
 			}
 		};
-		miOpen.addActionListener(_ -> {
+		miOpen.addActionListener(e -> {
 			try {
 				final File chosenFile = chooseFile();
 				if (chosenFile == null) {
@@ -307,15 +307,15 @@ public class SwingGUI {
 				}
 				recents.openFile(chosenFile.getAbsolutePath());
 			} catch (Exception e1) {
-				JOptionPane.showMessageDialog(controlFrame, STR."Can't open file: \{e1}");
+				JOptionPane.showMessageDialog(controlFrame, "Can't open file: " + e1);
 			}
 		});
 		fm.add(recents);
 		JMenuItem miClearRecents = MenuUtils.mkMenuItem(rb, "file", "clear_recents");
-		miClearRecents.addActionListener(_ -> recentsClear());
+		miClearRecents.addActionListener(e -> recentsClear());
 		fm.add(miClearRecents);
 		JMenuItem miClose = MenuUtils.mkMenuItem(rb, "file", "close");
-		miClose.addActionListener(_ -> {
+		miClose.addActionListener(e -> {
 			if (currentTab != null) {
 				closeFile(currentTab);
 			}
@@ -323,26 +323,26 @@ public class SwingGUI {
 		fm.add(miClose);
 
 		final JMenuItem infoButton = MenuUtils.mkMenuItem(rb, "file", "properties");
-		infoButton.addActionListener(_ -> showFileProps());
+		infoButton.addActionListener(e -> showFileProps());
 		fm.add(infoButton);
 
 		fm.addSeparator();
 		JMenuItem miPrint = MenuUtils.mkMenuItem(rb, "file", "print");
 		miPrint.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
 			InputEvent.CTRL_MASK));
-		miPrint.addActionListener(_->
+		miPrint.addActionListener(e ->
 			JOptionPane.showMessageDialog(controlFrame, "Sorry, not implemented yet"));
 		fm.add(miPrint);
 
 		fm.addSeparator();
 		JMenuItem miQuit = MenuUtils.mkMenuItem(rb, "file", "exit");
-		miQuit.addActionListener(_ -> checkAndQuit());
+		miQuit.addActionListener(e -> checkAndQuit());
 		fm.add(miQuit);
 
 		final JMenu editMenu = MenuUtils.mkMenu(rb, "edit");
 		menuBar.add(editMenu);
 		JMenuItem newPageMI = MenuUtils.mkMenuItem(rb, "edit","newpage");
-		newPageMI.addActionListener(_ -> {
+		newPageMI.addActionListener(e -> {
 			if (currentTab == null)
 				return;
 			currentTab.insertNewPage();
@@ -353,7 +353,7 @@ public class SwingGUI {
 		editMenu.add(delPageMI);
 		editMenu.addSeparator();
 		JMenuItem deleteItemMI = MenuUtils.mkMenuItem(rb, "edit","delete");
-		deleteItemMI.addActionListener(_ -> {
+		deleteItemMI.addActionListener(e -> {
 			if (currentTab == null)
 				return;
 			currentTab.deleteSelected();
@@ -410,15 +410,15 @@ public class SwingGUI {
 		menuBar.add(slideshowMenu);
 		final JMenuItem ssThisTabFromStartButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_start");
 		slideshowMenu.add(ssThisTabFromStartButton);
-		ssThisTabFromStartButton.addActionListener(_ -> runSlideShow(1));
+		ssThisTabFromStartButton.addActionListener(e -> runSlideShow(1));
 		final JMenuItem ssThisTabCurButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_current");
 		slideshowMenu.add(ssThisTabCurButton);
-		ssThisTabCurButton.addActionListener(_ -> runSlideShow(currentTab.getPageNumber()));
+		ssThisTabCurButton.addActionListener(e -> runSlideShow(currentTab.getPageNumber()));
 		final JMenuItem ssAcrossTabsButton = MenuUtils.mkMenuItem(rb, "slideshow", "across_tabs");
 		ssAcrossTabsButton.addActionListener(slideshowAcrossTabsAction);
 		slideshowMenu.add(ssAcrossTabsButton);
 		final JMenuItem ssCustomButton = MenuUtils.mkMenuItem(rb, "slideshow", "custom");
-		ssCustomButton.addActionListener(_ -> {
+		ssCustomButton.addActionListener(e -> {
 			if (currentTab == null) {
 				JOptionPane.showMessageDialog(controlFrame, "Must be in an open tab",
 						"Try again", JOptionPane.ERROR_MESSAGE);
@@ -438,7 +438,7 @@ public class SwingGUI {
 			if (result == JOptionPane.YES_OPTION) {
 				int start = Integer.parseInt(firstSlide.getText());
 				int end = Integer.parseInt(lastSlide.getText());
-				System.out.printf(STR."SlideShow from \{start} to \{end}");
+				System.out.printf("SlideShow from %s to %s".formatted(start, end));
 				runSlideShow(start, end);
 			} else {
 				System.out.println("Custom Show Canceled");
@@ -450,7 +450,7 @@ public class SwingGUI {
 		final JMenu helpMenu = MenuUtils.mkMenu(rb, "help");
 		menuBar.add(helpMenu);
 		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
-		aboutButton.addActionListener(_->
+		aboutButton.addActionListener(e->
 				JOptionPane.showMessageDialog(controlFrame,
 						String.format("SwingGUI(tm) %s\n(c) 2021 Ian Darwin\n%s\n",
 								programProps.getProperty(KEY_VERSION),
@@ -459,25 +459,26 @@ public class SwingGUI {
 						JOptionPane.INFORMATION_MESSAGE));
 		helpMenu.add(aboutButton);
 		final JMenuItem helpButton = MenuUtils.mkMenuItem(rb, "help", "help");
-		helpButton.addActionListener(_ ->
+		helpButton.addActionListener(e ->
 				JOptionPane.showMessageDialog(controlFrame, "Help not written yet",
 						"Sorry", JOptionPane.WARNING_MESSAGE));
 		helpMenu.add(helpButton);
 		final JMenuItem breakTimerHelpButton = MenuUtils.mkMenuItem(rb, "help", "breaktimer");
 		helpMenu.add(breakTimerHelpButton);
-		breakTimerHelpButton.addActionListener(_ -> breakTimer.doHelp());
+		breakTimerHelpButton.addActionListener(e -> breakTimer.doHelp());
 		final JMenuItem sourceButton = MenuUtils.mkMenuItem(rb, "help", "source_code");
 		sourceButton.setIcon(getMyImageIcon("octocat"));
-		sourceButton.addActionListener(_ -> {
+		sourceButton.addActionListener(e -> {
 			String url = programProps.getProperty(KEY_SOURCE_URL);
 			if (desktop == null) {
 				JOptionPane.showMessageDialog(controlFrame,
-                        STR."Java Desktop unsupported, visit \{url} on your own.");
+                        "Java Desktop unsupported, visit %s on your own.".formatted(url));
 			} else {
 				try {
 					desktop.browse(new URI(url));
 				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(controlFrame, STR."Failed to open browser to \{url}");
+					JOptionPane.showMessageDialog(controlFrame, 
+						"Failed to open browser to " + url);
 				}
 			}
 		});
@@ -502,16 +503,16 @@ public class SwingGUI {
 		navBox.setLayout(new GridLayout(0,2));
 
 		// Row 1 - just Up button
-		upButton.addActionListener(_-> moveToPage(currentTab.getPageNumber() - 1));
+		upButton.addActionListener(e-> moveToPage(currentTab.getPageNumber() - 1));
 		navBox.add(upButton);
-		downButton.addActionListener(_ -> moveToPage(currentTab.getPageNumber() + 1));
+		downButton.addActionListener(e -> moveToPage(currentTab.getPageNumber() + 1));
 		navBox.add(downButton);
 
 		JButton firstButton = new JButton(getMyImageIcon("Rewind"));
-		firstButton.addActionListener(_-> moveToPage(1));
+		firstButton.addActionListener(e-> moveToPage(1));
 		navBox.add(firstButton);
 		JButton lastButton = new JButton(getMyImageIcon("Fast-Forward"));
-		lastButton.addActionListener(_ -> moveToPage(currentTab.getPageCount()));
+		lastButton.addActionListener(e -> moveToPage(currentTab.getPageCount()));
 		navBox.add(lastButton);
 
 		// Row 2 - first page, # page, last page
@@ -523,7 +524,7 @@ public class SwingGUI {
 				pageNumTF.selectAll();
 			}
 		});
-		pageNumTF.addActionListener(_ -> {
+		pageNumTF.addActionListener(e -> {
 			String text = pageNumTF.getText();
 			try {
 				final int pgNum = Integer.parseInt(text.trim());
@@ -556,41 +557,41 @@ public class SwingGUI {
 		toolBox.setLayout(new GridLayout(0, 2));
 
 		// Mode buttons
-		selectButton.addActionListener(_ -> gotoState(viewState));
+		selectButton.addActionListener(e -> gotoState(viewState));
 		toolBox.add(selectButton);
 
-		textButton.addActionListener(_ -> gotoState(textDrawState));
+		textButton.addActionListener(e -> gotoState(textDrawState));
 		textButton.setToolTipText("Add text object");
 		toolBox.add(textButton);
 
-		markerButton.addActionListener(_ -> gotoState(markingState));
+		markerButton.addActionListener(e -> gotoState(markingState));
 		markerButton.setToolTipText("Add marker");
 		toolBox.add(markerButton);
 
-		lineButton.addActionListener(_ -> gotoState(lineDrawState));
+		lineButton.addActionListener(e -> gotoState(lineDrawState));
 		lineButton.setToolTipText("Add straight line");
 		toolBox.add(lineButton);
 
-		polyLineButton.addActionListener(_ -> gotoState(polyLineDrawState));
+		polyLineButton.addActionListener(e -> gotoState(polyLineDrawState));
 		polyLineButton.setToolTipText("Add a polyline");
 		toolBox.add(polyLineButton);
 
-		ovalButton.addActionListener(_ -> gotoState(ovalState));
+		ovalButton.addActionListener(e -> gotoState(ovalState));
 		ovalButton.setToolTipText("Add oval");
 		toolBox.add(ovalButton);
 
-		rectangleButton.addActionListener(_ -> gotoState(rectangleState));
+		rectangleButton.addActionListener(e -> gotoState(rectangleState));
 		rectangleButton.setToolTipText("Add rectangle");
 		toolBox.add(rectangleButton);
 
 		// Other buttons
 		final JButton clearButton = new JButton(getMyImageIcon("Trash"));
-		clearButton.addActionListener(_ -> currentTab.deleteAll());
+		clearButton.addActionListener(e -> currentTab.deleteAll());
 		clearButton.setToolTipText("Delete ALL objects");
 		toolBox.add(clearButton);
 
 		final JButton undoButton = new JButton(getMyImageIcon("Undo"));
-		undoButton.addActionListener(_ -> { currentTab.removeLastIn(); currentTab.repaint(); });
+		undoButton.addActionListener(e -> { currentTab.removeLastIn(); currentTab.repaint(); });
 		undoButton.setToolTipText("Undo last object");
 		toolBox.add(undoButton);
 
@@ -600,7 +601,7 @@ public class SwingGUI {
 		toolBox.add(feedbackButton);
 
 		final JButton starButton = new JButton(getMyImageIcon("Star"));
-		starButton.addActionListener(_ ->
+		starButton.addActionListener(e ->
 				JOptionPane.showMessageDialog(controlFrame, "Fave handling not written yet",
 						"Sorry", JOptionPane.WARNING_MESSAGE));
 		starButton.setToolTipText("Favorite this page");
@@ -613,7 +614,7 @@ public class SwingGUI {
 
 		JButton stop_show = new JButton("Stop slide show");
 		// toolBox.add(stop_show);
-		stop_show.addActionListener((_ -> done = true));
+		stop_show.addActionListener((e -> done = true));
 
 		return toolBox;
 	}
@@ -629,7 +630,7 @@ public class SwingGUI {
 		savePageNumbers = (boolean) b;
 	}
 
-	ActionListener showBreakTimer = _ ->  {
+	ActionListener showBreakTimer = e ->  {
 		boolean glassify = true;
 		if (glassify)
 			controlFrame.setGlassPane(jiffy);
@@ -640,7 +641,7 @@ public class SwingGUI {
 	};
 
     /** Runs a show "across tabs" */
-	ActionListener slideshowAcrossTabsAction = _ -> {
+	ActionListener slideshowAcrossTabsAction = e -> {
         done = false;
         final DocTab tab = currentTab;
         pool.submit(() -> {
@@ -695,8 +696,8 @@ public class SwingGUI {
         });
     }
 
-    ActionListener feedbackAction = _ -> {
-		String[] choices = { "Web-Comment", "Bug Report/Feature Req", "Email Team", "Cancel" }; // XXX  I18N this!
+    ActionListener feedbackAction = e -> {
+		String[] choices = { "Web-Comment", "Bug Report/Feature Req", "Email Team", "Cancel" }; // XXX I18N this!
 		int n = JOptionPane.showOptionDialog(controlFrame, "How to send feedback?", "Send Feedback",
                 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
 					choices, 0);
@@ -734,7 +735,7 @@ public class SwingGUI {
 				break;
 			}
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(controlFrame, STR."Unable to contact feedback form\n\{ex}",
+			JOptionPane.showMessageDialog(controlFrame, "Unable to contact feedback form\n" + ex,
 					"Feedback Fail!", JOptionPane.ERROR_MESSAGE);
 		}
 	};
@@ -847,7 +848,7 @@ public class SwingGUI {
 			try {
 				prefs.flush();
 			} catch (BackingStoreException e) {
-				JOptionPane.showMessageDialog(controlFrame, STR."Failed to save some prefs: \{e}");
+				JOptionPane.showMessageDialog(controlFrame, "Failed to save some prefs: " + e);
 				// Nothing can be done, alas.
 			}
 		}
@@ -857,7 +858,7 @@ public class SwingGUI {
 
 	private File chooseFile() {
 		String prevDir = prefs.get(KEY_FILECHOOSER_DIR, null);
-		logger.fine(STR."SwingGUI.chooseFile(): prevDir = \{prevDir}");
+		logger.fine("SwingGUI.chooseFile(): prevDir = " + prevDir);
 		String dir = prevDir != null ? prevDir :
 				System.getProperty("user.home");
 		JFileChooser fc = new JFileChooser(dir);
@@ -887,12 +888,12 @@ public class SwingGUI {
 		fc.showOpenDialog(controlFrame);
 		final File selectedFile = fc.getSelectedFile();
 		if (selectedFile != null) {
-			logger.fine(STR."SwingGUI.chooseFile(): put: \{selectedFile.getParent()}");
+			logger.fine("SwingGUI.chooseFile(): put: " + selectedFile.getParent());
 			prefs.put(KEY_FILECHOOSER_DIR, selectedFile.getParent());
 			try {
 				prefs.flush();
 			} catch (BackingStoreException e) {
-				JOptionPane.showMessageDialog(controlFrame, STR."Failed to save prefs: \{e}");
+				JOptionPane.showMessageDialog(controlFrame, "Failed to save prefs: " + e);
 				e.printStackTrace();
 			}
 		}
@@ -918,7 +919,9 @@ public class SwingGUI {
 		tabPane.setSelectedIndex(index);
 		ClosableTabHeader tabComponent = new ClosableTabHeader(this::closeFile, tabPane, t);
 		tabPane.setTabComponentAt(index, tabComponent);
-		int pageNum = savePageNumbers ? prefs.getInt(STR."PAGE#\{file.getName()}", -1) : 0;
+		int pageNum = savePageNumbers ? 
+			prefs.getInt("PAGE#" + file.getName(), -1)
+			: 0;
 		moveToPage(pageNum == -1 ? 0 : pageNum);
 		stopIndefiniteProgressBar();
 	}
@@ -929,7 +932,7 @@ public class SwingGUI {
 			viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
 		}
 		if (savePageNumbers) {
-			prefs.putInt(STR."PAGE#\{dt.getName()}", dt.getPageNumber());
+			prefs.putInt("PAGE#" + dt.getName(), dt.getPageNumber());
 		}
 		dt.close();
 	}
@@ -963,7 +966,7 @@ public class SwingGUI {
 
 	/** Convenience routine to get an application-local image */
 	private ImageIcon getMyImageIcon(String name) {
-		String fullName = STR."/images/\{name}";
+		String fullName = "/images/" + name;
 		return getImageIcon(fullName);
 	}
 
@@ -979,7 +982,7 @@ public class SwingGUI {
 				return new ImageIcon(imageURL);
 			}
 		}
-		throw new IllegalArgumentException(STR."No image: \{imgName}");
+		throw new IllegalArgumentException("No image: " + imgName);
 	}
 
 	// Old format, still needed for JFrame icon(?)
@@ -987,7 +990,7 @@ public class SwingGUI {
 		URL imageURL = getClass().getResource(imgName);
 
 		if (imageURL == null) {
-			throw new IllegalArgumentException(STR."No image: \{imgName}");
+			throw new IllegalArgumentException("No image: " + imgName);
 		}
 		return Toolkit.getDefaultToolkit().getImage(imageURL);
 	}
@@ -1049,7 +1052,7 @@ public class SwingGUI {
 				}
 				currentTab.renderer.renderPageToGraphics(pageNum, (Graphics2D) g, scaleX, scaleY);
 			} catch (IOException e) {
-				throw new RuntimeException(STR."Preview Rendering failed \{e}", e);
+				throw new RuntimeException("Preview Rendering failed: " + e);
 			}
 		}
 	}

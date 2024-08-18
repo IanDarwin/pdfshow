@@ -95,9 +95,6 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<compilerArgs>
-						<arg>--enable-preview</arg>
-					</compilerArgs>
 				</configuration>
 			</plugin>
 
@@ -113,9 +110,6 @@
 						<argument>samples/SampleShow.pdf</argument>
 						<argument>samples/SampleShow.pdf</argument>
 					</arguments>
-					<execArgs>
-						<execArg>--enable-preview</execArg>
-					</execArgs>
 				</configuration>
 			</plugin>
 

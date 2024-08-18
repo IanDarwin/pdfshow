@@ -54,7 +54,7 @@ public class Settings extends JPanel {
 					case INTEGER:
 						JButton lineWidthButton = I18N.mkButton(rb, name);
 						// XXX This could be done better - a slider with a live preview?
-						lineWidthButton.addActionListener(_ -> {
+						lineWidthButton.addActionListener(e -> {
 							String label = I18N.getString(rb, name + ".label", name);
 							String ret = JOptionPane.showInputDialog(label);
 							if (ret == null)
@@ -74,12 +74,12 @@ public class Settings extends JPanel {
 					case BOOLEAN:
 						final JCheckBox memoryBox = new JCheckBox(I18N.getString(rb, name, "Boolean"));
 						memoryBox.setSelected((Boolean)value);
-						memoryBox.addItemListener(_ -> mHandler.accept(memoryBox.isSelected()));
+						memoryBox.addItemListener(e -> mHandler.accept(memoryBox.isSelected()));
 						add(memoryBox);
 						break;
 					case FONT:
 						JButton fontButton = I18N.mkButton(rb, name);
-						fontButton.addActionListener(_ -> {
+						fontButton.addActionListener(e -> {
 							FontChooser fontChooser = new FontChooser(jf);
 							fontChooser.setSelectedFont((Font) handler.value());
 							fontChooser.setVisible(true);
@@ -93,7 +93,7 @@ public class Settings extends JPanel {
 						break;
 					case COLOR:
 						JButton colorButton = I18N.mkButton(rb, name);
-						colorButton.addActionListener(_ -> {
+						colorButton.addActionListener(e -> {
 							Color ch = JColorChooser.showDialog(
 									jf,             // parent
 									"Pick a Drawing Color",   // title
