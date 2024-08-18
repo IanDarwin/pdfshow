@@ -105,7 +105,8 @@ public class Settings extends JPanel {
 						add(colorButton);
 						break;
 					default:
-						throw new IllegalStateException(STR."Unknown Handler Type \{handler.type()}");
+						throw new IllegalStateException(
+								"Unknown Handler Type %s".formatted(handler.type()));
 				}
 			}
 		}
