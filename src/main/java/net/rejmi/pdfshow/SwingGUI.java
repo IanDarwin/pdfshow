@@ -20,12 +20,11 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
+import javax.print.Doc;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
-import com.darwinsys.swingui.BreakTimer;
-import com.darwinsys.swingui.MenuUtils;
-import com.darwinsys.swingui.RecentMenu;
+import com.darwinsys.swingui.*;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 
 /** 
@@ -87,14 +86,13 @@ public class SwingGUI {
 	Preview previewer;
 	RecentMenu recents;
 	private BreakTimer breakTimer;
+	ProgressBarSupport barHelper;
 
 	// For slide show
     ExecutorService pool = Executors.newSingleThreadExecutor();
     int slideTime = 10;
     boolean done = false;
 
-	// For "busy" popup
-	private JDialog progressDialog;
 	private MonitorMode monitorMode = MonitorMode.SINGLE;
 
 	/**
@@ -116,6 +114,7 @@ public class SwingGUI {
 
 		pickAScreenOrTwo();
 		createGuiAndListeners();
+		barHelper = new ProgressBarSupport(viewFrame,"Working...");
 		controlFrame.setJMenuBar(makeMenus());
 
 		gotoState(viewState);
@@ -180,10 +179,6 @@ public class SwingGUI {
 	}
 
 	void createGuiAndListeners() {
-		final JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
-		progressBar.setIndeterminate(true);
-		JFrame progressDialog = new JFrame("Loading");
-		progressDialog.add(progressBar);
 
 		// If view gets resized, must re-calc scaling
 		viewFrame.addComponentListener(new ComponentAdapter() { // cannot lambdafy
@@ -238,13 +233,15 @@ public class SwingGUI {
 		stop_show.addActionListener(e -> done = true);
 		JComponent stopButton = stop_show;
 		sidePanel.add(stopButton);
-		
+
+		sidePanel.add(new ColorPanel(GObject::setLineColor));
+		// sidePanel.add(new ColorPanel(GObject::setFillColor));
+
         // SETTINGS
 		sidePanel.add(new Settings(
 				controlFrame,
 				new SettingHandler("fontButton", SettingType.FONT, GObject.getFont(), GObject::setFont),
-				new SettingHandler("lineColorButton", SettingType.COLOR, GObject.getLineColor(), GObject::setLineColor),
-				new SettingHandler("fillColorButton", SettingType.COLOR, GObject.getFillColor(), GObject::setFillColor),
+				// new SettingHandler("fillColorButton", SettingType.COLOR, GObject.getFillColor(), GObject::setFillColor),
 				new SettingHandler("lineWidthButton", SettingType.INTEGER, GObject.getLineThickness(), GObject::setLineThickness),
 				new SettingHandler("slideDelayButton", SettingType.INTEGER, slideTime, this::setSlideTime),
 				new SettingHandler("memoryBox.label", SettingType.BOOLEAN, savePageNumbers, this::setSavePageNumbers)
@@ -907,23 +904,28 @@ public class SwingGUI {
 	private void openPdfFile(File file) throws IOException {
 		if (emptyViewScreenLabel != null)
 			viewFrame.remove(emptyViewScreenLabel);
-		startIndefiniteProgressBar();
-		DocTab t = new DocTab(file, prefs);
-		t.setFocusable(true);
-		t.addKeyListener(kl);
-		t.addMouseListener(ml);
-		t.addMouseMotionListener(mml);
+		barHelper.runWithProgressBar( () -> {
+			DocTab t = null;
+			try {
+				t = new DocTab(file, prefs);
+			} catch (IOException ex) {
+				throw new RuntimeException("Failed to load " + file, ex);
+			}
+					t.setFocusable(true);
+					t.addKeyListener(kl);
+					t.addMouseListener(ml);
+					t.addMouseMotionListener(mml);
 
-		tabPane.addTab(file.getName(), currentTab = t);
-		final int index = tabPane.getTabCount() - 1;
-		tabPane.setSelectedIndex(index);
-		ClosableTabHeader tabComponent = new ClosableTabHeader(this::closeFile, tabPane, t);
-		tabPane.setTabComponentAt(index, tabComponent);
-		int pageNum = savePageNumbers ? 
-			prefs.getInt("PAGE#" + file.getName(), -1)
-			: 0;
-		moveToPage(pageNum == -1 ? 0 : pageNum);
-		stopIndefiniteProgressBar();
+					tabPane.addTab(file.getName(), currentTab = t);
+					final int index = tabPane.getTabCount() - 1;
+					tabPane.setSelectedIndex(index);
+					ClosableTabHeader tabComponent = new ClosableTabHeader(this::closeFile, tabPane, t);
+					tabPane.setTabComponentAt(index, tabComponent);
+					int pageNum = savePageNumbers ?
+							prefs.getInt("PAGE#" + file.getName(), -1)
+							: 0;
+					moveToPage(pageNum == -1 ? 0 : pageNum);
+				}, () -> System.out.println("Done"));
 	}
 
 	void closeFile(DocTab dt) {
@@ -993,26 +995,6 @@ public class SwingGUI {
 			throw new IllegalArgumentException("No image: " + imgName);
 		}
 		return Toolkit.getDefaultToolkit().getImage(imageURL);
-	}
-
-	/** Show the indefinite progress bar */
-	void startIndefiniteProgressBar() {
-		new SwingWorker() {
-			@Override
-			protected Object doInBackground() {
-				progressDialog.setVisible(true);
-				return null;
-			}
-			@Override
-			protected void done() {
-				super.done();
-			}
-		}.execute();
-	}
-
-	/** Hide the indefinite progress bar */
-	void stopIndefiniteProgressBar() {
-		progressDialog.setVisible(false);
 	}
 
 	public void setMonitorMode(MonitorMode monitorMode) {
