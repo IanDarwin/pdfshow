@@ -40,7 +40,7 @@ abstract class GObject {
 
 	// Class Drawing Parameters - constructors should save what they need!
 	// Color starts with neutral blue - save Red for important stuff
-	static Color curLineColor = new Color(0x3399FF),
+	static Color defaultLineColor = new Color(0x3399FF),
 		curFillColor = new Color(0x00000000);	// Transparent(?)
 	static Font curFont = new Font("Sans", Font.PLAIN, 24);
 	static int curLineThickness = 3;
@@ -56,16 +56,16 @@ abstract class GObject {
 	GObject(int x, int y, int width, int height) {
 		this.x = x; this.y = y;
 		this.width = width; this.height = height;
-		lineColor = curLineColor;
+		lineColor = defaultLineColor;
 		fillColor = curFillColor;
 		lineThickness = curLineThickness;
 	}
 
-	public static Color getLineColor() {
-		return curLineColor;
+	public Color getLineColor() {
+		return lineColor;
 	}
 	public static void setLineColor(Object color) {
-		GObject.curLineColor = (Color)color;
+		GObject.defaultLineColor = (Color)color;
 	}
 
 	public static Color getFillColor() {
@@ -94,7 +94,7 @@ abstract class GObject {
 		render(g);
 		if (isSelected) {
 			((Graphics2D)g).setStroke(new BasicStroke(2));
-			g.setColor(Color.BLACK);
+			g.setColor(Color.RED);
 			g.drawRect(x-2, y-2, width + 2, height + 2);
 		}
 	}
@@ -168,7 +168,7 @@ class GText extends GObject {
 		font = curFont;
 	}
 	void render(Graphics g) {
-		g.setColor(curLineColor);
+		g.setColor(lineColor);
 		g.setFont(font);
 		g.drawString(text, x, y);
 	}
@@ -227,7 +227,7 @@ class GPolyLine extends GObject {
 	
 	void render(Graphics g) {
 		((Graphics2D)g).setStroke(new BasicStroke(lineThickness));
-		g.setColor(curLineColor);
+		g.setColor(lineColor);
 		// Translate
 		int lastX = x, lastY = y;
 		for (int i = 0; i < nPoints; i++) {
@@ -264,7 +264,7 @@ class GRectangle extends GObject {
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setStroke(new BasicStroke(lineThickness));
-		g.setColor(curLineColor);
+		g.setColor(lineColor);
 		g.drawRect(x, y, width, height);
 	}
 }
@@ -277,7 +277,7 @@ class GOval extends GObject {
 	}
 	void render(Graphics g) {
 		((Graphics2D)g).setStroke(new BasicStroke(lineThickness));
-		g.setColor(curLineColor);
+		g.setColor(lineColor);
 		g.drawOval(x, y, width, height);
 	}
 }
