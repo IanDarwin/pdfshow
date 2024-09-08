@@ -20,7 +20,6 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
-import javax.print.Doc;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
@@ -228,11 +227,10 @@ public class SwingGUI {
 		JPanel toolBox = makeToolbox();
 		sidePanel.add(toolBox);
 
-		JButton stop_show = new JButton("Stop slide show");
-		// toolBox.add(stop_show);
-		stop_show.addActionListener(e -> done = true);
-		JComponent stopButton = stop_show;
-		sidePanel.add(stopButton);
+		JButton stopShowButton = new JButton("Stop slide show");
+		// toolBox.add(stopShowButton);
+		stopShowButton.addActionListener(e -> done = true);
+		sidePanel.add(stopShowButton);
 
 		sidePanel.add(new ColorPanel(GObject::setLineColor));
 		// sidePanel.add(new ColorPanel(GObject::setFillColor));
@@ -780,6 +778,7 @@ public class SwingGUI {
 	void showFileProps() {
 		final PDDocumentInformation docInfo = currentTab.doc.getDocumentInformation();
 		var sb = new StringBuilder();
+		sb.append("Document Properties:").append('\n');
 		sb.append("Title: ").append(docInfo.getTitle()).append('\n');
 		sb.append("Author: ").append(docInfo.getAuthor()).append('\n');
 		sb.append("Producer: ").append(docInfo.getProducer()).append('\n');
@@ -905,27 +904,27 @@ public class SwingGUI {
 		if (emptyViewScreenLabel != null)
 			viewFrame.remove(emptyViewScreenLabel);
 		barHelper.runWithProgressBar( () -> {
-			DocTab t = null;
+			DocTab t;
 			try {
 				t = new DocTab(file, prefs);
 			} catch (IOException ex) {
 				throw new RuntimeException("Failed to load " + file, ex);
 			}
-					t.setFocusable(true);
-					t.addKeyListener(kl);
-					t.addMouseListener(ml);
-					t.addMouseMotionListener(mml);
+			t.setFocusable(true);
+			t.addKeyListener(kl);
+			t.addMouseListener(ml);
+			t.addMouseMotionListener(mml);
 
-					tabPane.addTab(file.getName(), currentTab = t);
-					final int index = tabPane.getTabCount() - 1;
-					tabPane.setSelectedIndex(index);
-					ClosableTabHeader tabComponent = new ClosableTabHeader(this::closeFile, tabPane, t);
-					tabPane.setTabComponentAt(index, tabComponent);
-					int pageNum = savePageNumbers ?
-							prefs.getInt("PAGE#" + file.getName(), -1)
-							: 0;
-					moveToPage(pageNum == -1 ? 0 : pageNum);
-				}, () -> System.out.println("Done"));
+			tabPane.addTab(file.getName(), currentTab = t);
+			final int index = tabPane.getTabCount() - 1;
+			tabPane.setSelectedIndex(index);
+			ClosableTabHeader tabComponent = new ClosableTabHeader(this::closeFile, tabPane, t);
+			tabPane.setTabComponentAt(index, tabComponent);
+			int pageNum = savePageNumbers ?
+					prefs.getInt("PAGE#" + file.getName(), -1)
+					: 0;
+			moveToPage(pageNum == -1 ? 0 : pageNum);
+		}, () -> System.out.println("Done"));
 	}
 
 	void closeFile(DocTab dt) {
