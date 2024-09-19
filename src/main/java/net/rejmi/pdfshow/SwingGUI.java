@@ -271,8 +271,7 @@ public class SwingGUI {
 		JMenu fm = MenuUtils.mkMenu(rb, "file");
 		menuBar.add(fm);
 		JMenuItem miOpen = MenuUtils.mkMenuItem(rb, "file", "open");
-		miOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
-                InputEvent.CTRL_MASK));
+		miOpen.setAccelerator(KeyStroke.getKeyStroke("control O"));
 		fm.add(miOpen);
 		recents = new RecentMenu(prefs, 10) {
 			@Serial
@@ -323,8 +322,7 @@ public class SwingGUI {
 
 		fm.addSeparator();
 		JMenuItem miPrint = MenuUtils.mkMenuItem(rb, "file", "print");
-		miPrint.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
-			InputEvent.CTRL_MASK));
+		miPrint.setAccelerator(KeyStroke.getKeyStroke("control P"));
 		miPrint.addActionListener(e ->
 			JOptionPane.showMessageDialog(controlFrame, "Sorry, not implemented yet"));
 		fm.add(miPrint);
@@ -586,7 +584,15 @@ public class SwingGUI {
 		toolBox.add(clearButton);
 
 		final JButton undoButton = new JButton(getMyImageIcon("Undo"));
-		undoButton.addActionListener(e -> { currentTab.removeLastIn(); currentTab.repaint(); });
+		Action performUndo = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				currentTab.removeLastIn(); currentTab.repaint();
+			}
+		};
+		undoButton.getActionMap().put("performUndo", performUndo);
+		undoButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+				.put(KeyStroke.getKeyStroke("control Z"), "performUndo");
 		undoButton.setToolTipText("Undo last object");
 		toolBox.add(undoButton);
 
