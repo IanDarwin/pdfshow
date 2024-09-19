@@ -5,6 +5,8 @@ import javax.swing.JOptionPane;
 
 public class Main {
 
+	public static boolean debug = false;
+
     public static void main(String[] args) throws Exception {
 
         // Instantiate main class
@@ -15,6 +17,10 @@ public class Main {
         for (String arg : args) {
             if (arg.startsWith("-")) {
                 switch (arg) {
+					case "-d":
+						debug = true;
+                        ++argsUsed;
+						break;
                     case "-s":
                     case "--single":
                         instance.setMonitorMode(MonitorMode.SINGLE);

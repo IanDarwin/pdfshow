@@ -69,7 +69,9 @@ abstract class State {
 			}
 				
 		}
-		SwingGUI.logger.warning("Unhandled key event: " + e);
+		if (Main.debug) {
+			SwingGUI.logger.warning("Unhandled key event: " + e);
+		}
 	}
 
 	public void mouseClicked(MouseEvent e) {
