@@ -183,13 +183,20 @@ public class SwingGUI {
 	void createGuiAndListeners() {
 
 		viewFrame.addMouseWheelListener(evt -> {
-			System.out.println("Wheeling: " + evt.getWheelRotation());
+
 			// WheelRotation is 1 for down, -1 for up
 			// Skip is b/c we get two events for every move, awt bug?
-			if (!skip) {
-				moveToPage(currentTab.getPageNumber() + evt.getWheelRotation());
+			if (currentTab != null) {
+				if (skip) {
+					if (Main.debug)
+						System.out.println("Skip wheeling");
+				} else {
+					if (Main.debug)
+						System.out.println("Wheeling: " + (evt.getWheelRotation() < 0 ? "up" : "down"));
+					moveToPage(currentTab.getPageNumber() + evt.getWheelRotation());
+				}
+				skip = !skip;
 			}
-			skip = !skip;
 		});
 
 		// If view gets resized, must re-calc scaling
