@@ -7,8 +7,12 @@ public class Main {
 
 	public static boolean debug = false;
 
+    public static boolean isMac = false;
+
     public static void main(String[] args) throws Exception {
 
+        isMac = System.getenv("mrj.version") != null;
+        System.out.println("isMac = " + isMac);
         // Instantiate main class
         SwingGUI instance = new SwingGUI();
 
