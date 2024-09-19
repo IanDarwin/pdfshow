@@ -25,6 +25,8 @@ Or maybe you want to re-give somebody else's preso from the PDF-only version the
 Or yet again, maybe you use the open-source
 https://staff.fnwi.uva.nl/b.diertens/useful/gpresent/[gpresent],
 which doesn't actually present shows but generates the PDF and leaves it to others to present.
+Or the https://docs.asciidoctor.org/reveal.js-converter/latest/converter/features/[
+	AsciiDoctor+Reveal.js tooling] which can create PDF slides from AsciiDoc.
 Or the Markdown-based https://marp.app/[MARP], which can generate PDFs directly from markdown files.
 Or the MagicPoint-based https://mg.pov.lt/mgp2pdf/[MagicPoint to PDF Converter].
 Whatever the reason you need to present with just the PDF of the slides,
