@@ -175,9 +175,22 @@ public class SwingGUI {
 		final Image iconImage = getImage("/images/logo.png");
 		logger.fine("SwingGUI.SwingGUI(): " + iconImage);
 		controlFrame.setIconImage(iconImage);
+
 	}
 
+	private boolean skip = false;
+
 	void createGuiAndListeners() {
+
+		viewFrame.addMouseWheelListener(evt -> {
+			System.out.println("Wheeling: " + evt.getWheelRotation());
+			// WheelRotation is 1 for down, -1 for up
+			// Skip is b/c we get two events for every move, awt bug?
+			if (!skip) {
+				moveToPage(currentTab.getPageNumber() + evt.getWheelRotation());
+			}
+			skip = !skip;
+		});
 
 		// If view gets resized, must re-calc scaling
 		viewFrame.addComponentListener(new ComponentAdapter() { // cannot lambdafy
