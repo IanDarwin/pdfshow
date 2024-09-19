@@ -6,11 +6,15 @@ The release notes for current and past releases are in the github under releases
 
 v1.0.5 "Clock Watcher" is a minor revision; changes include:
 
+* Scroll wheel support! For moving from page to page.
+* Color picker bar in left panel w/ 7 predefs and a picker launcher
+* CTRL/Z alias for Undo button, for undoing one or more draw commands
 * Adds background images to the break timer;
 * Corrects some minor bugs;
 * Adds Delete Page function (non-persistent);
 * Pointer mode pops back to View after adding Text item;
 * Custom slide show (contiguous range only);
+* Defaults to single monitor even on dual-monitor setups.
 
 == Version 1.0.4, 2023-05
 
