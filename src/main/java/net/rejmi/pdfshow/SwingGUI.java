@@ -616,7 +616,7 @@ public class SwingGUI {
 		undoButton.getActionMap().put("performUndo", performUndo);
 		undoButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 				.put(KeyStroke.getKeyStroke(
-						Main.isMac ? "meta O" : "control O"),
+						Main.isMac ? "meta Z" : "control Z"),
 				"performUndo");
 		undoButton.setToolTipText("Undo last object");
 		toolBox.add(undoButton);
