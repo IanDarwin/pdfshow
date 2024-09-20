@@ -191,9 +191,10 @@ public class SwingGUI {
 					if (Main.debug)
 						System.out.println("Skip wheeling");
 				} else {
+					int incr = Main.isMac ? -evt.getWheelRotation() : evt.getWheelRotation();
 					if (Main.debug)
-						System.out.println("Wheeling: " + (evt.getWheelRotation() < 0 ? "up" : "down"));
-					moveToPage(currentTab.getPageNumber() + evt.getWheelRotation());
+						System.out.println("Wheeling: " + (incr > 0 ? "up" : "down"));
+					moveToPage(currentTab.getPageNumber() + incr);
 				}
 				skip = !skip;
 			}
@@ -291,7 +292,8 @@ public class SwingGUI {
 		JMenu fm = MenuUtils.mkMenu(rb, "file");
 		menuBar.add(fm);
 		JMenuItem miOpen = MenuUtils.mkMenuItem(rb, "file", "open");
-		miOpen.setAccelerator(KeyStroke.getKeyStroke("control O"));
+		miOpen.setAccelerator(KeyStroke.getKeyStroke(
+				Main.isMac ? "meta O" : "control O"));
 		fm.add(miOpen);
 		recents = new RecentMenu(prefs, 10) {
 			@Serial
@@ -342,7 +344,8 @@ public class SwingGUI {
 
 		fm.addSeparator();
 		JMenuItem miPrint = MenuUtils.mkMenuItem(rb, "file", "print");
-		miPrint.setAccelerator(KeyStroke.getKeyStroke("control P"));
+		miPrint.setAccelerator(KeyStroke.getKeyStroke(
+				Main.isMac ? "meta P" : "control P"));
 		miPrint.addActionListener(e ->
 			JOptionPane.showMessageDialog(controlFrame, "Sorry, not implemented yet"));
 		fm.add(miPrint);
@@ -612,7 +615,9 @@ public class SwingGUI {
 		};
 		undoButton.getActionMap().put("performUndo", performUndo);
 		undoButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-				.put(KeyStroke.getKeyStroke("control Z"), "performUndo");
+				.put(KeyStroke.getKeyStroke(
+						Main.isMac ? "meta O" : "control O"),
+				"performUndo");
 		undoButton.setToolTipText("Undo last object");
 		toolBox.add(undoButton);
 
