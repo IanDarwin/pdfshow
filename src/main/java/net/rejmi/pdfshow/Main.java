@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        isMac = System.getenv("mrj.version") != null;
+        isMac = System.getProperty("os.name").toLowerCase().startsWith("mac");
         System.out.println("isMac = " + isMac);
         // Instantiate main class
         SwingGUI instance = new SwingGUI();
