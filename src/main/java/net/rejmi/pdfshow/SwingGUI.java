@@ -604,12 +604,15 @@ public class SwingGUI {
 		toolBox.add(clearButton);
 
 		final JButton undoButton = new JButton(getMyImageIcon("Undo"));
-		Action performUndo = new AbstractAction() {
+		// Have to give a name if give an icon, but we only want the icon.
+		Action performUndo = new AbstractAction("",
+				getMyImageIcon("Undo")) {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				currentTab.removeLastIn(); currentTab.repaint();
 			}
 		};
+		undoButton.setAction(performUndo);
 		undoButton.getActionMap().put("performUndo", performUndo);
 		undoButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 				.put(KeyStroke.getKeyStroke(
