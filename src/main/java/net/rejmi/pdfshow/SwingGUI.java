@@ -191,10 +191,7 @@ public class SwingGUI {
 					if (Main.debug)
 						System.out.println("Skip wheeling");
 				} else {
-					int incr = Main.isMac ? -evt.getWheelRotation() : evt.getWheelRotation();
-					if (Main.debug)
-						System.out.println("Wheeling: " + (incr > 0 ? "up" : "down"));
-					moveToPage(currentTab.getPageNumber() + incr);
+                    moveToPage(currentTab.getPageNumber() + evt.getWheelRotation());
 				}
 				skip = !skip;
 			}
