@@ -68,6 +68,7 @@ public class SwingGUI {
 	JFrame controlFrame;
 	static JFrame viewFrame;
 	private final JTabbedPane tabPane = new DnDTabbedPane();
+	JDesktopPane desktopPane;
 	JInternalFrame jiffy;
 	JLabel emptyViewScreenLabel;
 	DocTab currentTab;
@@ -380,44 +381,7 @@ public class SwingGUI {
 		favoritesMI.setEnabled(false);
 		viewMenu.add(favoritesMI);
 
-		jiffy = new JInternalFrame("Timer", true, true, true, true);
-
-		// Find "any" (up to 9) background images for timer;
-		// images can be in ~/.pdfshow/images or on classpath (e.g., in Jar file).
-		List<Image> all = new ArrayList<>();
-		var tilde = System.getProperty("user.home");
-		var myDir = tilde + "/" + ".pdfshow";
-		if (Files.isDirectory(Path.of(myDir))) {
-			System.out.println("mydir = " + myDir);
-			IntStream.rangeClosed(1, 9)
-					.mapToObj(n ->
-							myDir + "/images/break-background" + n + ".png")
-					.filter(s -> Path.of(s).toFile().canRead())
-					.map(path -> new ImageIcon(path).getImage())
-					.forEach(all::add);
-		}
-		List<Image> res = new ArrayList<>();
-		IntStream.rangeClosed(1,9)
-				.mapToObj(n->"/images/break-background"+n+".png")
-				.map(fn->getClass().getResource(fn))
-				.filter(Objects::nonNull)
-				.forEach(url -> {
-                     try {
-						Image image = ImageIO.read(url);
-						res.add(image);
-					} catch (IOException e) {
-						System.out.println("Image didn't load!");
-					}
-				});
-		all.addAll(res);
-
-		System.out.println("Total BreakTimer Images = " + all.size());
-		breakTimer = new BreakTimer(jiffy, all);
-
-		JMenuItem breakTimerMI = MenuUtils.mkMenuItem(rb, "view","break_timer");
-
-		breakTimerMI.addActionListener(showBreakTimer);
-		viewMenu.add(breakTimerMI);
+		setupBreakTimer(rb, viewMenu);
 
 		final JMenu slideshowMenu = MenuUtils.mkMenu(rb, "slideshow");
 		menuBar.add(slideshowMenu);
@@ -501,6 +465,54 @@ public class SwingGUI {
 		helpMenu.add(feedbackMI);
 
 		return menuBar;
+	}
+
+	//
+	// BREAK TIMER STUFF
+	//
+	private void setupBreakTimer(ResourceBundle rb, JMenu viewMenu) {
+		// Find "any" (up to 9) background images for timer;
+		// images can be in ~/.pdfshow/images or on classpath (e.g., in Jar file).
+		List<Image> all = new ArrayList<>();
+		var tilde = System.getProperty("user.home");
+		var myDir = tilde + "/" + ".pdfshow";
+		if (Files.isDirectory(Path.of(myDir))) {
+			System.out.println("User's images dir = " + myDir);
+			IntStream.rangeClosed(1, 9)
+					.mapToObj(n ->
+							myDir + "/images/break-background" + n + ".png")
+					.filter(s -> Path.of(s).toFile().canRead())
+					.map(path -> new ImageIcon(path).getImage())
+					.forEach(all::add);
+		}
+		List<Image> res = new ArrayList<>();
+		IntStream.rangeClosed(1,9)
+				.mapToObj(n->"/images/break-background"+n+".png")
+				.map(fn->getClass().getResource(fn))
+				.filter(Objects::nonNull)
+				.forEach(url -> {
+                     try {
+						Image image = ImageIO.read(url);
+						res.add(image);
+					} catch (IOException e) {
+						System.out.println("Image didn't load!");
+					}
+				});
+		all.addAll(res);
+		System.out.println("Total BreakTimer Images = " + all.size());
+
+		// Now some GUI stuff
+		desktopPane = new JDesktopPane();
+		viewFrame.setGlassPane(desktopPane);
+		desktopPane.setOpaque(false);
+		desktopPane.setVisible(true);
+		jiffy = new JInternalFrame("Timer", true, false, true, true);
+		breakTimer = new BreakTimer(jiffy, all);
+		desktopPane.add(jiffy);
+
+		JMenuItem breakTimerMI = MenuUtils.mkMenuItem(rb, "view","break_timer");
+		breakTimerMI.addActionListener(showBreakTimer);
+		viewMenu.add(breakTimerMI);
 	}
 
 	void recentsClear() {
@@ -657,11 +669,8 @@ public class SwingGUI {
 	}
 
 	ActionListener showBreakTimer = e ->  {
-		boolean glassify = true;
-		if (glassify)
-			controlFrame.setGlassPane(jiffy);
-		else
-			controlFrame.add(jiffy); // Fails
+		System.out.println("SwingGUI.showBreakTimer");
+		jiffy.setLocation(50, 50);
 		jiffy.setSize(800,600);
 		jiffy.setVisible(true);
 	};
