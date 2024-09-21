@@ -25,6 +25,8 @@ v1.0.5 "Clock Watcher" is a minor revision; changes include:
 * Text draw dialog, hitting ESC or Cancel leaves "Uninitialized Value" text.
 * Drawn objects sometimes drawn in wrong places.
 * Still can't select text or find text. Sorry.
+* Mac only: The color selector is drawn too large on some screens, but 
+all the colors are at least clickable.
 
 == Version 1.0.4, 2023-05
 
