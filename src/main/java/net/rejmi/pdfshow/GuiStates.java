@@ -67,15 +67,12 @@ abstract class State {
 					return;
 				}
 			}
-				
 		}
-		if (Main.debug) {
-			SwingGUI.logger.warning("Unhandled key event: " + e);
-		}
+		SwingGUI.instance.handleKey(e.getKeyChar());
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		// probably want to override this
+		// most will probably want to override this
 	}
 
 	public void mousePressed(MouseEvent e) {

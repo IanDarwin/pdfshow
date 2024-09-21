@@ -2,11 +2,10 @@
 
 The release notes for current and past releases are in the github under releases.
 
-== Version 1.0.5, 2024-08
+== Version 1.0.5, 2024-09-21
 
 v1.0.5 "Clock Watcher" is a minor revision; changes include:
 
-* **TODO** SELECT TEXT
 * Break timer now in own "JFrame" window, works correctly.
 * Scroll wheel support! For moving from page to page.
 * Color picker bar in left panel w/ 7 predefs and a picker launcher
@@ -20,6 +19,12 @@ v1.0.5 "Clock Watcher" is a minor revision; changes include:
 * Corrects several minor bugs, including:
 ** Color choice was static, not per-object
 ** View window came up wrong size if you have two monitors
+
+=== Known Issues/Bugs
+
+* Text draw dialog, hitting ESC or Cancel leaves "Uninitialized Value" text.
+* Drawn objects sometimes drawn in wrong places.
+* Still can't select text or find text. Sorry.
 
 == Version 1.0.4, 2023-05
 

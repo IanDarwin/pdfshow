@@ -805,6 +805,30 @@ public class SwingGUI {
 		currentState.enterState();
 	}
 
+	protected void handleKey(char keyChar) {
+		switch(keyChar) {
+			case 't':
+				gotoState(textDrawState);break;
+			case 'm':
+				gotoState(markingState); break;
+			case 'l':
+				gotoState(lineDrawState); break;
+			case 'w':
+				gotoState(polyLineDrawState); break;
+			case 'o':
+				gotoState(ovalState); break;
+			case 'r':
+				gotoState(rectangleState); break;
+			case 'v':
+				gotoState(viewState); break;
+			default:
+				if (Main.debug) {
+					System.out.println("Unhandled key " + keyChar);
+				}
+		}
+
+	}
+
 	void returnToViewState() {
 		SwingGUI.gotoState(viewState);
 	}
