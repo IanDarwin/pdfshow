@@ -11,3 +11,4 @@ target
 *.html
 pdfshow-runtime 
 *.iml
+.DS_Store
