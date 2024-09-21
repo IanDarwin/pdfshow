@@ -68,8 +68,7 @@ public class SwingGUI {
 	JFrame controlFrame;
 	static JFrame viewFrame;
 	private final JTabbedPane tabPane = new DnDTabbedPane();
-	JDesktopPane desktopPane;
-	JInternalFrame jiffy;
+	JFrame jiffy;
 	JLabel emptyViewScreenLabel;
 	DocTab currentTab;
 	private final JButton upButton = new JButton(getMyImageIcon("Chevron-Up")),
@@ -502,16 +501,18 @@ public class SwingGUI {
 		System.out.println("Total BreakTimer Images = " + all.size());
 
 		// Now some GUI stuff
-		desktopPane = new JDesktopPane();
-		viewFrame.setGlassPane(desktopPane);
-		desktopPane.setOpaque(false);
-		desktopPane.setVisible(true);
-		jiffy = new JInternalFrame("Timer", true, false, true, true);
+		jiffy = new JFrame("Timer");
+		// Set size and location for when non-maximized
+		jiffy.setLocation(100, 100);
+		jiffy.setSize(new Dimension(800, 600));
+		// But start maximized anyway, as it's more impressive.
+		jiffy.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		breakTimer = new BreakTimer(jiffy, all);
-		desktopPane.add(jiffy);
 
 		JMenuItem breakTimerMI = MenuUtils.mkMenuItem(rb, "view","break_timer");
-		breakTimerMI.addActionListener(showBreakTimer);
+		breakTimerMI.addActionListener(e ->  {
+			jiffy.setVisible(true);
+		});
 		viewMenu.add(breakTimerMI);
 	}
 
@@ -646,7 +647,9 @@ public class SwingGUI {
 		toolBox.add(starButton);
 
 		final JButton timerButton = new JButton(getMyImageIcon("Timer"));
-		timerButton.addActionListener(showBreakTimer);
+		timerButton.addActionListener(e1 ->  {
+			jiffy.setVisible(true);
+		});
 		timerButton.setToolTipText("Open Break Timer");
 		toolBox.add(timerButton);
 
@@ -668,14 +671,7 @@ public class SwingGUI {
 		savePageNumbers = (boolean) b;
 	}
 
-	ActionListener showBreakTimer = e ->  {
-		System.out.println("SwingGUI.showBreakTimer");
-		jiffy.setLocation(50, 50);
-		jiffy.setSize(800,600);
-		jiffy.setVisible(true);
-	};
-
-    /** Runs a show "across tabs" */
+	/** Runs a show "across tabs" */
 	ActionListener slideshowAcrossTabsAction = e -> {
         done = false;
         final DocTab tab = currentTab;

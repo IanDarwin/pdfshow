@@ -6,8 +6,8 @@ The release notes for current and past releases are in the github under releases
 
 v1.0.5 "Clock Watcher" is a minor revision; changes include:
 
-* **TODO** Fix break timer display: iconable or internaldialog?
 * **TODO** SELECT TEXT
+* Break timer now in own "JFrame" window, works correctly.
 * Scroll wheel support! For moving from page to page.
 * Color picker bar in left panel w/ 7 predefs and a picker launcher
 * CTRL/Z alias for Undo button, for undoing one or more draw commands
