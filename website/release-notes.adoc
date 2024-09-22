@@ -26,6 +26,7 @@ v1.0.5 "Clock Watcher" is a minor revision; changes include:
 * Text draw dialog, hitting ESC or Cancel leaves "Uninitialized Value" text.
 * Drawn objects sometimes drawn in wrong places.
 * Still can't select text or find text. Sorry.
+* A weird buglet in the pdf library prevents drawing on pages where there is a JPEG image.
 * Mac only: The color selector is drawn too large on some screens, but 
 all the colors are at least clickable.
 
