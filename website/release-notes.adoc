@@ -5,6 +5,7 @@ The release notes for current and past releases are in the github under releases
 == PLANNED for 1.0.6
 
 * Key shortcuts for graphics modes work in main window and in sidebar.
+* All graphic tools to be non-sticky, like Draw Text is now..
 
 == Version 1.0.5, 2024-09-21
 

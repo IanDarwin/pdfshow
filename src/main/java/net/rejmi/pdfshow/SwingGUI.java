@@ -436,9 +436,20 @@ public class SwingGUI {
 						JOptionPane.INFORMATION_MESSAGE));
 		helpMenu.add(aboutButton);
 		final JMenuItem helpButton = MenuUtils.mkMenuItem(rb, "help", "help");
-		helpButton.addActionListener(e ->
-				JOptionPane.showMessageDialog(controlFrame, "Help not written yet",
-						"Sorry", JOptionPane.WARNING_MESSAGE));
+		helpButton.addActionListener(e -> {
+			String url = programProps.getProperty(KEY_HOME_URL);
+			if (desktop == null) {
+				JOptionPane.showMessageDialog(controlFrame,
+						"Java Desktop unsupported, visit %s on your own.".formatted(url));
+			} else {
+				try {
+					desktop.browse(new URI(url));
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(controlFrame,
+							"Failed to open browser to " + url);
+				}
+			}
+		});
 		helpMenu.add(helpButton);
 		final JMenuItem breakTimerHelpButton = MenuUtils.mkMenuItem(rb, "help", "breaktimer");
 		helpMenu.add(breakTimerHelpButton);
@@ -821,6 +832,9 @@ public class SwingGUI {
 		public void keyPressed(KeyEvent e) {
 			System.out.println("keyPressed: " + e.getKeyChar());
 			switch (e.getKeyChar()) {
+				case 's':
+					gotoState(viewState);
+					break;
 				case 't':
 					gotoState(textDrawState);
 					break;

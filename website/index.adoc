@@ -10,21 +10,23 @@ just run your show in KeyNote, LibreOffice or PowerPoint.
 However, if you like to scribble all over the slides in your PDF slide deck each time you run your course,
 to make the slides come alive, then `PdfShow` may be right for you.
 
-Wait! Who presents from PDFs?
-Maybe you have to present a talk and you only have the PDF, not the ODP, KeyNote or PPT file(s).
-Some training companies just distribute their courses to instructors as PDFs, 
+Wait! Who presents from PDFs? *Lots of people!*
+Maybe you need to present a talk and you only have the PDF, not the ODP, KeyNote or PPTx file(s).
+Some training companies only distribute their courses to instructors as PDFs, 
 not presentation-software files.
 Or maybe you want to re-give somebody else's preso from the PDF-only version they published online
 (if you do this, make sure to ask permission/give credit/respect copyrights+licenses).
-Or yet again, maybe you use the open-source
-https://staff.fnwi.uva.nl/b.diertens/useful/gpresent/[gpresent],
+Or yet again, maybe you use one of the open-source tools that generates slide-decks in PDF:
+
+* https://staff.fnwi.uva.nl/b.diertens/useful/gpresent/[gpresent],
 which doesn't actually present shows but generates the PDF and leaves it to others to present.
-Or the https://docs.asciidoctor.org/reveal.js-converter/latest/converter/features/[
-       AsciiDoctor+Reveal.js tooling] which can create PDF slides from AsciiDoc.
-Or the Markdown-based https://marp.app/[MARP], which can generate PDFs directly from markdown files.
-Or the MagicPoint-based https://mg.pov.lt/mgp2pdf/[MagicPoint to PDF Converter].
-Whatever the reason you need to present with just the PDF of the slides,
-`PdfShow` is for you!
+* the https://docs.asciidoctor.org/reveal.js-converter/latest/converter/features/[
+AsciiDoctor+Reveal.js tooling] which can create PDF slides from AsciiDoc.
+* the Markdown-based https://marp.app/[MARP], which can generate PDFs directly from markdown files.
+* the MagicPoint-based https://mg.pov.lt/mgp2pdf/[MagicPoint to PDF Converter].
+
+Whatever the reason, when you need to present with just the PDF of the slides,
+`PdfShow` is right for you!
 
 image::images/SampleShow.png[width="800"]
 
@@ -51,9 +53,10 @@ For a full installer (which installs a compatible version of Java along with the
 * the `pdfshow`-x.x.x.rpm for dnf/yum/RPM-based Linux Systems (RHEL, Rocky, Fedora, etc;
 installs in _/opt/pdfshow_).
 
-I don't have a Deb/Ubuntu Linux at the moment.
+I don't have a Deb/Ubuntu Linux to build on at the moment.
 
-== Using It
+[[using_pdfshow]]
+== Using PdfShow
 
 On most systems you can start the program from the GUI, or from the command line if you prefer.
 
@@ -100,15 +103,27 @@ There are multiple draw tool icons in the toolbox.
 The Text button is not sticky; you draw one text and the program reverts to "selection" mode.
 The draw line/polyline/oval/rectangle buttons _are_ sticky, that is, to draw two lines, click the line icon, draw one line, then you can draw another without re-clicking the line icon.
 
-The toolbox has icons for straight line, polyline oval, and rectangle.
+Besides Text, the toolbox also has icons for select mode, marking/highlight mode,
+straight line, polyline, oval, and rectangle.
 Each of these will rubber-band as you draw it, like most draw programs.
 The Text icon pops up a dialog for the text; the others just let you draw.
 Each graphic object that you attach to a page will stay with that page
 until you close the file or exit the application.
 
-They are not saved on disk, since that goes against the "make your slides come alive" mantra.
-But I am open to well-reasoned arguments in favor of saving them into the PDF,
-especially if accompanied by a "pull request" containing working code.
+You can select the draw tools by clicking, but you can also select them by keyboard shortcuts:
+
+[[draw-shortcuts]]
+.Draw Tool Keyboard Shortcuts
+[options="header",cols="2,4"]
+|====
+|s|Select
+|t|Text
+|m|Marking
+|l|Line (straight)
+|w|Line (wiggly, a.k.a. PolyLine)
+|o|Oval/Circle
+|r|Rectangle/Square
+|====
 
 The Undo button (or CTRL/Z CMD/Z) removes the most-recently added graphic each time it's pressed.
 To delete an arbitrary graphic, click the `Select` icon then select the item
@@ -116,6 +131,11 @@ you want to get rid of, then either use the `Delete` key (if it's not mapped to
 VK_UP as it is on some systems) or use the `Edit->Delete Selected` menu item.
 The Trash Can icon is the most drastic: it removes *all* graphics from the current page.
 There's no undo for this at the moment.
+
+Items that you draw are _not_ saved on disk, since that would go against the 
+"make your slides come alive" mantra.
+But I am open to well-reasoned arguments in favor of saving them into the PDF,
+especially if accompanied by a "pull request" containing working code.
 
 === Auto Show Mode
 

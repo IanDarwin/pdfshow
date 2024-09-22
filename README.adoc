@@ -95,7 +95,7 @@ On Linux, for DEBs, you may need `fakeroot` (sudo apt install fakeroot).
 
 The install formats are:
 
-[[table-name]]
+[[install-formats]]
 .The Installer Formats
 [options="header",cols="2,4,3"]
 |====
