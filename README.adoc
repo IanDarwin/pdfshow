@@ -1,7 +1,7 @@
 ifndef::ver[]
 :ver: 1.0.5
 endif::[]
-:sillyName: Clock watching
+:sillyName: Clock watcher
 ifndef::current-java-ver[]
 :current-java-ver: Java 21
 endif::[]
@@ -9,7 +9,7 @@ endif::[]
 :releases-link: {gh-url}/releases
 :download-link: {releases-link}/download/v{ver}
 
-= PdfShow Version {ver} ({sillyName})
+= PdfShow Version {ver} ("{sillyName}")
 
 `PdfShow` is a PDF viewer specifically for running slide shows.
 I wrote it because I sometimes teach from PDFs and was tired of general-purpose programs 
