@@ -2,6 +2,10 @@
 
 The release notes for current and past releases are in the github under releases.
 
+== PLANNED for 1.0.6
+
+* Key shortcuts for graphics modes work in main window and in sidebar.
+
 == Version 1.0.5, 2024-09-21
 
 v1.0.5 "Clock Watcher" is a minor revision; changes include:

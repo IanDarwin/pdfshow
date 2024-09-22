@@ -10,6 +10,24 @@ just run your show in KeyNote, LibreOffice or PowerPoint.
 However, if you like to scribble all over the slides in your PDF slide deck each time you run your course,
 to make the slides come alive, then `PdfShow` may be right for you.
 
+Wait! Who presents from PDFs?
+Maybe you have to present a talk and you only have the PDF, not the ODP, KeyNote or PPT file(s).
+Some training companies just distribute their courses to instructors as PDFs, 
+not presentation-software files.
+Or maybe you want to re-give somebody else's preso from the PDF-only version they published online
+(if you do this, make sure to ask permission/give credit/respect copyrights+licenses).
+Or yet again, maybe you use the open-source
+https://staff.fnwi.uva.nl/b.diertens/useful/gpresent/[gpresent],
+which doesn't actually present shows but generates the PDF and leaves it to others to present.
+Or the https://docs.asciidoctor.org/reveal.js-converter/latest/converter/features/[
+       AsciiDoctor+Reveal.js tooling] which can create PDF slides from AsciiDoc.
+Or the Markdown-based https://marp.app/[MARP], which can generate PDFs directly from markdown files.
+Or the MagicPoint-based https://mg.pov.lt/mgp2pdf/[MagicPoint to PDF Converter].
+Whatever the reason you need to present with just the PDF of the slides,
+`PdfShow` is for you!
+
+image::images/SampleShow.png[width="800"]
+
 This program is free software and may be copied for use without fee.
 The source code is https://github.com/IanDarwin/pdfshow[available on my GitHub repository];
 if you are a developer and would like to improve it, see the _docs_ directory.
