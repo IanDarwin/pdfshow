@@ -12,7 +12,8 @@ to make the slides come alive, then `PdfShow` may be right for you.
 
 This program is free software and may be copied for use without fee.
 The source code is https://github.com/IanDarwin/pdfshow[available on my GitHub repository];
-if you are a developer and would like to improve it, Github pull requests are welcome.
+if you are a developer and would like to improve it, see the _docs_ directory.
+Github pull requests are welcome.
 
 == Installing it
 
