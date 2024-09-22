@@ -68,7 +68,8 @@ abstract class State {
 				}
 			}
 		}
-		SwingGUI.instance.handleKey(e.getKeyChar());
+		// Delegate
+		SwingGUI.instance.handleKeys.keyPressed(e);
 	}
 
 	public void mouseClicked(MouseEvent e) {

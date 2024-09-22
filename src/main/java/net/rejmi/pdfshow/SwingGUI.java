@@ -220,6 +220,7 @@ public class SwingGUI {
 				checkAndQuit();				
 			}	
 		});
+		controlFrame.addKeyListener(handleKeys);
 
 		programProps = new Properties();
 		try (InputStream propwash = getClass().getResourceAsStream(PROPS_FILE_NAME)) {
@@ -805,29 +806,49 @@ public class SwingGUI {
 		currentState.enterState();
 	}
 
-	protected void handleKey(char keyChar) {
-		switch(keyChar) {
-			case 't':
-				gotoState(textDrawState);break;
-			case 'm':
-				gotoState(markingState); break;
-			case 'l':
-				gotoState(lineDrawState); break;
-			case 'w':
-				gotoState(polyLineDrawState); break;
-			case 'o':
-				gotoState(ovalState); break;
-			case 'r':
-				gotoState(rectangleState); break;
-			case 'v':
-				gotoState(viewState); break;
-			default:
-				if (Main.debug) {
-					System.out.println("Unhandled key " + keyChar);
-				}
+	/** Keys that should work almost anywhere */
+	KeyListener handleKeys = new KeyListener() {
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// Empty
 		}
 
-	}
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// Empty
+		}
+
+		public void keyPressed(KeyEvent e) {
+			System.out.println("keyPressed: " + e.getKeyChar());
+			switch (e.getKeyChar()) {
+				case 't':
+					gotoState(textDrawState);
+					break;
+				case 'm':
+					gotoState(markingState);
+					break;
+				case 'l':
+					gotoState(lineDrawState);
+					break;
+				case 'w':
+					gotoState(polyLineDrawState);
+					break;
+				case 'o':
+					gotoState(ovalState);
+					break;
+				case 'r':
+					gotoState(rectangleState);
+					break;
+				case 'v':
+					gotoState(viewState);
+					break;
+				default:
+					if (Main.debug) {
+						System.out.println("Unhandled key " + e.getKeyChar());
+					}
+			}
+		}
+	};
 
 	void returnToViewState() {
 		SwingGUI.gotoState(viewState);
