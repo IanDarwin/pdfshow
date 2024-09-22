@@ -116,10 +116,9 @@ The "Stop slide" button is at the bottom left, below the Settings.
 
 === Settings
 
-There is a Settings icon in the lower part of the left-hand pane;
-this pops up a dialog to control
-various settings, such as the font and color for drawing,
-the speed of slide shows, etc.
+There is a Settings section in the lower part of the left-hand pane.
+There is a color bar with 7 predefined colors but the 8th space is a color chooser.
+There are pop up dialogs to choose a font and to set the drawing line thickness.
  
 The "Open at last-used page" is for the case where a slideshow takes more than one day,
 and your computer gets shut down overnight; in the morning when you open the file again
