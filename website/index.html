@@ -455,21 +455,35 @@ However, if you like to scribble all over the slides in your PDF slide deck each
 to make the slides come alive, then <code>PdfShow</code> may be right for you.</p>
 </div>
 <div class="paragraph">
-<p>Wait! Who presents from PDFs?
-Maybe you have to present a talk and you only have the PDF, not the ODP, KeyNote or PPT file(s).
-Some training companies just distribute their courses to instructors as PDFs,
+<p>Wait! Who presents from PDFs? <strong>Lots of people!</strong>
+Maybe you need to present a talk and you only have the PDF, not the ODP, KeyNote or PPTx file(s).
+Some training companies only distribute their courses to instructors as PDFs,
 not presentation-software files.
 Or maybe you want to re-give somebody else&#8217;s preso from the PDF-only version they published online
 (if you do this, make sure to ask permission/give credit/respect copyrights+licenses).
-Or yet again, maybe you use the open-source
-<a href="https://staff.fnwi.uva.nl/b.diertens/useful/gpresent/">gpresent</a>,
-which doesn&#8217;t actually present shows but generates the PDF and leaves it to others to present.
-Or the <a href="https://docs.asciidoctor.org/reveal.js-converter/latest/converter/features/">
-       AsciiDoctor+Reveal.js tooling</a> which can create PDF slides from AsciiDoc.
-Or the Markdown-based <a href="https://marp.app/">MARP</a>, which can generate PDFs directly from markdown files.
-Or the MagicPoint-based <a href="https://mg.pov.lt/mgp2pdf/">MagicPoint to PDF Converter</a>.
-Whatever the reason you need to present with just the PDF of the slides,
-<code>PdfShow</code> is for you!</p>
+Or yet again, maybe you use one of the open-source tools that generates slide-decks in PDF:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://staff.fnwi.uva.nl/b.diertens/useful/gpresent/">gpresent</a>,
+which doesn&#8217;t actually present shows but generates the PDF and leaves it to others to present.</p>
+</li>
+<li>
+<p>the <a href="https://docs.asciidoctor.org/reveal.js-converter/latest/converter/features/">
+AsciiDoctor+Reveal.js tooling</a> which can create PDF slides from AsciiDoc.</p>
+</li>
+<li>
+<p>the Markdown-based <a href="https://marp.app/">MARP</a>, which can generate PDFs directly from markdown files.</p>
+</li>
+<li>
+<p>the MagicPoint-based <a href="https://mg.pov.lt/mgp2pdf/">MagicPoint to PDF Converter</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Whatever the reason, when you need to present with just the PDF of the slides,
+<code>PdfShow</code> is right for you!</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -517,12 +531,12 @@ installs in <em>/opt/pdfshow</em>).</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>I don&#8217;t have a Deb/Ubuntu Linux at the moment.</p>
+<p>I don&#8217;t have a Deb/Ubuntu Linux to build on at the moment.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_using_it">Using It</h2>
+<h2 id="using_pdfshow">Using PdfShow</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>On most systems you can start the program from the GUI, or from the command line if you prefer.</p>
@@ -605,17 +619,55 @@ The Text button is not sticky; you draw one text and the program reverts to "sel
 The draw line/polyline/oval/rectangle buttons <em>are</em> sticky, that is, to draw two lines, click the line icon, draw one line, then you can draw another without re-clicking the line icon.</p>
 </div>
 <div class="paragraph">
-<p>The toolbox has icons for straight line, polyline oval, and rectangle.
+<p>Besides Text, the toolbox also has icons for select mode, marking/highlight mode,
+straight line, polyline, oval, and rectangle.
 Each of these will rubber-band as you draw it, like most draw programs.
 The Text icon pops up a dialog for the text; the others just let you draw.
 Each graphic object that you attach to a page will stay with that page
 until you close the file or exit the application.</p>
 </div>
 <div class="paragraph">
-<p>They are not saved on disk, since that goes against the "make your slides come alive" mantra.
-But I am open to well-reasoned arguments in favor of saving them into the PDF,
-especially if accompanied by a "pull request" containing working code.</p>
+<p>You can select the draw tools by clicking, but you can also select them by keyboard shortcuts:</p>
 </div>
+<table id="draw-shortcuts" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Draw Tool Keyboard Shortcuts</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">s</th>
+<th class="tableblock halign-left valign-top">Select</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">t</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Text</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">m</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Marking</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">l</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Line (straight)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">w</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Line (wiggly, a.k.a. PolyLine)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">o</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Oval/Circle</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">r</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rectangle/Square</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>The Undo button (or CTRL/Z CMD/Z) removes the most-recently added graphic each time it&#8217;s pressed.
 To delete an arbitrary graphic, click the <code>Select</code> icon then select the item
@@ -623,6 +675,12 @@ you want to get rid of, then either use the <code>Delete</code> key (if it&#8217
 VK_UP as it is on some systems) or use the <code>Edit&#8594;Delete Selected</code> menu item.
 The Trash Can icon is the most drastic: it removes <strong>all</strong> graphics from the current page.
 There&#8217;s no undo for this at the moment.</p>
+</div>
+<div class="paragraph">
+<p>Items that you draw are <em>not</em> saved on disk, since that would go against the
+"make your slides come alive" mantra.
+But I am open to well-reasoned arguments in favor of saving them into the PDF,
+especially if accompanied by a "pull request" containing working code.</p>
 </div>
 </div>
 <div class="sect2">
@@ -670,11 +728,7 @@ it will resume where you left off. This behaviour is true by default.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-<<<<<<< HEAD
-Last updated 2024-09-22 19:21:40 -0400
-=======
-Last updated 2024-09-21 21:51:03 -0400
->>>>>>> 7d21a5694c42dcbf2fb6b97b82bff5ce621ff9a0
+Last updated 2024-09-22 19:58:55 -0400
 </div>
 </div>
 </body>
