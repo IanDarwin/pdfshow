@@ -1,12 +1,12 @@
 = `PdfShow` Usage
 :author: Ian Darwin
 
-`PdfShow` is a simple Java Swing-based PDF viewer specifically for running slide shows.
-If you want to pre-draw fancy diagrams, and save them for each time you present your
+`PdfShow` is a simple Java-based PDF viewer specifically for running slide shows.
+If you want to pre-draw fancy diagrams, and save them for re-use each time you present your
 slide deck, this is not for you. 
 Use Adobe Reader DC, PDF Annotator, or some other fancier tool.
 And if your presentation skills depend on blurry transitions or zippy little animations,
-just present in KeyNote, LibreOffice or PowerPoint.
+just run your show in KeyNote, LibreOffice or PowerPoint.
 However, if you like to scribble all over the slides in your PDF slide deck each time you run your course,
 to make the slides come alive, then `PdfShow` may be right for you.
 
@@ -23,13 +23,20 @@ and either have `java` on your path or want to click on a Jar file to run it
 or invoke the program with a batch file / shell script, 
 pick the `pdfshow`-x.x.x-with-dependencies.jar.
 
-If you'd rather a full installer, pick the `pdfshow`-x.x.x.dmg file for your macOS system
-or the `pdfshow`-x.x.x.msi for your Windows box.
-I  build an RPM installer for Linux less frequently at the moment.
+For a full installer (which installs a compatible version of Java along with the app), use:
+
+* the `pdfshow`-x.x.x.dmg file for macOS;
+* the `pdfshow`-x.x.x.msi for MS-Windows;
+* the `pdfshow`-x.x.x.rpm for dnf/yum/RPM-based Linux Systems (RHEL, Rocky, Fedora, etc;
+installs in _/opt/pdfshow_).
+
+I don't have a Deb/Ubuntu Linux at the moment.
 
 == Using It
 
-This is intended for slide shows, which are almost always in "landscape mode"
+On most systems you can start the program from the GUI, or from the command line if you prefer.
+
+This program is intended for slide shows, which are almost always in "landscape mode"
 (oriented like a laptop or computer monitor, not upright like a smartphone).
 Slide decks will be scaled to fit your monitor, so book-style documents
 (portrait mode documents) will appear unusually wide, though still readable.
@@ -38,12 +45,13 @@ There is a code issue (https://github.com/IanDarwin/pdfshow/issues/7[Issue#7]) t
 Like most GUI tools, you can open a file either by passing it on the command line,
 via the `File->Open` menu, or via `CTRL`/`CMD`-O.
 You can have multiple files open, using the tab selector at the top.
-As of 1.3, you can drag tabs to change their order in the tabbed pane.
+You can drag tabs to change their order in the tabbed pane.
 
 === One or Two Monitors
 
 If you have one monitor, you get the standard view window.
-If you have two, the program will automatically put the control screen on the first monitor
+If you have two, you can try the -2 argument when starting the program;
+this will put the control screen on the first monitor
 and take the second monitor entirely for the slideshow.
 
 image::../images/control-view.png[width="600"]
@@ -52,6 +60,7 @@ image::../images/control-view.png[width="600"]
 
 You can move around within a file using:
 
+* The mouse scroll wheel for rapid work;
 * The scroll bar at the right side of the current tab;
 * The `Up` and `Down` buttons in the nav box;
 * The `Begin` and `End` buttons in the nav box (first and last page).
@@ -66,26 +75,27 @@ There are multiple draw tool icons in the toolbox.
 // Each of these
 // only has effect once, that is, you have to click the Line button
 // a second time to draw a second line.
-These buttons are sticky, that is, to draw two lines, click the line icon, draw one line, then you can draw another without re-clicking the line icon.
-I may add an option later to control this behaviour.
+The Text button is not sticky; you draw one text and the program reverts to "selection" mode.
+The draw line/polyline/oval/rectangle buttons _are_ sticky, that is, to draw two lines, click the line icon, draw one line, then you can draw another without re-clicking the line icon.
 
-The toolbox has icons for straight line, polyline and rectangle.
+The toolbox has icons for straight line, polyline oval, and rectangle.
 Each of these will rubber-band as you draw it, like most draw programs.
-The Text icon currently pops up a dialog for the text, but that will
-hopefully be simplified soon.
+The Text icon pops up a dialog for the text; the others just let you draw.
 Each graphic object that you attach to a page will stay with that page
 until you close the file or exit the application.
-They are not saved, since that goes against the "make your slides come alive" mantra.
+
+They are not saved on disk, since that goes against the "make your slides come alive" mantra.
 But I am open to well-reasoned arguments in favor of saving them into the PDF,
 especially if accompanied by a "pull request" containing working code.
 
-The Undo button removes the most-recently added graphic each time it's pressed.
+The Undo button (or CTRL/Z CMD/Z) removes the most-recently added graphic each time it's pressed.
 To delete an arbitrary graphic, click the `Select` icon then select the item
 you want to get rid of, then either use the `Delete` key (if it's not mapped to
 VK_UP as it is on some systems) or use the `Edit->Delete Selected` menu item.
 The Trash Can icon is the most drastic: it removes *all* graphics from the current page.
+There's no undo for this at the moment.
 
-=== Slide Show Mode
+=== Auto Show Mode
 
 There are two modes for auto-presenting, which I call "across" and "down".
 Across mode goes across all the tabs, showing the current slide from each.
