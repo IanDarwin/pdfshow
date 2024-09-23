@@ -211,6 +211,10 @@ class TextDrawState extends State {
 			return;
 		}
 		String text = pane.getInputValue().toString();
+		if ("uninitializedValue".equals(text)) {
+			parent.returnToViewState();
+			return;
+		}
 		if (text == null || text.isEmpty()) {
 			parent.returnToViewState();
 			return;

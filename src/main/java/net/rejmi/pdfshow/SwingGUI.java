@@ -131,6 +131,8 @@ public class SwingGUI {
 		}
 		assert dm != null : "Could not find DM";
 		viewFrame = new JFrame("PDFShow Display");
+		viewFrame.setSize(new Dimension(1024, 800));
+		// But start maximized anyway, as it's more impressive.
 		viewFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		emptyViewScreenLabel = new JLabel("<html><b>PDFShow Display</b><br/>" +
 				"Open a file from the Control window to view.",
