@@ -431,10 +431,10 @@ public class SwingGUI {
 		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
 		aboutButton.addActionListener(e->
 				JOptionPane.showMessageDialog(controlFrame,
-						String.format("SwingGUI(tm) %s\n(c) 2021 Ian Darwin\n%s\n",
+						String.format("PDFShow(tm) %s\n(c) 2021-24 Ian Darwin\n%s\n",
 								programProps.getProperty(KEY_VERSION),
 								programProps.getProperty(KEY_HOME_URL)),
-						"About SwingGUI(tm)",
+						"About PDFShow(tm)",
 						JOptionPane.INFORMATION_MESSAGE));
 		helpMenu.add(aboutButton);
 		final JMenuItem helpButton = MenuUtils.mkMenuItem(rb, "help", "help");
