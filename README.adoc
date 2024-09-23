@@ -78,7 +78,7 @@ You can rebuild that from source with `mvn package assembly:single`; see <<build
 
 == Using PdfShow
 
-Again, see https://darwinsys.com/pdfshow/[the web site].
+Again, see https://darwinsys.com/pdfshow/#using_pdfshow[the web site].
 
 [[building]]
 == Building PdfShow From Source
