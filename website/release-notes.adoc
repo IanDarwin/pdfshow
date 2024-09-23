@@ -2,10 +2,13 @@
 
 The release notes for current and past releases are in the github under releases.
 
-== PLANNED for 1.0.6
+== PLANNED for 1.0.6 (and fixed in current code in Github)
 
 * Key shortcuts for graphics modes work in main window and in sidebar.
-* All graphic tools to be non-sticky, like Draw Text is now..
+* All graphic tools to be non-sticky, like Draw Text is now.
+* Bug fixes:
+** Hitting ESC on Text dialog caused "uninitializedValue" text to appear.
+** Moving the main window could cause it to appear microscopically small.
 
 == Version 1.0.5, 2024-09-21
 
@@ -28,7 +31,7 @@ v1.0.5 "Clock Watcher" is a minor revision; changes include:
 
 === Known Issues/Bugs
 
-* Text draw dialog, hitting ESC or Cancel leaves "Uninitialized Value" text.
+* Text draw dialog, hitting ESC leaves "Uninitialized Value" text.
 * Drawn objects sometimes drawn in wrong places.
 * Still can't select text or find text. Sorry.
 * A weird buglet in the pdf library prevents drawing on pages where there is a JPEG image.
