@@ -259,11 +259,10 @@ public class SwingGUI {
         // SETTINGS
 		sidePanel.add(new Settings(
 				controlFrame,
-				new SettingHandler("fontButton", SettingType.FONT, GObject.getFont(), GObject::setFont),
-				// new SettingHandler("fillColorButton", SettingType.COLOR, GObject.getFillColor(), GObject::setFillColor),
-				new SettingHandler("lineWidthButton", SettingType.INTEGER, GObject.getLineThickness(), GObject::setLineThickness),
-				new SettingHandler("slideDelayButton", SettingType.INTEGER, slideTime, this::setSlideTime),
-				new SettingHandler("memoryBox.label", SettingType.BOOLEAN, savePageNumbers, this::setSavePageNumbers)
+				new SettingHandler("fontButton", SettingType.FONT, "Font", GObject.getFont(), GObject::setFont),
+				new SettingHandler("lineWidthButton", SettingType.INTEGER, "Line Thickness", GObject.getLineThickness(), GObject::setLineThickness),
+				new SettingHandler("slideDelayButton", SettingType.INTEGER, "Slide Show Interval", slideTime, this::setSlideTime),
+				new SettingHandler("memoryBox.label", SettingType.BOOLEAN, "", savePageNumbers, this::setSavePageNumbers)
 			));
 
 		controlFrame.add(BorderLayout.WEST, sidePanel);

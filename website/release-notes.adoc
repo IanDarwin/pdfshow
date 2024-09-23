@@ -39,7 +39,7 @@ v1.0.5 "Clock Watcher" is a minor revision; changes include:
 * Mac only: The color selector is drawn too large on some screens, but 
 all the colors are at least clickable.
 
-== Version 1.0.4, 2023-05
+== Version 1.0.4, Unreleased (2023-05)
 
 v1.0.4 "Double Header" is the first release supporting two monitors, as conventional slide show programs do.
 The "control" screen has the control buttons and the "view" screen goes full-screen on the second monitor.

@@ -26,8 +26,10 @@ enum SettingType { STRING, INTEGER, BOOLEAN, FONT, COLOR }
 
 record SettingHandler(String buttonName,
 					  SettingType type,
+					  String dialogLabel,
 					  Object value,
-					  Consumer<Object> callback){}
+					  Consumer<Object> callback){
+}
 
 /**
  * The Settings panel 
@@ -50,14 +52,15 @@ public class Settings extends JPanel {
 
 		for (SettingHandler handler : handlers) {
 			if (handler instanceof SettingHandler(
-					String name, SettingType type,
+					String name, SettingType type, String label,
 					Object value, Consumer<Object> mHandler)) {
 				switch (type) {
 					case STRING:
 						throw new UnsupportedOperationException("Not written yet");
-					case INTEGER: // ONLY USED FOR LINE WIDTH
+
+					case INTEGER: // USED FOR LINE WIDTH and Slide Interval
 						JButton lineWidthButton = I18N.mkButton(rb, name);
-						lineWidthButton.addActionListener(e -> showLineThicknessDialog(mHandler));
+						lineWidthButton.addActionListener(e -> showIntSliderDialog(label, mHandler));
 						add(lineWidthButton);
 						break;
 					case BOOLEAN:
@@ -112,7 +115,7 @@ public class Settings extends JPanel {
 	 * Could be reused for any other int number with
 	 * a bit of work to generalize.
 	 */
-	public void showLineThicknessDialog(Consumer<Object> mHandler) {
+	public void showIntSliderDialog(String label, Consumer<Object> mHandler) {
 		JComponent preview = new JComponent() {
 			public Dimension getPreferredSize(){
 				return new Dimension(PV_WIDTH, PV_HEIGHT);
@@ -131,7 +134,7 @@ public class Settings extends JPanel {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				lineThickness = slider.getValue();
-				System.out.println("Thickness now " + lineThickness);
+				System.out.println("Int now " + lineThickness);
 				preview.repaint();
 			}
 		});
@@ -142,7 +145,7 @@ public class Settings extends JPanel {
 
 		int result = 
 			JOptionPane.showConfirmDialog(null,
-				panel, "Line Thickness", JOptionPane.OK_CANCEL_OPTION);
+				panel, label, JOptionPane.OK_CANCEL_OPTION);
 
 		if (result == JOptionPane.OK_OPTION) {
 			int lineThickness = slider.getValue();
