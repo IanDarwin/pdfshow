@@ -71,16 +71,6 @@ via the `File->Open` menu, or via `CTRL`/`CMD`-O.
 You can have multiple files open, using the tab selector at the top.
 You can drag tabs to change their order in the tabbed pane.
 
-=== One or Two Monitors
-
-If you have one monitor, you get the standard view window.
-If you have two, you can try the -2 argument when starting the program;
-this will put the control screen on the first monitor
-and take the second monitor entirely for the slideshow.
-
-* You can't draw on the miniature view (yet?), and it doesn't show your drawings.
-* If you unplug the second monitor, you have to re-start PDFshow, but that shouldn't be a problem.
-
 === Navigation
 
 You can move around within a file using:
@@ -136,6 +126,33 @@ Items that you draw are _not_ saved on disk, since that would go against the
 "make your slides come alive" mantra.
 But I am open to well-reasoned arguments in favor of saving them into the PDF,
 especially if accompanied by a "pull request" containing working code.
+
+=== Break Timer
+
+The break timer is activated from the View menu or from the "clock" button in the toolbox.
+Set the time you want in the drop-down/textbox at the bottom, and press Start
+to show the count-down window.
+The window can be resized, moved, etc., in case you need to refer back to the slides
+(as is the case when a student asks a question when on a long break).
+Just remember to bring the timer window back to the front when finished!
+
+The Break Timer will choose one of several break-related theme photos to use as a background.
+If you'd like to add your own, create a directory in your home directory
+named _.pdfshow/images_, and name the image files _break-background**N**.png_, where 'N' is
+a single digit from 1 to 9. Other files will be ignored. Since the selection is random,
+it may choose your images or the built-in ones, on a per-run basis.
+That is, you may get one image all day, but you'll (probably!) get a different one tomorrow.
+
+
+=== One or Two Monitors
+
+If you have one monitor, you get the standard view window.
+If you have two, you can try the -2 argument when starting the program;
+this will put the control screen on the first monitor
+and take the second monitor entirely for the slideshow.
+
+* You can't draw on the miniature view (yet?), and it doesn't show your drawings.
+* If you unplug the second monitor, you have to re-start PDFshow, but that shouldn't be a problem.
 
 === Auto Show Mode
 
