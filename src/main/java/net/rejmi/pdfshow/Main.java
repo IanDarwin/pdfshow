@@ -25,11 +25,13 @@ public class Main {
 						debug = true;
                         ++argsUsed;
 						break;
+                    case "-1":
                     case "-s":
                     case "--single":
                         instance.setMonitorMode(MonitorMode.SINGLE);
                         ++argsUsed;
                         break;
+                    case "-2":
                     case "-m":
                     case "--multi-monitor":
                         instance.setMonitorMode(MonitorMode.MULTI);
