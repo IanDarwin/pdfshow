@@ -1,0 +1,128 @@
+[[building]]
+== Building PdfShow From Source
+
+=== Build: Prerequisites
+
+On all platforms you need JDK ({current-java-ver}$$+$$) and Apache Maven installed.
+On Windows `jpackage` has a couple of pre-requisites,
+which it will let you know about if they're not already installed.
+
+On Linux, for RPMs, you need `rpm-build` or you will get told that 'rpm' is an invalid type
+(sudo dnf install rpm-build).
+On Linux, for DEBs, you may need `fakeroot` (sudo apt install fakeroot).
+
+The install formats are:
+
+[[install-formats]]
+.The Installer Formats
+[options="header",cols="2,4,3"]
+|====
+|OS|Default Format|Other formats with `mkinstaller -t`
+|macOS|DMG, with copy-to-Applications iconage.|pkg
+|Linux|rpm - Redhat/Yum/dnf/Zypher|deb
+|Windows|MSI installer|exe
+|====
+
+=== Getting Source
+
+Download the repository from {gh-url}.
+
+Install Apache-Maven if not already installed.
+
+Using command-line tools:
+
+	git clone https://github.com/IanDarwin/pdfshow
+	cd pdfshow
+
+Using IntelliJ IDEA
+
+	From the startup screen, "Get from Version Control"
+	Enter the URL https://github.com/IanDarwin/pdfshow and click Clone
+	Accept or choose the directory and click Clone
+	On "Open or Import" popup (with choice of how to open), select "Maven Project"
+
+Using Eclipse (no longer actively tested):
+
+	Window->Show View->Git->Git Repositories.
+	In the Repos window, Clone (the third icon at the right side of this window).
+	Enter the URL https://github.com/IanDarwin/pdfshow and click Next
+	On the next dialog, be sure to check Import Existing Projects before Next.
+	PdfShow should show up in the Package Explorer
+
+=== Trial Runs
+
+To try ou run the program in a supported Java IDE,
+you just open and run `Main.java`.
+If you use some other IDE, and get it working, please
+submit a pull request with that IDE's config files, __as long as
+it doesn't require changing the directory structure__ (i.e., moving existing files around).
+
+To run the program in Maven, use `mvn exec:java`.
+
+=== Packaging
+
+To make a JAR file with just the program and its images (without the dependencies), do `mvn package`.
+
+To make a clickable runnable JAR file, run `mvn package assembly:single`.
+You'll then find a `jar` with dependencies in the target folder.
+It'll be named something like `target/pdfshow-x.y.z-SNAPSHOT-jar-with-dependencies.jar`.
+You can run it with `java -jar target/pdfshow*dependencies.jar` (see `scripts/pdfshow`), or just click on it in a file
+manager window in MS-Windows, macOS, or most *Nix windowed environments.
+
+The full-blown, platform-specific installers we release are built by the `mkinstaller` script. 
+This makes a clickable runnable JAR file as above and then runs the Java 
+https://docs.oracle.com/en/java/javase/14/docs/specs/man/jpackage.html[jpackage] tool.
+You can run that script yourself if you want.
+You can only build the Mac installer on macOS, the Windows installer on Windows, etc.
+
+=== Configuring a Linux rpm-based system and building PDFShow
+
+This may not be optimal, but should work. Newer versions may be available.
+
+----
+sudo dnf search jdk
+
+Pick and install the latest (probably 23; N.B. 21 did not work as they forgot to
+install the jmod files, which are needed to build the installers).
+
+sudo dnf install rpm-build
+
+# These systems' packaging have Maven depending on dark ages' JDK-1.8, so:
+
+curl -o apache-maven-3.8.4-bin.tar.gz \
+	https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz
+
+cd /usr/local; sudo tar xzvf apache-maven-3.8.4.tar.gz
+
+PATH=$PATH:/usr/local/apache-maven-3.8.4/bin
+
+mkdir git
+cd git
+git clone https://github.com/IanDarwin/pdfshow
+
+cd pdfshow
+
+mkinstaller -s # skiptests; they may fail on this Linux with infra-related errs, don't care
+----
+
+== Contributing / Development
+
+Fork the repo, clone your forked copy, make changes, test changes, send a pull request.
+
+== FAQ
+
+Q: Why didn't I use this for the drawing:
+
+	PDPageContentStream contentStream = new PDPageContentStream(document, page);
+	contentStream.setNonStrokingColor(Color.DARK_GRAY);
+	contentStream.addRect(200, 650, 100, 100);
+
+A: The problem is that it would be much harder (if not impossible) to implement Undo processing
+when using that approach. Perhaps a later Save PDF function could
+insert the GObjects into the PDF using this technique.
+
+Q: Why not use the built-in `contains()` method for hit detection?
+
+A: The `GObject` hierarchy is intentionally light-weight, not JComponent, and
+it's gotta be the same amount of work.
+
