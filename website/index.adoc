@@ -28,7 +28,7 @@ AsciiDoctor+Reveal.js tooling] which can create PDF slides from AsciiDoc.
 Whatever the reason, when you need to present with just the PDF of the slides,
 `PdfShow` is right for you!
 
-image::images/SampleShow.png[width="800"]
+image::images/SampleShow.png[width="800px"]
 
 This program is free software and may be copied for use without fee.
 The source code is https://github.com/IanDarwin/pdfshow[available on my GitHub repository];
@@ -143,6 +143,7 @@ a single digit from 1 to 9. Other files will be ignored. Since the selection is 
 it may choose your images or the built-in ones, on a per-run basis.
 That is, you may get one image all day, but you'll (probably!) get a different one tomorrow.
 
+image::images/breaktimer.png[width="700px"]
 
 === One or Two Monitors
 
