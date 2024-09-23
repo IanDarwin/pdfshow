@@ -9,6 +9,7 @@ The release notes for current and past releases are in the github under releases
 * Bug fixes:
 ** Hitting ESC on Text dialog caused "uninitializedValue" text to appear.
 ** Moving the main window could cause it to appear microscopically small.
+** Incorrect info in Help->About display.
 
 == Version 1.0.5, 2024-09-21
 
