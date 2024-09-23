@@ -280,10 +280,12 @@ class LineDrawState extends State {
 			parent.currentTab.setIn(ix, new GLine(startX, startY, e.getX() - startX, e.getY() - startY));
 		}
 		parent.currentTab.repaint();
+
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		line = null;
+		parent.returnToViewState();
 	}
 }
 
@@ -328,6 +330,7 @@ class PolyLineDrawState extends State {
 		SwingGUI.logger.fine("SwingGUI.PolyLineDrawState.mouseReleased()");
 		parent.currentTab.repaint();
 		line = null;	// We are done with it.
+		parent.returnToViewState();
 	}
 }
 
@@ -360,6 +363,7 @@ class RectangleState extends State {
 	public void mouseReleased(MouseEvent e) {
 		// parent.currentTab.addIn(new GRectangle(ulX, ulY, e.getX(), e.getY()));
 		parent.currentTab.repaint(); // XXX Should addIn() do repaint() for us?
+		parent.returnToViewState();
 	}
 	
 }
@@ -393,5 +397,6 @@ class OvalState extends State {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		parent.currentTab.repaint(); // XXX Should addIn() do repaint() for us?
+		parent.returnToViewState();
 	}
 }
