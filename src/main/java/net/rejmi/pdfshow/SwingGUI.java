@@ -68,7 +68,7 @@ public class SwingGUI {
 	JFrame controlFrame;
 	static JFrame viewFrame;
 	private final JTabbedPane tabPane = new DnDTabbedPane();
-	JFrame jiffy;
+	JFrame bTimerFrame;
 	JLabel emptyViewScreenLabel;
 	DocTab currentTab;
 	private final JButton upButton = new JButton(getMyImageIcon("Chevron-Up")),
@@ -483,7 +483,8 @@ public class SwingGUI {
 	// BREAK TIMER STUFF
 	//
 	private void setupBreakTimer(ResourceBundle rb, JMenu viewMenu) {
-		// Find "any" (up to 9) background images for timer;
+
+		// First, find "any" (up to 9) background images for timer;
 		// images can be in ~/.pdfshow/images or on classpath (e.g., in Jar file).
 		List<Image> all = new ArrayList<>();
 		var tilde = System.getProperty("user.home");
@@ -514,17 +515,17 @@ public class SwingGUI {
 		System.out.println("Total BreakTimer Images = " + all.size());
 
 		// Now some GUI stuff
-		jiffy = new JFrame("Timer");
+		bTimerFrame = new JFrame("Timer");
 		// Set size and location for when non-maximized
-		jiffy.setLocation(100, 100);
-		jiffy.setSize(new Dimension(800, 600));
+		bTimerFrame.setLocation(100, 100);
+		bTimerFrame.setSize(new Dimension(800, 600));
 		// But start maximized anyway, as it's more impressive.
-		jiffy.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		breakTimer = new BreakTimer(jiffy, all);
+		bTimerFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		breakTimer = new BreakTimer(bTimerFrame, all);
 
 		JMenuItem breakTimerMI = MenuUtils.mkMenuItem(rb, "view","break_timer");
 		breakTimerMI.addActionListener(e ->  {
-			jiffy.setVisible(true);
+			bTimerFrame.setVisible(true);
 		});
 		viewMenu.add(breakTimerMI);
 	}
@@ -661,7 +662,7 @@ public class SwingGUI {
 
 		final JButton timerButton = new JButton(getMyImageIcon("Timer"));
 		timerButton.addActionListener(e1 ->  {
-			jiffy.setVisible(true);
+			bTimerFrame.setVisible(true);
 		});
 		timerButton.setToolTipText("Open Break Timer");
 		toolBox.add(timerButton);

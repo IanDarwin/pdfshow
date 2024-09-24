@@ -134,7 +134,8 @@ public class Settings extends JPanel {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				lineThickness = slider.getValue();
-				System.out.println("Int now " + lineThickness);
+				if (Main.debug)
+					System.out.println("Int setting now " + lineThickness);
 				preview.repaint();
 			}
 		});
