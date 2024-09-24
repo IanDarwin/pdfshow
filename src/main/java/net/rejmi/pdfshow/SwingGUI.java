@@ -404,7 +404,7 @@ public class SwingGUI {
 			}
 			JTextField firstSlide = new JTextField(10),
 					lastSlide = new JTextField(5)
-;			Object[] msg = {"Start:", firstSlide, "End:", lastSlide};
+;			Object[] msg = {"Start (1):", firstSlide, "End:", lastSlide};
 
 			var result = JOptionPane.showConfirmDialog(
 					controlFrame,
@@ -414,7 +414,7 @@ public class SwingGUI {
 					JOptionPane.PLAIN_MESSAGE);
 
 			if (result == JOptionPane.YES_OPTION) {
-				int start = Integer.parseInt(firstSlide.getText());
+				int start = firstSlide.getText().isEmpty() ? 1 : Integer.parseInt(firstSlide.getText());
 				int end = Integer.parseInt(lastSlide.getText());
 				System.out.printf("SlideShow from %s to %s".formatted(start, end));
 				runSlideShow(start, end);
