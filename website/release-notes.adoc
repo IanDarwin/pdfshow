@@ -5,6 +5,7 @@ The release notes for current and past releases are in the github under releases
 == PLANNED for 1.0.6 (and fixed in current code in Github)
 
 * Key shortcuts for graphics modes work in main window and in sidebar.
+* 'Jump back to Select after text/draw' (sticky/non-sticky) is now an option.
 * All graphic tools (except highlighting) non-sticky, like Draw Text was in v1.0.5.
 * Bug fixes:
 ** Hitting ESC on Text dialog caused "uninitializedValue" text to appear.
