@@ -57,11 +57,13 @@ public class SwingGUI {
 	// For Prefs
 	final static String
 			KEY_SAVE_PAGENUMS = "save pagenums",
+			KEY_JUMP_BACK = "jump back",
 			KEY_ONESHOT = "one_shot_draw_tools",
 			KEY_FILECHOOSER_DIR = "file_chooser_dir";
 	final static String EMAIL_TEMPLATE = "mailto:%s?subject=PdfShow Feedback";
 	
 	boolean savePageNumbers = prefs.getBoolean(KEY_SAVE_PAGENUMS, true);
+	boolean jumpBack = prefs.getBoolean(KEY_JUMP_BACK, true);
 	boolean oneShotDrawTools = prefs.getBoolean(KEY_ONESHOT, true);
 
 	// GUI Controls - defined here since referenced throughout
@@ -262,8 +264,9 @@ public class SwingGUI {
 				new SettingHandler("fontButton", SettingType.FONT, "Font", GObject.getFont(), GObject::setFont),
 				new SettingHandler("lineWidthButton", SettingType.INTEGER, "Line Thickness", GObject.getLineThickness(), GObject::setLineThickness),
 				new SettingHandler("slideDelayButton", SettingType.INTEGER, "Slide Show Interval", slideTime, this::setSlideTime),
-				new SettingHandler("memoryBox.label", SettingType.BOOLEAN, "", savePageNumbers, this::setSavePageNumbers)
-			));
+				new SettingHandler("memoryBox.label", SettingType.BOOLEAN, "", savePageNumbers, this::setSavePageNumbers),
+				new SettingHandler("jumpbackBox.label", SettingType.BOOLEAN, "", jumpBack, this::setJumpBack)
+				));
 
 		controlFrame.add(BorderLayout.WEST, sidePanel);
 
@@ -685,6 +688,12 @@ public class SwingGUI {
 		savePageNumbers = (boolean) b;
 	}
 
+	/** Controls whether we "jump back" to Select mode after each text or draw op */
+	void setJumpBack(Object b) {
+		prefs.putBoolean(KEY_JUMP_BACK, (boolean)b);
+		jumpBack = (boolean) b;
+	}
+
 	/** Runs a show "across tabs" */
 	ActionListener slideshowAcrossTabsAction = e -> {
         done = false;
@@ -867,7 +876,8 @@ public class SwingGUI {
 	};
 
 	void returnToViewState() {
-		SwingGUI.gotoState(viewState);
+		if (jumpBack)
+			SwingGUI.gotoState(viewState);
 	}
 
 	// Everything Else
