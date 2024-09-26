@@ -7,9 +7,10 @@ The release notes for current and past releases are in the github under releases
 * Key shortcuts for graphics modes work in main window and in sidebar.
 * 'Jump back to Select after text/draw' (sticky/non-sticky) is now an option.
 * All graphic tools (except highlighting) non-sticky, like Draw Text was in v1.0.5.
+* Single letter commands to switch to t)ext, l)ine, o)val, etc - work with focus anywhere now.
 * Bug fixes:
 ** Hitting ESC on Text dialog caused "uninitializedValue" text to appear.
-** Moving the main window could cause it to appear microscopically small.
+** Moving the main window would cause it to appear microscopically small.
 ** Incorrect info in Help->About display.
 
 == Version 1.0.5, 2024-09-21
@@ -17,10 +18,12 @@ The release notes for current and past releases are in the github under releases
 v1.0.5 "Clock Watcher" is a minor revision; changes include:
 
 * Break timer now in own "JFrame" window, works correctly.
-* Scroll wheel support! For moving from page to page.
-* Color picker bar in left panel w/ 7 predefs and a picker launcher
+* Scroll wheel support! I personally find this makes a huge
+increase in usability when jumping back or ahead several slides at a time.
+* Color picker bar in left panel w/ 7 pre-defined colors and a picker launcher
 * CTRL/Z CMD/Z alias for Undo button, for undoing one or more draw commands
-* Adds background images to the break timer;
+* Adds background images to the break timer (and you can add your own
+without recompiling; see Help for how-to);
 * Adds Delete Page function (non-persistent);
 * Pointer mode pops back to View after adding Text item;
 * Custom slide show (contiguous range only);
