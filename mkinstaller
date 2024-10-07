@@ -90,8 +90,3 @@ for fmt in ${inst_format}; do
 		exit 1
 	}
 done
-exit
-	# The following are not used in production releases
-	# Omit file-association for OSes that only allow one program per filetype.
-	# See https://github.com/IanDarwin/pdfshow/issues/19 Issue #19
-	--file-associations install-aux/pdfassoc.properties \
