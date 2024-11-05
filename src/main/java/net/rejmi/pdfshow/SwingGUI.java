@@ -251,9 +251,13 @@ public class SwingGUI {
 		sidePanel.add(toolBox);
 
 		JButton stopShowButton = new JButton("Stop slide show");
-		// toolBox.add(stopShowButton);
 		stopShowButton.addActionListener(e -> done = true);
 		sidePanel.add(stopShowButton);
+
+		JTextField searchTF = new JTextField(15);
+		searchTF.addActionListener(e -> doSearch(searchTF.getText()));
+		searchTF.setBorder(BorderFactory.createTitledBorder("Search"));
+		sidePanel.add(searchTF);
 
 		sidePanel.add(new ColorPanel(GObject::setLineColor));
 		// sidePanel.add(new ColorPanel(GObject::setFillColor));
@@ -272,6 +276,10 @@ public class SwingGUI {
 
 		controlFrame.setVisible(true);
 		viewFrame.setVisible(true);
+	}
+
+	private void doSearch(String searchStr) {
+		JOptionPane.showMessageDialog(viewFrame, "Would search for " + searchStr);
 	}
 
 	/** Create a DnDTabbedPane: the main window for viewing PDFs */
@@ -383,7 +391,7 @@ public class SwingGUI {
 				Main.isMac ? "meta F" : "control F"));
 		miFind.addActionListener(e -> {
 			String search = JOptionPane.showInputDialog("Text");
-			System.out.println("Would search for = " + search);
+			doSearch(search);
 		});
 		editMenu.add(miFind);
 
@@ -678,10 +686,6 @@ public class SwingGUI {
 		});
 		timerButton.setToolTipText("Open Break Timer");
 		toolBox.add(timerButton);
-
-		JButton stop_show = new JButton("Stop slide show");
-		// toolBox.add(stop_show);
-		stop_show.addActionListener((e -> done = true));
 
 		return toolBox;
 	}
