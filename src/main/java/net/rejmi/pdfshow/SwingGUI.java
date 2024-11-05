@@ -291,12 +291,12 @@ public class SwingGUI {
 
 		JMenuBar menuBar = new JMenuBar();
 		ResourceBundle rb = ResourceBundle.getBundle("Menus");
-		JMenu fm = MenuUtils.mkMenu(rb, "file");
-		menuBar.add(fm);
+		JMenu fileMenu = MenuUtils.mkMenu(rb, "file");
+		menuBar.add(fileMenu);
 		JMenuItem miOpen = MenuUtils.mkMenuItem(rb, "file", "open");
 		miOpen.setAccelerator(KeyStroke.getKeyStroke(
 				Main.isMac ? "meta O" : "control O"));
-		fm.add(miOpen);
+		fileMenu.add(miOpen);
 		recents = new RecentMenu(prefs, 10) {
 			@Serial
 			private static final long serialVersionUID = 828751972333590042L;
@@ -328,34 +328,34 @@ public class SwingGUI {
 				JOptionPane.showMessageDialog(controlFrame, "Can't open file: " + e1);
 			}
 		});
-		fm.add(recents);
+		fileMenu.add(recents);
 		JMenuItem miClearRecents = MenuUtils.mkMenuItem(rb, "file", "clear_recents");
 		miClearRecents.addActionListener(e -> recentsClear());
-		fm.add(miClearRecents);
+		fileMenu.add(miClearRecents);
 		JMenuItem miClose = MenuUtils.mkMenuItem(rb, "file", "close");
 		miClose.addActionListener(e -> {
 			if (currentTab != null) {
 				closeFile(currentTab);
 			}
 		});
-		fm.add(miClose);
+		fileMenu.add(miClose);
 
 		final JMenuItem infoButton = MenuUtils.mkMenuItem(rb, "file", "properties");
 		infoButton.addActionListener(e -> showFileProps());
-		fm.add(infoButton);
+		fileMenu.add(infoButton);
 
-		fm.addSeparator();
+		fileMenu.addSeparator();
 		JMenuItem miPrint = MenuUtils.mkMenuItem(rb, "file", "print");
 		miPrint.setAccelerator(KeyStroke.getKeyStroke(
 				Main.isMac ? "meta P" : "control P"));
 		miPrint.addActionListener(e ->
 			JOptionPane.showMessageDialog(controlFrame, "Sorry, not implemented yet"));
-		fm.add(miPrint);
+		fileMenu.add(miPrint);
 
-		fm.addSeparator();
+		fileMenu.addSeparator();
 		JMenuItem miQuit = MenuUtils.mkMenuItem(rb, "file", "exit");
 		miQuit.addActionListener(e -> checkAndQuit());
-		fm.add(miQuit);
+		fileMenu.add(miQuit);
 
 		final JMenu editMenu = MenuUtils.mkMenu(rb, "edit");
 		menuBar.add(editMenu);
@@ -377,6 +377,15 @@ public class SwingGUI {
 			currentTab.deleteSelected();
 		});
 		editMenu.add(deleteItemMI);
+
+		JMenuItem miFind = MenuUtils.mkMenuItem(rb, "edit", "find");
+		miFind.setAccelerator(KeyStroke.getKeyStroke(
+				Main.isMac ? "meta F" : "control F"));
+		miFind.addActionListener(e -> {
+			String search = JOptionPane.showInputDialog("Text");
+			System.out.println("Would search for = " + search);
+		});
+		editMenu.add(miFind);
 
 		final JMenu viewMenu = MenuUtils.mkMenu(rb, "view");
 		menuBar.add(viewMenu);
