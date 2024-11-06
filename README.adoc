@@ -1,7 +1,7 @@
 ifndef::ver[]
-:ver: 1.0.5
+:ver: 1.1.0
 endif::[]
-:sillyName: Clock watcher
+:sillyName: Finders Keepers
 ifndef::current-java-ver[]
 :current-java-ver: Java 21
 endif::[]
