@@ -21,6 +21,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.text.PDFTextStripper;
 
 /**
  * A visual rep of one PDF document, for placing within a TabView
@@ -41,6 +42,8 @@ class DocTab extends JPanel {
 	File file;
 	/** The PdfBox renderer for it */
 	PDFRenderer renderer;
+	/** The textStripper for the find command */
+	PDFTextStripper textStripper;
 	/** Scaling to make the document fit */
 	float scaleX, scaleY;
 	/** Our user's annotations for this doc, indexed by page#-1 to get list */
@@ -64,6 +67,8 @@ class DocTab extends JPanel {
 			addIns.add(new ArrayList<>());
 		}
 		// End of "Should be done in a background thread"
+
+		textStripper = new PDFTextStripper();
 
 		// GUI stuff
 		setDoubleBuffered(true);
@@ -200,6 +205,40 @@ class DocTab extends JPanel {
 				break;
 			}
 		}
+	}
+
+	public void doSearch(String searchStr) {
+
+		for (int pgnum = getPageNumber(); pgnum <= getPageCount(); pgnum++) {
+			if (doSearch(pgnum, searchStr)) {
+				return;
+			}
+		}
+		for (int pgnum = 1; pgnum < getPageNumber() - 1; pgnum++) {
+			if (doSearch(pgnum, searchStr)) {
+				return;
+			}
+		}
+		System.out.println("searchStr Not Found: " + searchStr);
+	}
+
+	private boolean doSearch(int pgNum, String searchStr) {
+
+			textStripper.setStartPage(pgNum);
+			textStripper.setEndPage(pgNum);
+
+			try {
+				String pageText = textStripper.getText(doc);
+				if (pageText.toLowerCase().contains(searchStr.toLowerCase())) {
+					System.out.println("Text found on page " + pgNum);
+					gotoPage(pgNum);
+					return true;
+				}
+			} catch (IOException u) {
+				u.printStackTrace();
+				return false;
+			}
+		return false;
 	}
 
 	void close() {

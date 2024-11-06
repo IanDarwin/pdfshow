@@ -279,7 +279,9 @@ public class SwingGUI {
 	}
 
 	private void doSearch(String searchStr) {
-		JOptionPane.showMessageDialog(viewFrame, "Would search for " + searchStr);
+		if (currentTab != null) {
+			currentTab.doSearch(searchStr);
+		}
 	}
 
 	/** Create a DnDTabbedPane: the main window for viewing PDFs */
