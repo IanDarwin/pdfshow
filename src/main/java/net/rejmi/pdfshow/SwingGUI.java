@@ -76,6 +76,7 @@ public class SwingGUI {
 	private final JButton upButton = new JButton(getMyImageIcon("Chevron-Up")),
 			downButton = new JButton(getMyImageIcon("Chevron-Down"));
 	private JTextField pageNumTF;
+	private JTextField searchTF;
 	private JLabel pageCountTF;
 	private final JButton selectButton = new JButton(getMyImageIcon("Select")),
 		textButton = new JButton(getMyImageIcon("Text")),
@@ -255,7 +256,7 @@ public class SwingGUI {
 		sidePanel.add(stopShowButton);
 
 		JPanel searchPanel = new JPanel();
-		JTextField searchTF = new JTextField(10);
+		searchTF = new JTextField(10);
 		searchTF.addActionListener(e -> doSearch(searchTF.getText()));
 		searchTF.setBorder(BorderFactory.createTitledBorder("Search"));
 		searchPanel.add(searchTF);
@@ -397,6 +398,7 @@ public class SwingGUI {
 				Main.isMac ? "meta F" : "control F"));
 		miFind.addActionListener(e -> {
 			String search = JOptionPane.showInputDialog("Text");
+			searchTF.setText(search);	// stash for re-use
 			doSearch(search);
 		});
 		editMenu.add(miFind);
