@@ -254,10 +254,14 @@ public class SwingGUI {
 		stopShowButton.addActionListener(e -> done = true);
 		sidePanel.add(stopShowButton);
 
-		JTextField searchTF = new JTextField(15);
+		JPanel searchPanel = new JPanel();
+		JTextField searchTF = new JTextField(10);
 		searchTF.addActionListener(e -> doSearch(searchTF.getText()));
 		searchTF.setBorder(BorderFactory.createTitledBorder("Search"));
-		sidePanel.add(searchTF);
+		searchPanel.add(searchTF);
+		final JButton searchButton = (JButton)searchPanel.add(new JButton(getMyImageIcon("Search")));
+		searchButton.addActionListener(e -> doSearch(searchTF.getText()));
+		sidePanel.add(searchPanel);
 
 		sidePanel.add(new ColorPanel(GObject::setLineColor));
 		// sidePanel.add(new ColorPanel(GObject::setFillColor));

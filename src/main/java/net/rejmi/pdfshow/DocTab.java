@@ -209,7 +209,7 @@ class DocTab extends JPanel {
 
 	public void doSearch(String searchStr) {
 
-		for (int pgnum = getPageNumber(); pgnum <= getPageCount(); pgnum++) {
+		for (int pgnum = getPageNumber() + 1; pgnum <= getPageCount(); pgnum++) {
 			if (doSearch(pgnum, searchStr)) {
 				return;
 			}
