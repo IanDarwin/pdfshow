@@ -26,7 +26,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 /**
  * A visual rep of one PDF document, for placing within a TabView
  * Page numbers in methods are one-based, but PDFRenderer is
- * zero-based, so subtract 1 for PDTree
+ * zero-based, so subtract 1 when dealing with PDTree etc.
  */
 class DocTab extends JPanel {
 
@@ -223,21 +223,35 @@ class DocTab extends JPanel {
 	}
 
 	private boolean doSearch(int pgNum, String searchStr) {
+		String str = searchStr.toLowerCase();
 
-			textStripper.setStartPage(pgNum);
-			textStripper.setEndPage(pgNum);
+		textStripper.setStartPage(pgNum);
+		textStripper.setEndPage(pgNum);
 
-			try {
-				String pageText = textStripper.getText(doc);
-				if (pageText.toLowerCase().contains(searchStr.toLowerCase())) {
-					System.out.println("Text found on page " + pgNum);
+		try {
+			String pageText = textStripper.getText(doc);
+			if (pageText.toLowerCase().contains(str)) {
+				System.out.println("Found in body on page " + pgNum);
+				gotoPage(pgNum);
+				return true;
+			}
+		} catch (IOException u) {
+			u.printStackTrace();
+			return false;
+		}
+		for (GObject gobj : addIns.get(pgNum - 1)) {
+			if (gobj instanceof GText gtx) {
+				String text = gtx.getText();
+				if (text == null || text.isEmpty()) {
+					continue;
+				}
+				if (text.toLowerCase().contains(str)) {
+					System.out.println("Found in gtext on page " + pgNum);
 					gotoPage(pgNum);
 					return true;
 				}
-			} catch (IOException u) {
-				u.printStackTrace();
-				return false;
 			}
+		}
 		return false;
 	}
 

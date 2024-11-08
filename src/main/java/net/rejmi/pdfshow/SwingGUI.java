@@ -398,6 +398,9 @@ public class SwingGUI {
 				Main.isMac ? "meta F" : "control F"));
 		miFind.addActionListener(e -> {
 			String search = JOptionPane.showInputDialog("Text");
+			if (search == null || search.isEmpty()) {
+				return;
+			}
 			searchTF.setText(search);	// stash for re-use
 			doSearch(search);
 		});

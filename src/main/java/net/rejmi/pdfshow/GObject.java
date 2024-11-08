@@ -165,6 +165,11 @@ class GText extends GObject {
 		g.setFont(font);
 		g.drawString(text, x, y);
 	}
+
+	public String getText() {
+		return text;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("GText: x %d, y %d, w %d, h %d %s", x, y, width, height, text);
