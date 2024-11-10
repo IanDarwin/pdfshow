@@ -90,3 +90,5 @@ for fmt in ${inst_format}; do
 		exit 1
 	}
 done
+
+echo "$0 done at $(date)"
