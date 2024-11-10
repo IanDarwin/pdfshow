@@ -21,11 +21,12 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.text.PDFTextStripper;
 
 /**
  * A visual rep of one PDF document, for placing within a TabView
  * Page numbers in methods are one-based, but PDFRenderer is
- * zero-based, so subtract 1 for PDTree
+ * zero-based, so subtract 1 when dealing with PDTree etc.
  */
 class DocTab extends JPanel {
 
@@ -33,7 +34,7 @@ class DocTab extends JPanel {
 
 	private final JScrollBar sbar;
 	private final JComponent pdfComponent;
-	/** one--based pageNumber, same as from document's page numbering */
+	/** one--based pageNumber, usually same as document's page numbering */
 	private int pageNumber = 1;
 	/** The current PDF */
 	PDDocument doc;
@@ -41,6 +42,8 @@ class DocTab extends JPanel {
 	File file;
 	/** The PdfBox renderer for it */
 	PDFRenderer renderer;
+	/** The textStripper for the find command */
+	PDFTextStripper textStripper;
 	/** Scaling to make the document fit */
 	float scaleX, scaleY;
 	/** Our user's annotations for this doc, indexed by page#-1 to get list */
@@ -64,6 +67,8 @@ class DocTab extends JPanel {
 			addIns.add(new ArrayList<>());
 		}
 		// End of "Should be done in a background thread"
+
+		textStripper = new PDFTextStripper();
 
 		// GUI stuff
 		setDoubleBuffered(true);
@@ -202,6 +207,54 @@ class DocTab extends JPanel {
 		}
 	}
 
+	public void doSearch(String searchStr) {
+
+		for (int pgnum = getPageNumber() + 1; pgnum <= getPageCount(); pgnum++) {
+			if (doSearch(pgnum, searchStr)) {
+				return;
+			}
+		}
+		for (int pgnum = 1; pgnum < getPageNumber() - 1; pgnum++) {
+			if (doSearch(pgnum, searchStr)) {
+				return;
+			}
+		}
+		System.out.println("searchStr Not Found: " + searchStr);
+	}
+
+	private boolean doSearch(int pgNum, String searchStr) {
+		String str = searchStr.toLowerCase();
+
+		textStripper.setStartPage(pgNum);
+		textStripper.setEndPage(pgNum);
+
+		try {
+			String pageText = textStripper.getText(doc);
+			if (pageText.toLowerCase().contains(str)) {
+				System.out.println("Found in body on page " + pgNum);
+				gotoPage(pgNum);
+				return true;
+			}
+		} catch (IOException u) {
+			u.printStackTrace();
+			return false;
+		}
+		for (GObject gobj : addIns.get(pgNum - 1)) {
+			if (gobj instanceof GText gtx) {
+				String text = gtx.getText();
+				if (text == null || text.isEmpty()) {
+					continue;
+				}
+				if (text.toLowerCase().contains(str)) {
+					System.out.println("Found in gtext on page " + pgNum);
+					gotoPage(pgNum);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	void close() {
 		try {
 			prefs.putInt("PAGE#" + getName(), getPageNumber());
@@ -220,7 +273,7 @@ class DocTab extends JPanel {
 		@Override
 		protected void paintComponent(Graphics g) {
 			// 1) Super
-			super.paintComponent(g);
+			//super.paintComponent(g);
 			if (pageNumber < 1 || pageNumber > getPageCount()) {
 				throw new IllegalStateException("Ran off end, in paintComponent: pageNumber " + pageNumber);
 			}

@@ -4,7 +4,7 @@
 # Note there are now two different 'jpackage-maven-plugin' plugins,
 # so this could eventually be moved into the Maven pom.xml file.
 
-RELEASE_VERSION=1.0.6	# DRY? Keep in sync with pom file
+RELEASE_VERSION=1.1.0	# DRY? Keep in sync with pom file
 
 USAGE="$0 [-t installer-type] [-v]"
 
@@ -90,8 +90,3 @@ for fmt in ${inst_format}; do
 		exit 1
 	}
 done
-exit
-	# The following are not used in production releases
-	# Omit file-association for OSes that only allow one program per filetype.
-	# See https://github.com/IanDarwin/pdfshow/issues/19 Issue #19
-	--file-associations install-aux/pdfassoc.properties \

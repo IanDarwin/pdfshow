@@ -28,7 +28,7 @@ abstract class GObject {
 			new AffineTransform(defaultTransform);
 	}
 	
-	private static Logger logger;
+	private static final Logger logger;
 	static {
 		// Configure logging
 		LoggerSetup.init();
@@ -68,13 +68,6 @@ abstract class GObject {
 		GObject.defaultLineColor = (Color)color;
 	}
 
-	public static Color getFillColor() {
-		return curFillColor;
-	}
-	public static void setFillColor(Object color) {
-		GObject.curFillColor = (Color)color;
-	}
-
 	public static Font getFont() {
 		return curFont;
 	}
@@ -89,7 +82,7 @@ abstract class GObject {
 	}
 	abstract void render(Graphics g);
 	
-	void draw(Graphics g) {
+	final void draw(Graphics g) {
 		((Graphics2D)g).setTransform(UPRIGHT_TRANSLATE_INSTANCE);
 		render(g);
 		if (isSelected) {
@@ -172,6 +165,11 @@ class GText extends GObject {
 		g.setFont(font);
 		g.drawString(text, x, y);
 	}
+
+	public String getText() {
+		return text;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("GText: x %d, y %d, w %d, h %d %s", x, y, width, height, text);
@@ -208,7 +206,8 @@ class GMarker extends GLine {
 /** Multi-straight-line-segment polyline, no bezier or anything */
 class GPolyLine extends GObject {
 	final int MAX_POINTS = 375;
-	private int[] xPoints = new int[MAX_POINTS], yPoints = new int[MAX_POINTS];
+	private final int[] xPoints = new int[MAX_POINTS],
+			yPoints = new int[MAX_POINTS];
 	private int nPoints = 0;
 	GPolyLine(int x, int y) {
 		super(x, y);
