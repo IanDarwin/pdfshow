@@ -200,11 +200,6 @@ public class SwingGUI {
 		public Dimension getPreferredSize() {
 			return SQUARE;
 		}
-
-		@Override
-		public Dimension getMaximumSize() {
-			return getPreferredSize();
-		}
 	}
 
 	void createGuiAndListeners() {
@@ -605,8 +600,12 @@ public class SwingGUI {
 		lastButton.addActionListener(e -> moveToPage(currentTab.getPageCount()));
 		navBox.add(lastButton);
 
-		// Row 2 - first page, # page, last page
-		pageNumTF = new JTextField("001");
+		return navBox;
+	}
+
+	JPanel makePageCount() {
+		JPanel pageNumbersPanel = new JPanel();
+		pageNumTF = new JTextField("001", JTextField.RIGHT);
 		pageNumTF.addMouseListener(new MouseAdapter() {
 			// If you click in it, we select all so that you can overtype
 			@Override
@@ -627,14 +626,9 @@ public class SwingGUI {
 						JOptionPane.ERROR_MESSAGE);
 			}
 		});
-		return navBox;
-	}
-
-	JPanel makePageCount() {
-		JPanel pageNumbersPanel = new JPanel();
 		pageCountTF = new JLabel("1");
 		pageNumbersPanel.setLayout(new BoxLayout(pageNumbersPanel, BoxLayout.LINE_AXIS));
-		pageNumbersPanel.add(new JLabel("Slide"));
+		pageNumbersPanel.add(new JLabel("Slide Number "));
 		pageNumbersPanel.add(pageNumTF);
 		pageNumbersPanel.add(new JLabel(" of "));
 		pageNumbersPanel.add(pageCountTF);
