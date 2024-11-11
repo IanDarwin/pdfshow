@@ -33,7 +33,10 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
  * @author Ian Darwin
  */
 public class SwingGUI {
-	
+
+	public static final int HEIGHT = 800;
+	public static final int FULL_WIDTH = 1024;
+	public static final String MENU_SLIDESHOW = "slideshow";
 	static Logger logger;
 	
 	static SwingGUI instance;
@@ -61,6 +64,7 @@ public class SwingGUI {
 			KEY_ONESHOT = "one_shot_draw_tools",
 			KEY_FILECHOOSER_DIR = "file_chooser_dir";
 	final static String EMAIL_TEMPLATE = "mailto:%s?subject=PdfShow Feedback";
+	final static Dimension SQUARE = new Dimension(32, 32);
 	
 	boolean savePageNumbers = prefs.getBoolean(KEY_SAVE_PAGENUMS, true);
 	boolean jumpBack = prefs.getBoolean(KEY_JUMP_BACK, true);
@@ -73,18 +77,19 @@ public class SwingGUI {
 	JFrame bTimerFrame;
 	JLabel emptyViewScreenLabel;
 	DocTab currentTab;
-	private final JButton upButton = new JButton(getMyImageIcon("Chevron-Up")),
-			downButton = new JButton(getMyImageIcon("Chevron-Down"));
+	private final JButton
+			upButton = new BoxButton(getMyImageIcon("Chevron-Up")),
+			downButton = new BoxButton(getMyImageIcon("Chevron-Down"));
 	private JTextField pageNumTF;
 	private JTextField searchTF;
 	private JLabel pageCountTF;
-	private final JButton selectButton = new JButton(getMyImageIcon("Select")),
-		textButton = new JButton(getMyImageIcon("Text")),
-		markerButton = new JButton(getMyImageIcon("Marker")),
-		lineButton = new JButton(getMyImageIcon("Line")),
-		polyLineButton = new JButton(getMyImageIcon("PolyLine")),
-		ovalButton = new JButton(getMyImageIcon("Oval")),
-		rectangleButton = new JButton(getMyImageIcon("Rectangle"));
+	private final JButton selectButton = new BoxButton(getMyImageIcon("Select")),
+		textButton = new BoxButton(getMyImageIcon("Text")),
+		markerButton = new BoxButton(getMyImageIcon("Marker")),
+		lineButton = new BoxButton(getMyImageIcon("Line")),
+		polyLineButton = new BoxButton(getMyImageIcon("PolyLine")),
+		ovalButton = new BoxButton(getMyImageIcon("Oval")),
+		rectangleButton = new BoxButton(getMyImageIcon("Rectangle"));
 	Preview previewer;
 	RecentMenu recents;
 	private BreakTimer breakTimer;
@@ -93,7 +98,7 @@ public class SwingGUI {
 	// For slide show
     ExecutorService pool = Executors.newSingleThreadExecutor();
     int slideTime = 10;
-    boolean done = false;
+    boolean slideshowDone = false;
 
 	private MonitorMode monitorMode = MonitorMode.SINGLE;
 
@@ -134,7 +139,7 @@ public class SwingGUI {
 		}
 		assert dm != null : "Could not find DM";
 		viewFrame = new JFrame("PDFShow Display");
-		viewFrame.setSize(new Dimension(1024, 800));
+		viewFrame.setSize(new Dimension(FULL_WIDTH, HEIGHT));
 		// But start maximized anyway, as it's more impressive.
 		viewFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		emptyViewScreenLabel = new JLabel("<html><b>PDFShow Display</b><br/>" +
@@ -156,7 +161,7 @@ public class SwingGUI {
 						controlFrame = new JFrame("PDFShow Control");
 						previewer = new Preview();
 						controlFrame.add(previewer, BorderLayout.CENTER);
-						controlFrame.setSize(800, 800);
+						controlFrame.setSize(HEIGHT, HEIGHT);
 						controlFrame.setVisible(true);
 						GraphicsDevice screen2 = gs[1];
 						viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
@@ -178,12 +183,29 @@ public class SwingGUI {
 		controlFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		controlFrame.setFocusable(true);
 		final Image iconImage = getImage("/images/logo.png");
-		logger.fine("SwingGUI.SwingGUI(): " + iconImage);
+		logger.finest("SwingGUI.SwingGUI(): Logo Image = " + iconImage);
 		controlFrame.setIconImage(iconImage);
-
 	}
 
-	private boolean skip = false;
+	private boolean skipMoveWhileMouseWheeling = false;
+
+	private static class BoxButton extends JButton {
+		BoxButton() {
+			super();
+		}
+		BoxButton(Icon img) {
+			super(img);
+		}
+		@Override
+		public Dimension getPreferredSize() {
+			return SQUARE;
+		}
+
+		@Override
+		public Dimension getMaximumSize() {
+			return getPreferredSize();
+		}
+	}
 
 	void createGuiAndListeners() {
 
@@ -192,29 +214,13 @@ public class SwingGUI {
 			// WheelRotation is 1 for down, -1 for up
 			// Skip is b/c we get two events for every move, awt bug?
 			if (currentTab != null) {
-				if (skip) {
+				if (skipMoveWhileMouseWheeling) {
 					if (Main.debug)
 						System.out.println("Skip wheeling");
 				} else {
                     moveToPage(currentTab.getPageNumber() + evt.getWheelRotation());
 				}
-				skip = !skip;
-			}
-		});
-
-		// If view gets resized, must re-calc scaling
-		viewFrame.addComponentListener(new ComponentAdapter() { // cannot lambdafy
-			public void componentResized(ComponentEvent e) {
-				int nt = tabPane.getTabCount();
-				for (int i = 0; i < nt; i++) {
-					Component tabComponent = tabPane.getComponent(nt);
-					if (tabPane.getComponent(nt) instanceof DocTab) {
-						DocTab dt = (DocTab) tabComponent;
-						dt.computeScaling(dt.doc.getPage(0).getBBox(), (JComponent) tabComponent);
-					} else {
-						logger.warning(String.format("Tab %d is %s, not DocTab", i, tabComponent.getClass()));
-					}
-				}
+				skipMoveWhileMouseWheeling = !skipMoveWhileMouseWheeling;
 			}
 		});
 
@@ -240,27 +246,50 @@ public class SwingGUI {
 		}
 		logger.info("SwingGUI(): Properties " + programProps);
 
-		makeTabbedPane(viewFrame);
+		tabPane.addChangeListener(e -> {
+			currentTab = (DocTab)tabPane.getSelectedComponent();
+			if (currentTab != null) { // Avoid NPE on removal
+				updatePageNumbersDisplay();
+			}
+		});
+		// If view gets resized, must re-calc scaling
+		tabPane.addComponentListener(new ComponentAdapter() { // cannot lambdafy
+			public void componentResized(ComponentEvent e) {
+				int nt = tabPane.getTabCount();
+				for (int i = 0; i < nt; i++) {
+					Component tabComponent = tabPane.getComponent(nt);
+					if (tabPane.getComponent(nt) instanceof DocTab) {
+						DocTab dt = (DocTab) tabComponent;
+						dt.computeScaling(dt.doc.getPage(0).getBBox(), (JComponent) tabComponent);
+					} else {
+						logger.finest(String.format("Tab %d is %s, not DocTab", i, tabComponent.getClass()));
+					}
+				}
+			}
+		});
+
+		var splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		viewFrame.setContentPane(splitPane);
 
 		JPanel sidePanel = new JPanel();
-		sidePanel.setPreferredSize(new Dimension(200, 800));
+		sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
+		sidePanel.setPreferredSize(new Dimension(150, HEIGHT));
 
 		JPanel navBox = makeNavBox();
 		sidePanel.add(navBox);
 
+		JPanel pageNumPanel = makePageCount();
+		sidePanel.add(pageNumPanel);
+
 		JPanel toolBox = makeToolbox();
 		sidePanel.add(toolBox);
-
-		JButton stopShowButton = new JButton("Stop slide show");
-		stopShowButton.addActionListener(e -> done = true);
-		sidePanel.add(stopShowButton);
 
 		JPanel searchPanel = new JPanel();
 		searchTF = new JTextField(10);
 		searchTF.addActionListener(e -> doSearch(searchTF.getText()));
 		searchTF.setBorder(BorderFactory.createTitledBorder("Search"));
 		searchPanel.add(searchTF);
-		final JButton searchButton = (JButton)searchPanel.add(new JButton(getMyImageIcon("Search")));
+		final JButton searchButton = (JButton)searchPanel.add(new BoxButton(getMyImageIcon("Search")));
 		searchButton.addActionListener(e -> doSearch(searchTF.getText()));
 		sidePanel.add(searchPanel);
 
@@ -277,7 +306,8 @@ public class SwingGUI {
 				new SettingHandler("jumpbackBox.label", SettingType.BOOLEAN, "", jumpBack, this::setJumpBack)
 				));
 
-		controlFrame.add(BorderLayout.WEST, sidePanel);
+		splitPane.add(sidePanel);
+		splitPane.add(tabPane);
 
 		controlFrame.setVisible(true);
 		viewFrame.setVisible(true);
@@ -290,17 +320,6 @@ public class SwingGUI {
 	}
 
 	/** Create a DnDTabbedPane: the main window for viewing PDFs */
-	private void makeTabbedPane(JFrame frame) {
-
-		tabPane.addChangeListener(e -> {
-			currentTab = (DocTab)tabPane.getSelectedComponent();
-			if (currentTab != null) { // Avoid NPE on removal
-				updatePageNumbersDisplay();
-			}
-		});
-		frame.add(BorderLayout.CENTER, tabPane);
-	}
-
 	/** Create a JMenuBar with all the menus. */
 	private JMenuBar makeMenus() {
 
@@ -415,18 +434,18 @@ public class SwingGUI {
 
 		setupBreakTimer(rb, viewMenu);
 
-		final JMenu slideshowMenu = MenuUtils.mkMenu(rb, "slideshow");
+		final JMenu slideshowMenu = MenuUtils.mkMenu(rb, MENU_SLIDESHOW);
 		menuBar.add(slideshowMenu);
-		final JMenuItem ssThisTabFromStartButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_start");
+		final JMenuItem ssThisTabFromStartButton = MenuUtils.mkMenuItem(rb, MENU_SLIDESHOW, "thistab_from_start");
 		slideshowMenu.add(ssThisTabFromStartButton);
 		ssThisTabFromStartButton.addActionListener(e -> runSlideShow(1));
-		final JMenuItem ssThisTabCurButton = MenuUtils.mkMenuItem(rb, "slideshow", "thistab_from_current");
+		final JMenuItem ssThisTabCurButton = MenuUtils.mkMenuItem(rb, MENU_SLIDESHOW, "thistab_from_current");
 		slideshowMenu.add(ssThisTabCurButton);
 		ssThisTabCurButton.addActionListener(e -> runSlideShow(currentTab.getPageNumber()));
-		final JMenuItem ssAcrossTabsButton = MenuUtils.mkMenuItem(rb, "slideshow", "across_tabs");
+		final JMenuItem ssAcrossTabsButton = MenuUtils.mkMenuItem(rb, MENU_SLIDESHOW, "across_tabs");
 		ssAcrossTabsButton.addActionListener(slideshowAcrossTabsAction);
 		slideshowMenu.add(ssAcrossTabsButton);
-		final JMenuItem ssCustomButton = MenuUtils.mkMenuItem(rb, "slideshow", "custom");
+		final JMenuItem ssCustomButton = MenuUtils.mkMenuItem(rb, MENU_SLIDESHOW, "custom");
 		ssCustomButton.addActionListener(e -> {
 			if (currentTab == null) {
 				JOptionPane.showMessageDialog(controlFrame, "Must be in an open tab",
@@ -549,7 +568,7 @@ public class SwingGUI {
 		bTimerFrame = new JFrame("Timer");
 		// Set size and location for when non-maximized
 		bTimerFrame.setLocation(100, 100);
-		bTimerFrame.setSize(new Dimension(800, 600));
+		bTimerFrame.setSize(new Dimension(HEIGHT, HEIGHT));
 		// But start maximized anyway, as it's more impressive.
 		bTimerFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		breakTimer = new BreakTimer(bTimerFrame, all);
@@ -571,16 +590,16 @@ public class SwingGUI {
 
 		JPanel navBox = new JPanel();
 		navBox.setBorder(BorderFactory.createTitledBorder("Navigation"));
-		navBox.setLayout(new GridLayout(0,2));
+		navBox.setLayout(new GridLayout(0, 2));
 
 		// Row 1 - just Up button
-		upButton.addActionListener(e-> moveToPage(currentTab.getPageNumber() - 1));
+		upButton.addActionListener(e -> moveToPage(currentTab.getPageNumber() - 1));
 		navBox.add(upButton);
 		downButton.addActionListener(e -> moveToPage(currentTab.getPageNumber() + 1));
 		navBox.add(downButton);
 
 		JButton firstButton = new JButton(getMyImageIcon("Rewind"));
-		firstButton.addActionListener(e-> moveToPage(1));
+		firstButton.addActionListener(e -> moveToPage(1));
 		navBox.add(firstButton);
 		JButton lastButton = new JButton(getMyImageIcon("Fast-Forward"));
 		lastButton.addActionListener(e -> moveToPage(currentTab.getPageCount()));
@@ -608,15 +627,19 @@ public class SwingGUI {
 						JOptionPane.ERROR_MESSAGE);
 			}
 		});
-		pageCountTF = new JLabel("1");
+		return navBox;
+	}
+
+	JPanel makePageCount() {
 		JPanel pageNumbersPanel = new JPanel();
+		pageCountTF = new JLabel("1");
 		pageNumbersPanel.setLayout(new BoxLayout(pageNumbersPanel, BoxLayout.LINE_AXIS));
+		pageNumbersPanel.add(new JLabel("Slide"));
 		pageNumbersPanel.add(pageNumTF);
 		pageNumbersPanel.add(new JLabel(" of "));
 		pageNumbersPanel.add(pageCountTF);
-		navBox.add(pageNumbersPanel);
 
-		return navBox;
+		return pageNumbersPanel;
 	}
 
 	/** Create the drawing-tool toolBox */
@@ -684,12 +707,10 @@ public class SwingGUI {
 		feedbackButton.setToolTipText("Send feedback");
 		toolBox.add(feedbackButton);
 
-		final JButton starButton = new JButton(getMyImageIcon("Star"));
-		starButton.addActionListener(e ->
-				JOptionPane.showMessageDialog(controlFrame, "Fave handling not written yet",
-						"Sorry", JOptionPane.WARNING_MESSAGE));
-		starButton.setToolTipText("Favorite this page");
-		toolBox.add(starButton);
+		final JButton stopButton = new JButton(getMyImageIcon("StopSign"));
+		stopButton.addActionListener(e -> slideshowDone = true);
+		stopButton.setToolTipText("Stop Slide Show");
+		toolBox.add(stopButton);
 
 		final JButton timerButton = new JButton(getMyImageIcon("Timer"));
 		timerButton.addActionListener(e1 ->  {
@@ -720,7 +741,7 @@ public class SwingGUI {
 
 	/** Runs a show "across tabs" */
 	ActionListener slideshowAcrossTabsAction = e -> {
-        done = false;
+        slideshowDone = false;
         final DocTab tab = currentTab;
         pool.submit(() -> {
             if (tab != currentTab) {
@@ -728,14 +749,14 @@ public class SwingGUI {
                 return;
             }
             int n = tabPane.getSelectedIndex();
-            while (!done) {
+            while (!slideshowDone) {
                 try {
                     Thread.sleep(slideTime * 1000L);
                 } catch (InterruptedException ex) {
-                    done = true;
+                    slideshowDone = true;
                     return;
                 }
-                if (done)
+                if (slideshowDone)
                 	return;
                 n = (n + 1) % tabPane.getTabCount();
                 tabPane.setSelectedIndex(n);
@@ -750,21 +771,21 @@ public class SwingGUI {
 	}
 	/** Runs a show within the current tab, from page 'start' to 'end', wrap around */
 	void runSlideShow(int start, int end) {
-        done = false;
+        slideshowDone = false;
         pool.submit(() -> {
             int slideShowPageNumber = start;
             DocTab tab = currentTab;
 			tab.gotoPage(slideShowPageNumber);
-			while (!done) {
+			while (!slideshowDone) {
                 if (tab != currentTab) {
                     // User manually changed it, so "the show must go off"!
-                	done = true;
+                	slideshowDone = true;
                     return;
                 }
                 try {
                     Thread.sleep(slideTime * 1000L);
                 } catch (InterruptedException ex) {
-                    done = true;
+                    slideshowDone = true;
                     return;
                 }
 				if (++slideShowPageNumber > end)
@@ -867,7 +888,7 @@ public class SwingGUI {
 		public void keyPressed(KeyEvent e) {
 			System.out.println("keyPressed: " + e.getKeyChar());
 			switch (e.getKeyChar()) {
-				case 's':
+				case 's', 'v':
 					gotoState(viewState);
 					break;
 				case 't':
@@ -888,10 +909,7 @@ public class SwingGUI {
 				case 'r':
 					gotoState(rectangleState);
 					break;
-				case 'v':
-					gotoState(viewState);
-					break;
-				default:
+                default:
 					if (Main.debug) {
 						System.out.println("Unhandled key " + e.getKeyChar());
 					}
