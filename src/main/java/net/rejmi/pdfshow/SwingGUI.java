@@ -608,6 +608,7 @@ public class SwingGUI {
 
 	JPanel makePageCount() {
 		JPanel pageNumbersPanel = new JPanel();
+		pageNumbersPanel.setMaximumSize(new Dimension(300, 100));
 		pageNumTF = new JTextField("001", JTextField.RIGHT);
 		pageNumTF.addMouseListener(new MouseAdapter() {
 			// If you click in it, we select all so that you can overtype
