@@ -207,19 +207,19 @@ class DocTab extends JPanel {
 		}
 	}
 
-	public void doSearch(String searchStr) {
+	public boolean doSearch(String searchStr) {
 
 		for (int pgnum = getPageNumber() + 1; pgnum <= getPageCount(); pgnum++) {
 			if (doSearch(pgnum, searchStr)) {
-				return;
+				return true;
 			}
 		}
-		for (int pgnum = 1; pgnum < getPageNumber() - 1; pgnum++) {
+		for (int pgnum = 1; pgnum < getPageNumber(); pgnum++) {
 			if (doSearch(pgnum, searchStr)) {
-				return;
+				return true;
 			}
 		}
-		System.out.println("searchStr Not Found: " + searchStr);
+		return false;
 	}
 
 	private boolean doSearch(int pgNum, String searchStr) {
@@ -230,6 +230,7 @@ class DocTab extends JPanel {
 
 		try {
 			String pageText = textStripper.getText(doc);
+			System.out.printf("Page %d contents %s\n\n", pgNum, pageText);
 			if (pageText.toLowerCase().contains(str)) {
 				System.out.println("Found in body on page " + pgNum);
 				gotoPage(pgNum);

@@ -310,7 +310,10 @@ public class SwingGUI {
 
 	private void doSearch(String searchStr) {
 		if (currentTab != null) {
-			currentTab.doSearch(searchStr);
+			boolean found = currentTab.doSearch(searchStr);
+			if (!found) {
+				JOptionPane.showMessageDialog(viewFrame, "Could not find '" + searchStr + "'");
+			}
 		}
 	}
 
