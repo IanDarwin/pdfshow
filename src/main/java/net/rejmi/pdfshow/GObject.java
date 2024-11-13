@@ -28,7 +28,7 @@ abstract class GObject {
 			new AffineTransform(defaultTransform);
 	}
 	
-	private static final Logger logger;
+	static final Logger logger;
 	static {
 		// Configure logging
 		LoggerSetup.init();
