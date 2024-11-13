@@ -126,6 +126,19 @@ class ViewState extends State {
 		SwingGUI.logger.info(String.format(
 				"SwingGUI.ViewState.mouseClicked() x %d y %d", mx, my));
 		changed = found = false;
+
+		if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+			System.out.println("double clicked");
+			visitCurrentPageGObjs(gobj -> {
+				if (gobj.isSelected && gobj instanceof GText) {
+					System.out.println("Editable Text gobj = " + ((GText) gobj).text);
+					String newText = JOptionPane.showInputDialog("Edit Text", ((GText) gobj).text);
+					((GText) gobj).text = newText;
+				}
+			});
+			parent.currentTab.repaint();
+			return;
+		}
 		// Avoid old selection
 		visitCurrentPageGObjs(gobj -> gobj.isSelected = false);
 
@@ -192,6 +205,7 @@ class TextDrawState extends State {
 	boolean dialogClosed = false;
 	@Override
 	public void mousePressed(MouseEvent e) {
+		// Not sure why this isn't just JOptionPane.showInputDialog()
 		JOptionPane pane = new JOptionPane("Text?",
 			JOptionPane.QUESTION_MESSAGE,
 			JOptionPane.DEFAULT_OPTION);
