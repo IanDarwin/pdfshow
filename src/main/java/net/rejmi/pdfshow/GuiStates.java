@@ -133,6 +133,9 @@ class ViewState extends State {
 				if (gobj.isSelected && gobj instanceof GText) {
 					System.out.println("Editable Text gobj = " + ((GText) gobj).text);
 					String newText = JOptionPane.showInputDialog("Edit Text", ((GText) gobj).text);
+					if (newText == null || newText.isEmpty()) {
+						return;
+					}
 					((GText) gobj).text = newText;
 				}
 			});
