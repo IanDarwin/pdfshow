@@ -209,6 +209,8 @@ class DocTab extends JPanel {
 
 	public boolean doSearch(String searchStr) {
 
+		logger.finest("Search for " + searchStr);
+
 		for (int pgnum = getPageNumber() + 1; pgnum <= getPageCount(); pgnum++) {
 			if (doSearch(pgnum, searchStr)) {
 				return true;
@@ -230,9 +232,8 @@ class DocTab extends JPanel {
 
 		try {
 			String pageText = textStripper.getText(doc);
-			System.out.printf("Page %d contents %s\n\n", pgNum, pageText);
 			if (pageText.toLowerCase().contains(str)) {
-				System.out.println("Found in body on page " + pgNum);
+				logger.finest("Found in body on page " + pgNum);
 				gotoPage(pgNum);
 				return true;
 			}
@@ -247,7 +248,7 @@ class DocTab extends JPanel {
 					continue;
 				}
 				if (text.toLowerCase().contains(str)) {
-					System.out.println("Found in gtext on page " + pgNum);
+					logger.finest("Found in gtext on page " + pgNum);
 					gotoPage(pgNum);
 					return true;
 				}
