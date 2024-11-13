@@ -2,11 +2,26 @@
 
 The release notes for current and past releases are in the github under releases.
 
-== PLANNED for 1.0.6 (and fixed in current code in Github)
+== Implemented for next release.
+
+Double-clicking on a Text box lets you edit the text, copy from it, etc.
+
+== 1.1.0 Finders Keepers
+
+* Implements the Find command, via CTRL/F, Edit->Find Menu, and a textfield in the toolbox.
+The latter has a Search icon button that will repeat a search. 
+Search will not find what's on the current page, and the found text isn't highlighted (yet?).
+* The color picker has the half-dozen most common colors predefined, but you can still pick from a full-blown color chooser - this was in the previous release, but now: Picking a color no longer changes the color of existing objects.
+* Better Progress Bar for seconds-long operations.
+
+All binaries were corrected 2024-11-12 around 20:00 Eastern, a few days after the first binaries,
+in order to fix an off-by-one that caused Find to miss some pages.
+
+== UNRELEASED 1.0.6 (included in 1.1.0 above).
 
 * Key shortcuts for graphics modes work in main window and in sidebar.
-* 'Jump back to Select after text/draw' (sticky/non-sticky) is now an option.
 * All graphic tools (except highlighting) non-sticky, like Draw Text was in v1.0.5.
+'Jump back to Select after text/draw' (sticky/non-sticky) is now an option, settable in the bottom section of the toolbox.
 * Single letter commands to switch to t)ext, l)ine, o)val, etc - work with focus anywhere now.
 * Bug fixes:
 ** Hitting ESC on Text dialog caused "uninitializedValue" text to appear.
