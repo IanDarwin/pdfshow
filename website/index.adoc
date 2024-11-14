@@ -3,8 +3,8 @@
 
 `PdfShow` is a simple Java-based PDF viewer specifically for running slide shows.
 If you want to pre-draw fancy diagrams, and save them for re-use each time you present your
-slide deck, this is not for you. 
-Use Adobe Reader DC, PDF Annotator, or some other fancier tool.
+slide deck, this is not for you;
+use Adobe Reader DC, PDF Annotator, or some other fancier tool.
 And if your presentation skills depend on blurry transitions or zippy little animations,
 just run your show in KeyNote, LibreOffice or PowerPoint.
 However, if you like to scribble all over the slides in your PDF slide deck each time you run your course,
