@@ -4,7 +4,7 @@
 Test the **** out of it!
 * Pick a sillyName (cutesly release name) for the release.
 * Bump the build number and sillyName, and commit and push, in:
-** ver: pom.xml mkinstaller Makefile install-aux/winget-manifest.yaml
+** ver: pom.xml mkinstaller install-aux/winget-manifest.yaml
 ** ver and sillyName: README.adoc 
 * Bump the version number both in pom.xml AND in mkinstaller
 * Commit both.
