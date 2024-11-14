@@ -2,16 +2,22 @@
 
 The release notes for current and past releases are in the github under releases.
 
-== Implemented for next release.
+== Planned for 1.1.1 release.
 
-Double-clicking on a Text box lets you edit the text, copy from it, etc.
+=== Implemented in current code:
+
+* Double-clicking on a Text box lets you edit the text, copy from it, etc.
+
+=== Other planned:
+
+T.B.A.
 
 == 1.1.0 Finders Keepers
 
-* Implements the Find command, via CTRL/F, Edit->Find Menu, and a textfield in the toolbox.
-The latter has a Search icon button that will repeat a search. 
+* Implements the Find command, via CTRL/F, Edit->Find Menu, or a textfield in the toolbox.
+The latter has a Search icon button that will repeat a search, as will just pressing Enter there. 
 Search will not find what's on the current page, and the found text isn't highlighted (yet?).
-* The color picker has the half-dozen most common colors predefined, but you can still pick from a full-blown color chooser - this was in the previous release, but now: Picking a color no longer changes the color of existing objects.
+* The color picker has the half-dozen most common colors predefined, but you can still pick from a full-blown color chooser - this was in the previous release, but now: Picking a color no longer alters the color of existing objects.
 * Better Progress Bar for seconds-long operations.
 
 All binaries were corrected 2024-11-12 around 20:00 Eastern, a few days after the first binaries,
