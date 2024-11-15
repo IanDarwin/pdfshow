@@ -162,6 +162,7 @@ public class SwingGUI {
 						previewer = new Preview();
 						controlFrame.add(previewer, BorderLayout.CENTER);
 						controlFrame.setSize(HEIGHT, HEIGHT);
+						controlFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 						controlFrame.setVisible(true);
 						GraphicsDevice screen2 = gs[1];
 						viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
@@ -653,27 +654,27 @@ public class SwingGUI {
 		toolBox.add(selectButton);
 
 		textButton.addActionListener(e -> gotoState(textDrawState));
-		textButton.setToolTipText("Add text object");
+		textButton.setToolTipText("Add text object (t)");
 		toolBox.add(textButton);
 
 		markerButton.addActionListener(e -> gotoState(markingState));
-		markerButton.setToolTipText("Add marker");
+		markerButton.setToolTipText("Add marker (m)");
 		toolBox.add(markerButton);
 
 		lineButton.addActionListener(e -> gotoState(lineDrawState));
-		lineButton.setToolTipText("Add straight line");
+		lineButton.setToolTipText("Add straight line (l)");
 		toolBox.add(lineButton);
 
 		polyLineButton.addActionListener(e -> gotoState(polyLineDrawState));
-		polyLineButton.setToolTipText("Add a polyline");
+		polyLineButton.setToolTipText("Add a polyline (w)");
 		toolBox.add(polyLineButton);
 
 		ovalButton.addActionListener(e -> gotoState(ovalState));
-		ovalButton.setToolTipText("Add oval");
+		ovalButton.setToolTipText("Add oval (o)");
 		toolBox.add(ovalButton);
 
 		rectangleButton.addActionListener(e -> gotoState(rectangleState));
-		rectangleButton.setToolTipText("Add rectangle");
+		rectangleButton.setToolTipText("Add rectangle (r)");
 		toolBox.add(rectangleButton);
 
 		// Other buttons
@@ -1071,7 +1072,7 @@ public class SwingGUI {
 					prefs.getInt("PAGE#" + file.getName(), -1)
 					: 0;
 			moveToPage(pageNum == -1 ? 0 : pageNum);
-		}, () -> System.out.println("Done"));
+		}, () -> logger.fine("Done"));
 	}
 
 	void closeFile(DocTab dt) {
