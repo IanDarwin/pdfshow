@@ -7,6 +7,14 @@ On all platforms you need JDK ({current-java-ver}$$+$$) and Apache Maven install
 On Windows `jpackage` has a couple of pre-requisites,
 which it will let you know about if they're not already installed.
 
+If I have been using a pre-release of darwinsys-api, which I often do, you will also have to clone 
+https://github.com/IanDarwin/darwinsys-api[], then `cd darwinsys-api; make package install`
+which should install the latest darwinsys-api into your ~/.m2/repository.
+
+Then in `pdfshow` you can do `mvn package`, or open it in your IDE and run the main program.
+
+=== Build: Making Installable Packages
+
 On Linux, for RPMs, you need `rpm-build` or you will get told that 'rpm' is an invalid type
 (sudo dnf install rpm-build).
 On Linux, for DEBs, you may need `fakeroot` (sudo apt install fakeroot).
