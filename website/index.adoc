@@ -172,6 +172,7 @@ and your own informational slide during the pre-class period.
 That's the use case I designed it for, but your mileage may vary.
 
 "Down" mode is normal slide show mode - run through all the slides in one tab.
+Or, select `Custom Slide Show` and list the slide numbers in the current tab to display.
 
 For both modes, there is a single "Interval time" setting, which controls the speed
 of both modes, and takes effect on the next slide if changed during a show.
