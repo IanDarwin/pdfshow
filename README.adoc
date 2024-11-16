@@ -55,8 +55,8 @@ within the general tone of the program - _minimalist, but functional._
 |====
 |OS|Pkg Format|CLI Install|Install Download
 |Java|fat jar|n/a/|{download-link}/pdfshow-{ver}-jar-with-dependencies.jar
-|Linux|deb|Not available ATM.|-
 |Linux|rpm|Download then dnf install|{download-link}/pdfshow-{ver}-1.x86_64.rpm
+|Linux|deb|Not available ATM.|-
 |macOS|dmg|Download; should open|{download-link}/PDFShow-{ver}.dmg
 |Windows|msi|winget install RejminetGroupInc.PDFShow|{download-link}/PDFShow-{ver}.msi
 |====
