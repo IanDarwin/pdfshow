@@ -577,6 +577,11 @@ You can drag tabs to change their order in the tabbed pane.</p>
 <p>Typing a given page number in the page number box in the middle of the nav box;</p>
 </li>
 <li>
+<p>By finding text on a slide (either in a text annotation or in the original);
+use Edit&#8594;Find or CTRL/F for a dialog, or just type in the search box near the middle
+of the tool box.</p>
+</li>
+<li>
 <p>Ensuring the mouse is in the window, and using these shortcuts (not all work on all platforms):</p>
 <div class="ulist">
 <ul>
@@ -595,20 +600,26 @@ You can drag tabs to change their order in the tabbed pane.</p>
 <div class="sect2">
 <h3 id="_drawing">Drawing</h3>
 <div class="paragraph">
-<p>There are multiple draw tool icons in the toolbox.
-The Text button is not sticky; you draw one text and the program reverts to "selection" mode.
-The draw line/polyline/oval/rectangle buttons <em>are</em> sticky, that is, to draw two lines, click the line icon, draw one line, then you can draw another without re-clicking the line icon.</p>
+<p>There are multiple draw tool icons in the toolbox:
+Text, highlight, line, polyline, circle/oval, and rectangle.
+There is a setting at the bottom of the toolbox to set if
+these (except highlight) are "sticky, that is,
+you stay in that mode until you click a different one, or non-sticky, that is,
+you draw once and the program reverts to "selection" mode.</p>
 </div>
 <div class="paragraph">
-<p>Besides Text, the toolbox also has icons for select mode, marking/highlight mode,
-straight line, polyline, oval, and rectangle.
-Each of these will rubber-band as you draw it, like most draw programs.
-The Text icon pops up a dialog for the text; the others just let you draw.
+<p>The drawing modes for straight line, polyline, oval, and rectangle,
+will rubber-band as you draw it, like most draw programs.
 Each graphic object that you attach to a page will stay with that page
 until you close the file or exit the application.</p>
 </div>
 <div class="paragraph">
-<p>You can select the draw tools by clicking, but you can also select them by keyboard shortcuts:</p>
+<p>Note that the drawn objects other than text are immutable, e.g., you cannot resize a rectangle
+after you finish drawing it.
+Text is mutable: double-click on a text object for a dialog to revise it, or copy/paste.</p>
+</div>
+<div class="paragraph">
+<p>You can select the draw tools by clicking, or by their keyboard shortcuts:</p>
 </div>
 <table id="draw-shortcuts" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Draw Tool Keyboard Shortcuts</caption>
@@ -650,12 +661,12 @@ until you close the file or exit the application.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>The Undo button (or CTRL/Z CMD/Z) removes the most-recently added graphic each time it&#8217;s pressed.
+<p>The Undo button (or CTRL/Z CMD/Z) <em>removes</em> the most-recently added graphic each time it&#8217;s pressed.
 To delete an arbitrary graphic, click the <code>Select</code> icon then select the item
 you want to get rid of, then either use the <code>Delete</code> key (if it&#8217;s not mapped to
 VK_UP as it is on some systems) or use the <code>Edit&#8594;Delete Selected</code> menu item.
 The Trash Can icon is the most drastic: it removes <strong>all</strong> graphics from the current page.
-There&#8217;s no undo for this at the moment.</p>
+There&#8217;s no undo for this at the moment!</p>
 </div>
 <div class="paragraph">
 <p>Items that you draw are <em>not</em> saved on disk, since that would go against the
@@ -669,9 +680,9 @@ especially if accompanied by a "pull request" containing working code.</p>
 <div class="paragraph">
 <p>The break timer is activated from the View menu or from the "clock" button in the toolbox.
 Set the time you want in the drop-down/textbox at the bottom, and press Start
-to show the count-down window.
+to show the count-down window. There are some adjusters like +1 and -1 which add or subtract a minute.
 The window can be resized, moved, etc., in case you need to refer back to the slides
-(as is the case when a student asks a question when on a long break).
+(as is the case when an attendeed asks a question when on a long break).
 Just remember to bring the timer window back to the front when finished!</p>
 </div>
 <div class="paragraph">
@@ -686,6 +697,9 @@ That is, you may get one image all day, but you&#8217;ll (probably!) get a diffe
 <div class="content">
 <img src="images/breaktimer.png" alt="breaktimer" width="700px">
 </div>
+</div>
+<div class="paragraph">
+<p>When the time expires, you can click <code>Close</code> and the timer window will disappear.</p>
 </div>
 </div>
 <div class="sect2">
@@ -752,7 +766,7 @@ it will resume where you left off. This behaviour is true by default.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-09-22 21:20:17 -0400
+Last updated 2024-11-16 14:33:06 -0500
 </div>
 </div>
 </body>

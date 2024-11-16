@@ -80,27 +80,32 @@ You can move around within a file using:
 * The `Up` and `Down` buttons in the nav box;
 * The `Begin` and `End` buttons in the nav box (first and last page).
 * Typing a given page number in the page number box in the middle of the nav box;
+* By finding text on a slide (either in a text annotation or in the original);
+use Edit->Find or CTRL/F for a dialog, or just type in the search box near the middle
+of the tool box.
 * Ensuring the mouse is in the window, and using these shortcuts (not all work on all platforms):
 ** `DownArrow`, `j`, `SPACE`, or `RETURN` to move to the next page;
 ** `UpArrow`, `k`, `DELETE`, or `BACKSPACE` to move to the previous page.
 
 === Drawing
 
-There are multiple draw tool icons in the toolbox. 
-// Each of these
-// only has effect once, that is, you have to click the Line button
-// a second time to draw a second line.
-The Text button is not sticky; you draw one text and the program reverts to "selection" mode.
-The draw line/polyline/oval/rectangle buttons _are_ sticky, that is, to draw two lines, click the line icon, draw one line, then you can draw another without re-clicking the line icon.
+There are multiple draw tool icons in the toolbox:
+Text, highlight, line, polyline, circle/oval, and rectangle.
+There is a setting at the bottom of the toolbox to set if
+these (except highlight) are "sticky, that is,
+you stay in that mode until you click a different one, or non-sticky, that is,
+you draw once and the program reverts to "selection" mode.
 
-Besides Text, the toolbox also has icons for select mode, marking/highlight mode,
-straight line, polyline, oval, and rectangle.
-Each of these will rubber-band as you draw it, like most draw programs.
-The Text icon pops up a dialog for the text; the others just let you draw.
+The drawing modes for straight line, polyline, oval, and rectangle,
+will rubber-band as you draw it, like most draw programs.
 Each graphic object that you attach to a page will stay with that page
 until you close the file or exit the application.
 
-You can select the draw tools by clicking, but you can also select them by keyboard shortcuts:
+Note that the drawn objects other than text are immutable, e.g., you cannot resize a rectangle 
+after you finish drawing it.
+Text is mutable: double-click on a text object for a dialog to revise it, or copy/paste.
+
+You can select the draw tools by clicking, or by their keyboard shortcuts:
 
 [[draw-shortcuts]]
 .Draw Tool Keyboard Shortcuts
@@ -115,12 +120,12 @@ You can select the draw tools by clicking, but you can also select them by keybo
 |r|Rectangle/Square
 |====
 
-The Undo button (or CTRL/Z CMD/Z) removes the most-recently added graphic each time it's pressed.
+The Undo button (or CTRL/Z CMD/Z) _removes_ the most-recently added graphic each time it's pressed.
 To delete an arbitrary graphic, click the `Select` icon then select the item
 you want to get rid of, then either use the `Delete` key (if it's not mapped to
 VK_UP as it is on some systems) or use the `Edit->Delete Selected` menu item.
 The Trash Can icon is the most drastic: it removes *all* graphics from the current page.
-There's no undo for this at the moment.
+There's no undo for this at the moment!
 
 Items that you draw are _not_ saved on disk, since that would go against the 
 "make your slides come alive" mantra.
@@ -131,9 +136,9 @@ especially if accompanied by a "pull request" containing working code.
 
 The break timer is activated from the View menu or from the "clock" button in the toolbox.
 Set the time you want in the drop-down/textbox at the bottom, and press Start
-to show the count-down window.
+to show the count-down window. There are some adjusters like +1 and -1 which add or subtract a minute.
 The window can be resized, moved, etc., in case you need to refer back to the slides
-(as is the case when a student asks a question when on a long break).
+(as is the case when an attendeed asks a question when on a long break).
 Just remember to bring the timer window back to the front when finished!
 
 The Break Timer will choose one of several break-related theme photos to use as a background.
@@ -144,6 +149,8 @@ it may choose your images or the built-in ones, on a per-run basis.
 That is, you may get one image all day, but you'll (probably!) get a different one tomorrow.
 
 image::images/breaktimer.png[width="700px"]
+
+When the time expires, you can click `Close` and the timer window will disappear.
 
 === One or Two Monitors
 
