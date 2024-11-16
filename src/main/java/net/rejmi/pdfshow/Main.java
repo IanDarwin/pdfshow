@@ -11,6 +11,9 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        // Configure logging
+        LoggerSetup.init();
+
         isMac = System.getProperty("os.name").toLowerCase().startsWith("mac");
         System.out.println("isMac = " + isMac);
         // Instantiate main class
