@@ -308,8 +308,10 @@ public class SwingGUI {
 
 	private void doSearch(String searchStr) {
 		if (currentTab != null) {
-			boolean found = currentTab.doSearch(searchStr);
-			if (!found) {
+			OptionalInt found = currentTab.doSearch(searchStr);
+			if (found.isPresent()) {
+				moveToPage(found.getAsInt());
+			} else {
 				JOptionPane.showMessageDialog(viewFrame, "Could not find '" + searchStr + "'");
 			}
 		}
@@ -1100,9 +1102,8 @@ public class SwingGUI {
 		}
 		currentTab.gotoPage(newPage);
 		updatePageNumbersDisplay();
-		currentPageNumber = currentTab.getPageNumber();
-		upButton.setEnabled(currentPageNumber > 1);
-		downButton.setEnabled(currentPageNumber < currentPageCount);
+		upButton.setEnabled(newPage > 1);
+		downButton.setEnabled(newPage < currentPageCount);
 		currentTab.repaint();
 	}
 

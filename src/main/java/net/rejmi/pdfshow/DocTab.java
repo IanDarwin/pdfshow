@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
@@ -207,21 +208,21 @@ class DocTab extends JPanel {
 		}
 	}
 
-	public boolean doSearch(String searchStr) {
+	public OptionalInt doSearch(String searchStr) {
 
 		logger.finest("Search for " + searchStr);
 
 		for (int pgnum = getPageNumber() + 1; pgnum <= getPageCount(); pgnum++) {
 			if (doSearch(pgnum, searchStr)) {
-				return true;
+				return OptionalInt.of(pgnum);
 			}
 		}
 		for (int pgnum = 1; pgnum < getPageNumber(); pgnum++) {
 			if (doSearch(pgnum, searchStr)) {
-				return true;
+				return OptionalInt.of(pgnum);
 			}
 		}
-		return false;
+		return OptionalInt.empty();
 	}
 
 	private boolean doSearch(int pgNum, String searchStr) {
@@ -234,7 +235,6 @@ class DocTab extends JPanel {
 			String pageText = textStripper.getText(doc);
 			if (pageText.toLowerCase().contains(str)) {
 				logger.finest("Found in body on page " + pgNum);
-				gotoPage(pgNum);
 				return true;
 			}
 		} catch (IOException u) {
@@ -249,7 +249,6 @@ class DocTab extends JPanel {
 				}
 				if (text.toLowerCase().contains(str)) {
 					logger.finest("Found in gtext on page " + pgNum);
-					gotoPage(pgNum);
 					return true;
 				}
 			}
