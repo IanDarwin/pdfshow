@@ -73,9 +73,12 @@ public class SwingGUI {
 	// GUI Controls - defined here since referenced throughout
 	JFrame controlFrame;
 	static JFrame viewFrame;
+	private JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 	private final JTabbedPane tabPane = new DnDTabbedPane();
 	JFrame bTimerFrame;
-	JLabel emptyViewScreenLabel;
+	JLabel emptyViewScreenLabel = new JLabel("<html><b>PDFShow Display</b><br/>" +
+			"Open a file from the Control window to view.",
+			JLabel.CENTER);;
 	DocTab currentTab;
 	private final JButton
 			upButton = new BoxButton(getMyImageIcon("Chevron-Up")),
@@ -109,9 +112,7 @@ public class SwingGUI {
 
 		instance = this;
 
-		// Configure logging
-		LoggerSetup.init();
-		logger = Logger.getLogger("net.rejmi.pdfshow");
+		logger = Logger.getLogger("pdfshow.swingui");
 
 		// Configure for macOS if possible/applicable - before JFrame() -
 		// ignored on other platforms
@@ -119,10 +120,11 @@ public class SwingGUI {
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
 				SwingGUI.class.getSimpleName());
 
+		// Do not reference controlFrame or viewFrame before this call!
 		pickAScreenOrTwo();
+		controlFrame.setJMenuBar(makeMenus());
 		createGuiAndListeners();
 		barHelper = new ProgressBarSupport(viewFrame,"Working...");
-		controlFrame.setJMenuBar(makeMenus());
 
 		gotoState(viewState);
 	}
@@ -142,9 +144,6 @@ public class SwingGUI {
 		viewFrame.setSize(new Dimension(FULL_WIDTH, HEIGHT));
 		// But start maximized anyway, as it's more impressive.
 		viewFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		emptyViewScreenLabel = new JLabel("<html><b>PDFShow Display</b><br/>" +
-				"Open a file from the Control window to view.",
-				JLabel.CENTER);
 
 		switch (monitorMode) {
 			case SINGLE:
@@ -165,7 +164,6 @@ public class SwingGUI {
 						controlFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 						controlFrame.setVisible(true);
 						GraphicsDevice screen2 = gs[1];
-						viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
 						viewFrame.setLocation(screen2.getDefaultConfiguration().getBounds().x, controlFrame.getY());
 						break;
 					default:
@@ -190,6 +188,7 @@ public class SwingGUI {
 
 	private boolean skipMoveWhileMouseWheeling = false;
 
+	/// Simple JButton subclass to force getPreferredSize on many buttons.
 	private static class BoxButton extends JButton {
 		BoxButton() {
 			super();
@@ -264,7 +263,6 @@ public class SwingGUI {
 			}
 		});
 
-		var splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		viewFrame.setContentPane(splitPane);
 
 		JPanel sidePanel = new JPanel();
@@ -290,7 +288,6 @@ public class SwingGUI {
 		sidePanel.add(searchPanel);
 
 		sidePanel.add(new ColorPanel(GObject::setLineColor));
-		// sidePanel.add(new ColorPanel(GObject::setFillColor));
 
         // SETTINGS
 		sidePanel.add(new Settings(
@@ -302,8 +299,8 @@ public class SwingGUI {
 				new SettingHandler("jumpbackBox.label", SettingType.BOOLEAN, "", jumpBack, this::setJumpBack)
 				));
 
-		splitPane.add(sidePanel);
-		splitPane.add(tabPane);
+		splitPane.add(sidePanel, JSplitPane.LEFT);
+		splitPane.add(tabPane, JSplitPane.RIGHT);
 
 		controlFrame.setVisible(true);
 		viewFrame.setVisible(true);
@@ -415,7 +412,7 @@ public class SwingGUI {
 		miFind.setAccelerator(KeyStroke.getKeyStroke(
 				Main.isMac ? "meta F" : "control F"));
 		miFind.addActionListener(e -> {
-			String search = JOptionPane.showInputDialog("Text");
+			String search = JOptionPane.showInputDialog("Find", searchTF.getText());
 			if (search == null || search.isEmpty()) {
 				return;
 			}
@@ -1049,8 +1046,10 @@ public class SwingGUI {
 	 * @param file A File descriptor for the file to be opened.
 	 */
 	private void openPdfFile(File file) throws IOException {
-		if (emptyViewScreenLabel != null)
-			viewFrame.remove(emptyViewScreenLabel);
+		if (splitPane.getComponent(2) instanceof JLabel) {
+			splitPane.remove(emptyViewScreenLabel);
+			splitPane.add(tabPane, JSplitPane.RIGHT);
+		}
 		barHelper.runWithProgressBar( () -> {
 			DocTab t;
 			try {
@@ -1078,7 +1077,8 @@ public class SwingGUI {
 	void closeFile(DocTab dt) {
 		tabPane.remove(dt);
 		if (tabPane.getTabCount() == 0) {
-			viewFrame.add(emptyViewScreenLabel, BorderLayout.CENTER);
+			splitPane.remove(2); // The right hand panel
+			splitPane.add(emptyViewScreenLabel, JSplitPane.RIGHT);
 		}
 		if (savePageNumbers) {
 			prefs.putInt("PAGE#" + dt.getName(), dt.getPageNumber());
@@ -1148,6 +1148,7 @@ public class SwingGUI {
 		this.monitorMode = monitorMode;
 	}
 
+	/** Class with a miniature of the slide. Only used if two-monitor mode */
 	private class PreviewComponent extends JComponent {
 		int pageNum;
 		float scaleX, scaleY;
