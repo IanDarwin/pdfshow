@@ -102,7 +102,7 @@ Each graphic object that you attach to a page will stay with that page
 until you close the file or exit the application.
 
 Note that the drawn objects other than text are immutable, e.g., you cannot resize a rectangle 
-after you finish drawing it.
+after you finish drawing it, you can only move it (or delete it).
 Text is mutable: double-click on a text object for a dialog to revise it, or copy/paste.
 
 You can select the draw tools by clicking, or by their keyboard shortcuts:
