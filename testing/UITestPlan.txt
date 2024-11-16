@@ -6,6 +6,13 @@ if any stack traces are issued.
 Ignore any debug outputs.
 In some IDEs, stack traces and errors are in red while debug outputs are in black.
 
+== Notifications (a.k.a. non-empty main pane)
+
+Start the app with no args. The "No file. Open one from the menu" label should appear.
+N.B. We know that currently it doesn't.
+Open one file. Close its tab. Verify that the label appears.
+Terminate the app.
+
 == Open/Close/Recent
 
 * Run the program with no arguments.
@@ -15,7 +22,8 @@ In some IDEs, stack traces and errors are in red while debug outputs are in blac
 * Verify that there are 5 pages and that you can move to all of them.
 * Close the application
 * Run the program again
-* Ensure that SampleShow.pdf is the only entry in the Recents menu.
+* Verify that SampleShow.pdf is the only entry in the Recents menu.
+(N.B. We know it currently isn't).
 * Open this file by selecting its menu item.
 
 == Drawing
@@ -55,6 +63,26 @@ in the correct styling.
 * Drag the scrollbar to the top and ensure that the title page is now showing.
 * Drag the scrollbar to the bottom and ensure that the last page is now showing.
 * Drag the scrollbar to the middle and ensure that it displays a page from the middle with the correct page number.
+
+== Find/Search
+
+You can invoke "find" from the Edit->Find menu (shortcut CTRL/F), or type typing the search string
+in the search box near the middle of the left-hand toolbox.
+
+Open the sample file provided. Use the Find menu to look for "point".
+It should take you to the last page ("graph to prove a point.").
+Verify that the down arrow in the toolbox is disabled, and the up arrow is enabled.
+
+Use CTRL/F to open the find dialog. Verify that the text gives an
+initial value of "point". Change the text to "fox" and press OK.
+Verify that you are taken to page 1, and that the up arrow is
+disabled and the down arrow enable. This verifies that the find
+feature wraps around from the bottom of the file to the top correctly.
+
+One more find, for "mov". Verify that you're on page 3 with the "moving
+along" arrow graphic, and that both up and down arrows are enabled.
+
+(This paragraph is a placeholder for when search has forward/reverse functionality).
 
 == Slideshow
 
