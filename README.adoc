@@ -61,6 +61,8 @@ within the general tone of the program - _minimalist, but functional._
 |Windows|msi|winget install RejminetGroupInc.PDFShow|{download-link}/PDFShow-{ver}.msi
 |====
 
+(Winget does not currently install the latest version, sorry.)
+
 Or check the {releases-link}[latest release under the _Assets_ dropdown].
 
 The installers bundle their own Java VM, with which they are known
