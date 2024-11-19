@@ -158,7 +158,7 @@ public class SwingGUI {
 						break;
 					case 2:
 						controlFrame = new JFrame("PDFShow Control");
-						previewer = new Preview();
+						previewer = new Preview(this);
 						controlFrame.add(previewer, BorderLayout.CENTER);
 						controlFrame.setSize(HEIGHT, HEIGHT);
 						controlFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -1151,83 +1151,4 @@ public class SwingGUI {
 		this.monitorMode = monitorMode;
 	}
 
-	/** Class with a miniature of the slide. Only used if two-monitor mode */
-	private class PreviewComponent extends JComponent {
-		int pageNum;
-		float scaleX, scaleY;
-
-		PreviewComponent(float x, float y) {
-			this.scaleX = x;
-			this.scaleY = y;
-		}
-
-		void setPageNum(int pageNum) {
-			this.pageNum = pageNum;
-			repaint();
-		}
-
-		/** A simple draw component for slide miniatures.
-		 * NB Page numbers in this code are zero based
-		 * @param g the <code>Graphics</code> object to draw with
-		 */
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			try {
-				if (currentTab == null) {
-					return;
-				}
-				if (pageNum < 0) {
-					return;
-				}
-				if (pageNum >= currentTab.getPageCount()) {
-					return;
-				}
-				currentTab.renderer.renderPageToGraphics(pageNum, (Graphics2D) g, scaleX, scaleY);
-			} catch (IOException e) {
-				throw new RuntimeException("Preview Rendering failed: " + e);
-			}
-		}
-	}
-
-	class Preview extends JPanel {
-		PreviewComponent current, prev, next;
-		private int pageNumber;
-
-		Preview() {
-			setLayout(new TripartiteLayoutManager());
-
-			current = new PreviewComponent(0.6f, 0.6f);
-			add("main", current);
-
-			prev  = new PreviewComponent(0.35f, 0.35f);
-			prev.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					if (pageNumber > 1)
-						currentTab.gotoPage(pageNumber - 1);
-				}
-			});
-			add("left", prev);
-
-			next  = new PreviewComponent(0.35f, 0.35f);
-			next.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					if (pageNumber < currentTab.getPageCount() - 1)
-						currentTab.gotoPage(pageNumber + 1);
-				}
-			});
-			add("right", next);
-		}
-
-		void setPageNumber(int pageNum) {
-			this.pageNumber = pageNum;
-			pageNum--; // 1-based to 0-based
-			current.setPageNum(pageNum);
-			prev.setPageNum(pageNum - 1);
-			next.setPageNum(pageNum + 1);
-			repaint();
-		}
-	}
 }
