@@ -300,7 +300,7 @@ public class SwingGUI {
 				));
 
 		splitPane.add(sidePanel, JSplitPane.LEFT);
-		splitPane.add(tabPane, JSplitPane.RIGHT);
+		splitPane.add(emptyViewScreenLabel, JSplitPane.RIGHT);
 
 		controlFrame.setVisible(true);
 		viewFrame.setVisible(true);
