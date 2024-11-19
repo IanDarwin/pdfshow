@@ -1102,14 +1102,16 @@ public class SwingGUI {
 		}
 		currentTab.gotoPage(newPage);
 		updatePageNumbersDisplay();
-		upButton.setEnabled(newPage > 1);
-		downButton.setEnabled(newPage < currentPageCount);
 		currentTab.repaint();
 	}
 
 	void updatePageNumbersDisplay() {
-		pageNumTF.setText(Integer.toString(currentTab.getPageNumber()));
-		pageCountTF.setText(Integer.toString(currentTab.getPageCount()));
+		final int currentPageNumber = currentTab.getPageNumber();
+		final int currentPageCount = currentTab.getPageCount();
+		pageNumTF.setText(Integer.toString(currentPageNumber));
+		pageCountTF.setText(Integer.toString(currentPageCount));
+		upButton.setEnabled(currentPageNumber > 1);
+		downButton.setEnabled(currentPageNumber < currentPageCount);
 	}
 
 	// Graphics helpers
