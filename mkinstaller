@@ -60,6 +60,8 @@ do
 done
 shift $(expr $OPTIND - 1)		 # leave just filenames
 
+set -e	# failures after here -> game over
+
 if [ "${BUILT}" = "NO" ]; then
 	mvn ${SKIP_TESTS} clean package assembly:single
 fi
