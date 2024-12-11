@@ -37,6 +37,16 @@ Github pull requests are welcome.
 
 For current improvements (and known bugs), see the link:release-notes.html[release notes].
 
+== What They're Saying
+
+[quote,Marc Loy, Java Champion, co-author of O'Reilly Java Swing]
+____
+What a spiffy utility! I'm
+going to keep this around. Presenting from a PDF isn't a daily thing for me,
+but I definitely have situations where this would save me trouble...
+____
+
+
 == Installing it
 
 Downloads are occasionally released on my https://github.com/IanDarwin/pdfshow/releases[GitHub page].
@@ -50,10 +60,8 @@ For a full installer (which installs a compatible version of Java along with the
 
 * the `pdfshow`-x.x.x.dmg file for macOS;
 * the `pdfshow`-x.x.x.msi for MS-Windows;
-* the `pdfshow`-x.x.x.rpm for dnf/yum/RPM-based Linux Systems (RHEL, Rocky, Fedora, etc;
-installs in _/opt/pdfshow_).
-
-I don't have a Deb/Ubuntu Linux to build on at the moment.
+* the `pdfshow`-x.x.x.rpm for dnf/yum/RPM-based Linux Systems (RHEL, Rocky, Fedora, etc)
+and `.deb` for Debian, Ubuntu, etc.
 
 [[using_pdfshow]]
 == Using PdfShow
