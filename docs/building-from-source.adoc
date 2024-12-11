@@ -26,7 +26,7 @@ The install formats are:
 [options="header",cols="2,4,3"]
 |====
 |OS|Default Format|Other formats with `mkinstaller -t`
-|macOS|DMG, with copy-to-Applications iconage.|pkg
+|macOS (Apple Silicon only)|DMG, with copy-to-Applications iconage.|pkg
 |Linux|rpm - Redhat/Yum/dnf/Zypher|deb
 |Windows|MSI installer|exe
 |====
