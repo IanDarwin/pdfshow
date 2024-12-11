@@ -87,8 +87,9 @@ Again, see https://darwinsys.com/pdfshow/#using_pdfshow[the web site].
 == Credits
 
 Program written by Ian Darwin of Rejminet Group Inc.
-Contributions by a cast of thousands (we hope);
-their names are listed on the main github page.
+Contributions by a cast of thousands (we hope).
+For now, the main other contributor is Marc Loy.
+All contributors' names are listed on the main github page.
 Thanks In Advance, folks!
 
 Draggable Tab component DnDTabbedPane courtesy of
