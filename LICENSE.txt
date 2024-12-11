@@ -1,4 +1,4 @@
-Copyright (c) Ian F. Darwin 2019
+Copyright (c) Ian F. Darwin
 Software written by Ian F. Darwin and others.
 
 Redistribution and use in source and binary forms, with or without
