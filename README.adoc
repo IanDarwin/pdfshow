@@ -56,7 +56,7 @@ within the general tone of the program - _minimalist, but functional._
 |Linux|deb|Download then install|{download-link}/pdfshow_{ver}_amd64.deb
 |Linux|rpm|Download then dnf install|{download-link}/pdfshow-{ver}-1.x86_64.rpm
 |macOS|dmg|Download; should open|{download-link}/PDFShow-{ver}.dmg
-|Windows|msi|winget install RejminetGroupInc.PDFShow|{download-link}/PDFShow-{ver}.msi
+|Windows|msi|Download and click on|{download-link}/PDFShow-{ver}.msi
 |====
 
 (Winget does not currently install the latest version, sorry.)
@@ -69,11 +69,13 @@ If you already have a current Java installed, you may prefer to run the `jar-wit
 you have a JDK that will work with `PdfShow`.
 This JAR is usually built with {current-java-ver} or later.
 
-For MS-Windows, once you have `winget` installed, just type this in a terminal window:
+For MS-Windows, when we get the `winget` db updated, just type this in a terminal window:
 
 	winget install RejminetGroupInc.PDFShow
 
 (That's really me; Rejminet Group Inc. is my consulting company.)
+
+Windows users can also download the .msi and click on it to start the install.
 
 Finally, if there's no installer for you, but you have Java,
 there's a Jar file that you can run with `java -jar`.
