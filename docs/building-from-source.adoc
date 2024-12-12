@@ -59,13 +59,13 @@ Using Eclipse (no longer actively tested):
 
 === Trial Runs
 
-To try ou run the program in a supported Java IDE,
-you just open and run `Main.java`.
+To try out the program in a supported, Maven-enabled Java IDE,
+just open and run `Main.java`.
 If you use some other IDE, and get it working, please
 submit a pull request with that IDE's config files, __as long as
 it doesn't require changing the directory structure__ (i.e., moving existing files around).
 
-To run the program in Maven, use `mvn exec:java`.
+To run the program in command-line Maven, use `mvn exec:java`.
 
 === Packaging
 
@@ -74,8 +74,8 @@ To make a JAR file with just the program and its images (without the dependencie
 To make a clickable runnable JAR file, run `mvn package assembly:single`.
 You'll then find a `jar` with dependencies in the target folder.
 It'll be named something like `target/pdfshow-x.y.z-SNAPSHOT-jar-with-dependencies.jar`.
-You can run it with `java -jar target/pdfshow*dependencies.jar` (see `scripts/pdfshow`), or just click on it in a file
-manager window in MS-Windows, macOS, or most *Nix windowed environments.
+You can run it with `java -jar target/pdfshow*dependencies.jar` (see `scripts/pdfshow`),
+or just click on it in a file manager window in most windowed environments.
 
 The full-blown, platform-specific installers we release are built by the `mkinstaller` script. 
 This makes a clickable runnable JAR file as above and then runs the Java 
@@ -87,31 +87,31 @@ You can only build the Mac installer on macOS, the Windows installer on Windows,
 
 This may not be optimal, but should work. Newer versions may be available.
 
-----
-sudo dnf search jdk
+	sudo dnf search jdk
 
 Pick and install the latest (probably 23; N.B. 21 did not work as they forgot to
 install the jmod files, which are needed to build the installers).
 
-sudo dnf install rpm-build
+	sudo dnf install rpm-build
 
-# These systems' packaging have Maven depending on dark ages' JDK-1.8, so:
+	mkdir git
+	cd git
+	git clone https://github.com/IanDarwin/pdfshow
 
-curl -o apache-maven-3.8.4-bin.tar.gz \
-	https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz
+# Some Linux systems' packaging have Maven depending on dark ages' JDK-1.8; if yours does, do:
 
-cd /usr/local; sudo tar xzvf apache-maven-3.8.4.tar.gz
+	cd ~/Downloads
+	curl -o apache-maven-3.8.4-bin.tar.gz \
+		https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz
+	cd /usr/local; sudo tar xzvf ~/Downloads/apache-maven-3.8.4.tar.gz
+	PATH=$PATH:/usr/local/apache-maven-3.8.4/bin
 
-PATH=$PATH:/usr/local/apache-maven-3.8.4/bin
+Then you can build it.
 
-mkdir git
-cd git
-git clone https://github.com/IanDarwin/pdfshow
+	cd pdfshow
+	mkinstaller # If some tests fail on Linux with infra-related errs, don't care: add -s
 
-cd pdfshow
-
-mkinstaller -s # skiptests; they may fail on this Linux with infra-related errs, don't care
-----
+This should create an installer or two in the `pdfshow` directory.
 
 == Contributing / Development
 
