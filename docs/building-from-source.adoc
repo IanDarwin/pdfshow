@@ -98,7 +98,7 @@ install the jmod files, which are needed to build the installers).
 	cd git
 	git clone https://github.com/IanDarwin/pdfshow
 
-# Some Linux systems' packaging have Maven depending on dark ages' JDK-1.8; if yours does, do:
+Some Linux systems' packaging have Maven depending on dark ages' JDK-1.8; if yours does, do:
 
 	cd ~/Downloads
 	curl -o apache-maven-3.8.4-bin.tar.gz \
