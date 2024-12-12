@@ -11,7 +11,7 @@ If I have been using a pre-release of darwinsys-api, which I often do, you will 
 https://github.com/IanDarwin/darwinsys-api[], then `cd darwinsys-api; mvn package install`
 which should install the latest darwinsys-api into your ~/.m2/repository.
 
-Then in `pdfshow` you can do `mvn package`, or open it in your IDE and run the main program.
+Then in `pdfshow` you can do `mvn package`, or open it in your Maven-aware IDE and run `Main.java`
 
 === Build: Making Installable Packages
 
