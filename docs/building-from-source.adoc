@@ -8,7 +8,7 @@ On Windows `jpackage` has a couple of pre-requisites,
 which it will let you know about if they're not already installed.
 
 If I have been using a pre-release of darwinsys-api, which I often do, you will also have to clone 
-https://github.com/IanDarwin/darwinsys-api[], then `cd darwinsys-api; make package install`
+https://github.com/IanDarwin/darwinsys-api[], then `cd darwinsys-api; mvn package install`
 which should install the latest darwinsys-api into your ~/.m2/repository.
 
 Then in `pdfshow` you can do `mvn package`, or open it in your IDE and run the main program.
