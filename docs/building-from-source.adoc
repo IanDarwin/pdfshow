@@ -17,7 +17,7 @@ Then in `pdfshow` you can do `mvn package`, or open it in your Maven-aware IDE a
 
 On Linux, for RPMs, you need `rpm-build` or you will get told that 'rpm' is an invalid type
 (sudo dnf install rpm-build).
-On Linux, for DEBs, you may need `fakeroot` (sudo apt install fakeroot).
+On Linux, for DEBs, you need `fakeroot` (sudo apt install fakeroot).
 
 The install formats are:
 
@@ -27,7 +27,7 @@ The install formats are:
 |====
 |OS|Default Format|Other formats with `mkinstaller -t`
 |macOS (Apple Silicon only)|DMG, with copy-to-Applications iconage.|pkg
-|Linux|rpm - Redhat/Yum/dnf/Zypher|deb
+|Linux|rpm and deb|-
 |Windows|MSI installer|exe
 |====
 
