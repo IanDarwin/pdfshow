@@ -12,8 +12,8 @@ final class ClosableTabHeader extends JPanel {
 
 	public ClosableTabHeader(Consumer<DocTab> tabCloser, final JTabbedPane panel, DocTab docTab) {
 		setLayout(new FlowLayout());
-        JLabel label = new JLabel(docTab.file.getName());
-        add(label);
+		JLabel label = new JLabel(docTab.file.getName());
+		add(label);
 		JButton xButton = new MyCloseButton();
 		add(xButton);
 		xButton.setPreferredSize(new Dimension(16,16));
@@ -21,21 +21,22 @@ final class ClosableTabHeader extends JPanel {
 	}
 
 	// The X button for tabs
-    private static class MyCloseButton extends JButton {
-        private static final long serialVersionUID = 1L;
+	private static class MyCloseButton extends JButton {
+		private static final long serialVersionUID = 1L;
 
-        public MyCloseButton() {
-            super("X");
-            setBorder(BorderFactory.createEmptyBorder());
-            setFocusPainted(false);
-            setBorderPainted(false);
-            setContentAreaFilled(false);
-            setRolloverEnabled(false);
-        }
-        @Override
-        public Dimension getPreferredSize() {
+		public MyCloseButton() {
+			super("X");
+			setBorder(BorderFactory.createEmptyBorder());
+			setFocusPainted(false);
+			setBorderPainted(false);
+			setContentAreaFilled(false);
+			setRolloverEnabled(false);
+		}
+
+		@Override
+		public Dimension getPreferredSize() {
 			// This is OK on most current monitors, but may need scaling as res goes up
-            return new Dimension(16, 16);
-        }
-    }
+			return new Dimension(16, 16);
+		}
+	}
 }
