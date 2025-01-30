@@ -49,7 +49,7 @@ public class Main {
             final File file = new File(arg);
             if (!file.canRead()) {
                 JOptionPane.showMessageDialog(instance.controlFrame,
-                        "Can't open file " + file);
+					String.format("Can't read file %s", file));
                 continue;
             }
             instance.recents.openFile(arg); // Include in Recents dropdown

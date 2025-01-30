@@ -350,14 +350,15 @@ public class SwingGUI {
 			}
 		};
 		miOpen.addActionListener(e -> {
+			final File chosenFile = chooseFile();
+			if (chosenFile == null) {
+				return;
+			}
 			try {
-				final File chosenFile = chooseFile();
-				if (chosenFile == null) {
-					return;
-				}
 				recents.openFile(chosenFile.getAbsolutePath());
 			} catch (Exception e1) {
-				JOptionPane.showMessageDialog(controlFrame, "Can't open file: " + e1);
+				JOptionPane.showMessageDialog(controlFrame,
+					String.format("Can't open file %s: %s", chosenFile, e1));
 			}
 		});
 		fileMenu.add(recents);
