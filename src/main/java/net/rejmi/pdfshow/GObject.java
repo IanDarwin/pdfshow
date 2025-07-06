@@ -1,12 +1,11 @@
 package net.rejmi.pdfshow;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.geom.AffineTransform;
+import java.awt.image.ImageObserver;
+import java.net.URL;
 import java.util.logging.Logger;
 
 /** 
@@ -150,6 +149,30 @@ abstract class GObject {
 	};
 }
 
+class GIcon extends GObject implements ImageObserver {
+	ImageIcon img;
+
+	public GIcon(int x, int y, String imageName) {
+		super(x, y);
+		String fullName = "/images/" + imageName + ".png";
+		URL imageURL = getClass().getResource(fullName);
+		if (imageURL != null) {
+			img = new ImageIcon(imageURL);
+		}
+	}
+
+	@Override
+	void render(Graphics g) {
+		g.drawImage(img.getImage(), x, y, this);
+	}
+
+	@Override
+	public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+		System.out.println("GIcon.imageUpdate()");
+		return false;
+	}
+}
+
 class GText extends GObject {
 	String text;
 	Font font;
@@ -176,6 +199,7 @@ class GText extends GObject {
 	}
 }
 
+/* Thin straight line */
 class GLine extends GObject {
 	GLine(int x, int y, int width, int height) {
 		super(x, y);
@@ -194,12 +218,22 @@ class GLine extends GObject {
 	}
 }
 
-class GMarker extends GLine {
-	private static final int MARKER_TRANS_ALPHA = 100;
+/** Highlighter */
+class GMarker extends GObject {
 	GMarker(int x, int y, int endx, int endy) {
 		super(x, y, endx, endy);
 		lineThickness = 20;
-		lineColor = new Color(255, 255, 0, MARKER_TRANS_ALPHA); // Yellow w/ reduced alpha
+	}
+	void render(Graphics g) {
+		Graphics2D g2d = (Graphics2D) g;
+		Composite originalComposite = g2d.getComposite();
+		float alpha = 0.5f; // 0.0f is fully transparent, 1.0f is fully opaque
+		AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+		g2d.setComposite(alphaComposite);
+		g2d.setStroke(new BasicStroke(lineThickness));
+		g2d.setColor(lineColor);
+		g2d.drawLine(x, y, x + width, y + height);
+		g2d.setComposite(originalComposite);
 	}
 }
 

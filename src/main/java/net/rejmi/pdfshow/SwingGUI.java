@@ -73,7 +73,7 @@ public class SwingGUI {
 	// GUI Controls - defined here since referenced throughout
 	JFrame controlFrame;
 	static JFrame viewFrame;
-	private JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+	private final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 	private final JTabbedPane tabPane = new DnDTabbedPane();
 	JFrame bTimerFrame;
 	JLabel emptyViewScreenLabel = new JLabel("<html><b>PDFShow Display</b><br/>" +
@@ -680,10 +680,14 @@ public class SwingGUI {
 		rectangleButton.setToolTipText("Add rectangle (r)");
 		toolBox.add(rectangleButton);
 
+		// Each of these 3 will require another ViewState
+		smileButton.addActionListener(e-> System.out.println("Not written!"));
 		toolBox.add(smileButton);
 
+		checkButton.addActionListener(e->System.out.println("Not written!"));
 		toolBox.add(checkButton);
 
+		nixButton.addActionListener(e->System.out.println("Not written!"));
 		toolBox.add(nixButton);
 
 		// Other buttons
