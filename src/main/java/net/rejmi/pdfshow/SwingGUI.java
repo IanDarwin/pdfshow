@@ -64,7 +64,7 @@ public class SwingGUI {
 			KEY_ONESHOT = "one_shot_draw_tools",
 			KEY_FILECHOOSER_DIR = "file_chooser_dir";
 	final static String EMAIL_TEMPLATE = "mailto:%s?subject=PdfShow Feedback";
-	final static Dimension SQUARE = new Dimension(32, 32);
+	final static Dimension SQUARE = new Dimension(24, 24);
 	
 	boolean savePageNumbers = prefs.getBoolean(KEY_SAVE_PAGENUMS, true);
 	boolean jumpBack = prefs.getBoolean(KEY_JUMP_BACK, true);
@@ -78,7 +78,7 @@ public class SwingGUI {
 	JFrame bTimerFrame;
 	JLabel emptyViewScreenLabel = new JLabel("<html><b>PDFShow Display</b><br/>" +
 			"Open a file from the Control window to view.",
-			JLabel.CENTER);;
+			JLabel.CENTER);
 	DocTab currentTab;
 	private final JButton
 			upButton = new BoxButton(getMyImageIcon("Chevron-Up")),
@@ -92,7 +92,10 @@ public class SwingGUI {
 		lineButton = new BoxButton(getMyImageIcon("Line")),
 		polyLineButton = new BoxButton(getMyImageIcon("PolyLine")),
 		ovalButton = new BoxButton(getMyImageIcon("Oval")),
-		rectangleButton = new BoxButton(getMyImageIcon("Rectangle"));
+		rectangleButton = new BoxButton(getMyImageIcon("Rectangle")),
+		checkButton = new BoxButton(getMyImageIcon("GreenCheck")),
+		nixButton = new BoxButton(getMyImageIcon("RedX")),
+		smileButton = new BoxButton(getMyImageIcon("Smile"));
 	Preview previewer;
 	RecentMenu recents;
 	private BreakTimer breakTimer;
@@ -676,6 +679,12 @@ public class SwingGUI {
 		rectangleButton.addActionListener(e -> gotoState(rectangleState));
 		rectangleButton.setToolTipText("Add rectangle (r)");
 		toolBox.add(rectangleButton);
+
+		toolBox.add(smileButton);
+
+		toolBox.add(checkButton);
+
+		toolBox.add(nixButton);
 
 		// Other buttons
 		final JButton clearButton = new JButton(getMyImageIcon("Trash"));
