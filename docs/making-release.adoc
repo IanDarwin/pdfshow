@@ -49,3 +49,4 @@ For Winget:
 ** Click Create New Pull Request.
 ** Watch the Conversation.
 ** If the whole thing fails after a few minutes, fix the problem and try again.
+** If "All checks have passed" after a few mins, the next delay requires human action, so be patient.
