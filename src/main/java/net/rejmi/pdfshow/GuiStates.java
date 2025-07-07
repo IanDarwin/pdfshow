@@ -417,3 +417,19 @@ class OvalState extends State {
 		parent.returnToViewState();
 	}
 }
+
+class IconState extends State {
+	String iconName;
+	GIcon icon;
+	IconState(SwingGUI parent, String iconName) {
+        super(parent, null);
+        this.iconName = iconName;
+	}
+
+	public void mousePressed(MouseEvent e) {
+        icon= new GIcon(e.getX(), e.getY(), iconName);
+		parent.currentTab.addIn(icon);
+		parent.currentTab.repaint();
+		parent.returnToViewState();
+	}
+}

@@ -681,13 +681,13 @@ public class SwingGUI {
 		toolBox.add(rectangleButton);
 
 		// Each of these 3 will require another ViewState
-		smileButton.addActionListener(e-> System.out.println("Not written!"));
+		smileButton.addActionListener(e-> gotoState(iconStateSmile));
 		toolBox.add(smileButton);
 
-		checkButton.addActionListener(e->System.out.println("Not written!"));
+		checkButton.addActionListener(e -> gotoState(iconStateCheck));
 		toolBox.add(checkButton);
 
-		nixButton.addActionListener(e->System.out.println("Not written!"));
+		nixButton.addActionListener(e -> gotoState(iconStateNix));
 		toolBox.add(nixButton);
 
 		// Other buttons
@@ -872,6 +872,9 @@ public class SwingGUI {
 	final State polyLineDrawState = new PolyLineDrawState(this, polyLineButton);
 	final State rectangleState = new RectangleState(this, rectangleButton);
 	final State ovalState = new OvalState(this, ovalButton);
+	final State iconStateSmile = new IconState(this, "Smile");
+	final State iconStateCheck = new IconState(this,  "GreenCheck");
+	final State iconStateNix = new IconState(this,  "RedX");
 
 	// State Management
 
