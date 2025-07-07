@@ -27,14 +27,16 @@ Test the **** out of it!
 
 For Winget:
 
-* cd ~/git-others/winget-pkgs
-* If that doesn't exist, cd ~/git-others; git clone https://github.com/microsoft/winget-pkgs
-* git pull
-* git pull upstream master
+* Update the files in install-winget (versions, dates, etc)
+* `cd ~/git-others/winget-pkgs`
+* If that doesn't exist, `cd ~/git-others; git clone https://github.com/microsoft/winget-pkgs`
+* `git pull`
+* `git pull upstream master`
 ** If no upstream, do `git remote add upstream https://github.com/microsoft/winget-pkgs`
 ** May take a LONG time
 ** Do a git push
-* `cp ~/git/pdfshow/install-aux/winget-manifest.yaml manifests/r/RejminetGroupInc/PDFShow/$VER`
+* `mkdir manifests/r/RejminetGroupInc/PDFShow/$VER`
+* `cp -r ~/git/pdfshow/install-winget/*.yaml manifests/r/RejminetGroupInc/PDFShow/$VER`
 * git commit
 * git push
 * Send pull request on gh:
@@ -42,7 +44,7 @@ For Winget:
 ** Click Pull Request in top bar.
 ** Click green New Pull Request button
 ** Click link "compare across forks"
-** On right side, cliek Compare dropdown, select IanDarwin/winget-pkgs
+** On right side, click Compare dropdown, select IanDarwin/winget-pkgs
 ** Enter title, brief description.
 ** Click Create New Pull Request.
 ** Watch the Conversation.
