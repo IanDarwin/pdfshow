@@ -1,10 +1,10 @@
 PackageIdentifier: IanDarwin.PDFShow
-PackageVersion: 1.1.1.0
+PackageVersion: 1.1.2.0
 PackageLocale: en-US
 Publisher: Ian Darwin, Rejminet Group Inc.
 PackageName: PDFShow
 License: MIT
-ShortDescription: Awesom presentation tool for PDF slide decks.
+ShortDescription: Awesome presentation tool for PDF slide decks.
 Installers: 
  - Architecture: x64
    InstallerType: msi
