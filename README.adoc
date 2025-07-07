@@ -50,7 +50,7 @@ within the general tone of the program - _minimalist, but functional._
 1.1.2 You can add smileys, checkmarks and X/fail marks (but these cannot be moved yet; for now,
 use Undo and re-draw them).
 
-1.1.1 Numerous small fixes.
+1.1.1 Adds the ability to modify, copy/paste, or edit a text annotation.  Numerous small fixes.
 
 == Installing PdfShow
 
