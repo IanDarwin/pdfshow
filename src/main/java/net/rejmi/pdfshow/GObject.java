@@ -151,9 +151,11 @@ abstract class GObject {
 
 class GIcon extends GObject implements ImageObserver {
 	ImageIcon img;
+	String imageName;
 
 	public GIcon(int x, int y, String imageName) {
 		super(x, y);
+		this.imageName = imageName;
 		String fullName = "/images/" + imageName + ".png";
 		URL imageURL = getClass().getResource(fullName);
 		if (imageURL != null) {
@@ -170,6 +172,12 @@ class GIcon extends GObject implements ImageObserver {
 	public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
 		System.out.println("GIcon.imageUpdate()");
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s(@%d,%d; image = %s)",
+				getClass().getSimpleName(), x, y, imageName);
 	}
 }
 
