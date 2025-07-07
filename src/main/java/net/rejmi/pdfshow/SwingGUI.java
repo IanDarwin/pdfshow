@@ -680,7 +680,6 @@ public class SwingGUI {
 		rectangleButton.setToolTipText("Add rectangle (r)");
 		toolBox.add(rectangleButton);
 
-		// Each of these 3 will require another ViewState
 		smileButton.addActionListener(e-> gotoState(iconStateSmile));
 		toolBox.add(smileButton);
 
