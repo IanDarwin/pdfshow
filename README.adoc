@@ -1,7 +1,7 @@
 ifndef::ver[]
-:ver: 1.1.1
+:ver: 1.1.2
 endif::[]
-:sillyName: Just Text It
+:sillyName: Funny Face
 ifndef::current-java-ver[]
 :current-java-ver: Java 21
 endif::[]
