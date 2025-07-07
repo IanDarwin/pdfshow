@@ -45,6 +45,13 @@ There is still some basic functionality that is imperfect or incomplete.
 Pull requests will be gratefully accepted as long as they fit
 within the general tone of the program - _minimalist, but functional._
 
+== Recent Changes
+
+1.1.2 You can add smileys, checkmarks and X/fail marks (but these cannot be moved yet; for now,
+use Undo and re-draw them).
+
+1.1.1 Numerous small fixes.
+
 == Installing PdfShow
 
 [[installation-summary]]
@@ -84,7 +91,7 @@ If you want to try building it from source, see the file link:docs/building-from
 
 == Using PdfShow
 
-Again, see https://darwinsys.com/pdfshow/#using_pdfshow[the web site].
+"It is intuitively obvious", but see https://darwinsys.com/pdfshow/#using_pdfshow[the web site].
 
 == Credits
 
@@ -100,4 +107,5 @@ https://java-swing-tips.blogspot.com/2008/04/drag-and-drop-tabs-in-jtabbedpane.h
 PDF access (i.e., some of the heavy listing!) is done by
 https://pdfbox.apache.org/[Apache PDFBox] software.
 
-Some icons from feathericons.com; the rest by Ian Darwin.
+Icons from feathericons.com, OpenClipArt, and Ian Darwin.
+Stock images for breaktimer created by an AI.
