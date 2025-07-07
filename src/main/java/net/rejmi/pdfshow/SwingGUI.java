@@ -482,7 +482,7 @@ public class SwingGUI {
 		final JMenuItem aboutButton = MenuUtils.mkMenuItem(rb, "help", "about");
 		aboutButton.addActionListener(e->
 				JOptionPane.showMessageDialog(controlFrame,
-						String.format("PDFShow(tm) %s\n(c) 2021-24 Ian Darwin\n%s\n",
+						String.format("PDFShow(tm) %s\n(c) 2021-2024 Ian Darwin\n%s\n",
 								programProps.getProperty(KEY_VERSION),
 								programProps.getProperty(KEY_HOME_URL)),
 						"About PDFShow(tm)",

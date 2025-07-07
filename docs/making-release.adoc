@@ -4,8 +4,8 @@
 Test the **** out of it!
 * Pick a sillyName (cutesly release name) for the release.
 * Bump the build number and sillyName, and commit and push, in:
-** ver: pom.xml mkinstaller install-aux/winget-manifest.yaml
-** ver and sillyName: README.adoc 
+** ver in FOUR FILES pom.xml mkinstaller install-aux/winget-manifest.yaml README.adoc (which also needs sillyName)
+* Check latest year date in aboutButton actionlistener in src/main/java/net/rejmi/pdfshow/SwingGUI.java
 * Commit them all.
 * git tag -a -m 'Version x.y.z' vx.y.z
 * git push --tag
@@ -25,7 +25,25 @@ Test the **** out of it!
 *** Drag the just-created installer into the drag area
 *** Click Create or Update Release
 
-Note that the WinGet (windows CLI installer) support is not working;
-`jpackage` seems to have some incompatibility.
-Update the version in our entry in winget, push, send pull request.
-XXX Do we need to update InstallerSha256 manually?
+For Winget:
+
+* cd ~/git-others/winget-pkgs
+* If that doesn't exist, cd ~/git-others; git clone https://github.com/microsoft/winget-pkgs
+* git pull
+* git pull upstream master
+** If no upstream, do `git remote add upstream https://github.com/microsoft/winget-pkgs`
+** May take a LONG time
+** Do a git push
+* `cp ~/git/pdfshow/install-aux/winget-manifest.yaml manifests/r/RejminetGroupInc/PDFShow/$VER`
+* git commit
+* git push
+* Send pull request on gh:
+** open https://github.com/microsoft/winget-pkgs
+** Click Pull Request in top bar.
+** Click green New Pull Request button
+** Click link "compare across forks"
+** On right side, cliek Compare dropdown, select IanDarwin/winget-pkgs
+** Enter title, brief description.
+** Click Create New Pull Request.
+** Watch the Conversation.
+** If the whole thing fails after a few minutes, fix the problem and try again.
