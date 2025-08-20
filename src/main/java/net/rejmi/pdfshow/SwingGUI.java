@@ -370,7 +370,7 @@ public class SwingGUI {
 		miClearRecents.addActionListener(e -> recentsClear());
 		fileMenu.add(miClearRecents);
 		JMenuItem miSaveAnnos = MenuUtils.mkMenuItem(rb, "file", "save_annos");
-		miSaveAnnos.addActionListener(e -> saveAnnotations());
+		miSaveAnnos.addActionListener(e -> saveAnnotations(false));
 		fileMenu.add(miSaveAnnos);
 		JMenuItem miLoadAnnos = MenuUtils.mkMenuItem(rb, "file", "load_annos");
 		miLoadAnnos.addActionListener(e -> loadAnnotations());
@@ -407,11 +407,11 @@ public class SwingGUI {
 			if (currentTab == null)
 				return;
 			currentTab.insertNewPage();
+			if (saveAnnos) {
+				saveAnnotations(true);
+			}
 		});
 		editMenu.add(newPageMI);
-		JMenuItem delPageMI = MenuUtils.mkMenuItem(rb, "edit","delpage");
-		delPageMI.setEnabled(false);
-		editMenu.add(delPageMI);
 		editMenu.addSeparator();
 		JMenuItem deleteItemMI = MenuUtils.mkMenuItem(rb, "edit","delete");
 		deleteItemMI.addActionListener(e -> {
@@ -532,7 +532,7 @@ public class SwingGUI {
 		}
 	}
 
-	private void saveAnnotations() {
+	private void saveAnnotations(boolean silent) {
 		int count = 0;
 		String fileName = ANNOTATIONS_SAVE_FILE + currentTab.getName() + ANNOTATIONS_SAVE_EXT;
 		try (ObjectOutputStream os =
@@ -542,8 +542,10 @@ public class SwingGUI {
                 os.writeObject(gobjs);
 				count += gobjs.size();
             }
-			JOptionPane.showMessageDialog(viewFrame,
-					"Saved " + count + " annotations to " + fileName);
+			if (!silent) {
+				JOptionPane.showMessageDialog(viewFrame,
+						"Saved " + count + " annotations to " + fileName);
+			}
         } catch (IOException ex){
 			JOptionPane.showMessageDialog(viewFrame, "Write to " + fileName + " failed: " + ex);
 		}
@@ -1045,6 +1047,9 @@ public class SwingGUI {
 	 * Should be the only place we exit from.
 	 */
 	private void checkAndQuit() {
+		if (saveAnnos) {
+			saveAnnotations(true);
+		}
 		if (savePageNumbers) {
 			for (int i = 0; i < tabPane.getTabCount(); i++) {
 				Object comp = tabPane.getComponent(i);
