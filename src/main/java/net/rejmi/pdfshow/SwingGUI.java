@@ -561,6 +561,7 @@ public class SwingGUI {
 				count += list.size();
 				gobjs.addAll(list);
 			}
+			currentTab.repaint();
 			JOptionPane.showMessageDialog(viewFrame,
 					"Loaded " + count + " annotations from " + fileName);
 		} catch (EOFException eof) {
