@@ -4,7 +4,7 @@
 Test the **** out of it!
 * Pick a sillyName (cutesly release name) for the release.
 * Bump the build number and sillyName, and commit and push, in:
-** ver in FOUR FILES pom.xml mkinstaller install-aux/winget-manifest.yaml README.adoc (which also needs sillyName)
+** ver in FOUR FILES pom.xml mkinstaller README.adoc (which also needs sillyName)
 * Check latest year date in aboutButton actionlistener in src/main/java/net/rejmi/pdfshow/SwingGUI.java
 * Commit them all.
 * git tag -a -m 'Version x.y.z' vx.y.z
@@ -17,7 +17,7 @@ Test the **** out of it!
 **** Under Releases at right, Create New Release (first) 
 **** Set tag to same as vx.y.z used in tag (from dropdown)
 **** Install the sillyname
-**** Write a bit about this release
+**** Write a bit ("release notes") about this release
 **** Drag the `with-dependencies- jar from one machine.
 **** Wait for that to upload. Then upload your newly-minted installer.
 *** On subsequent machines:
@@ -26,6 +26,8 @@ Test the **** out of it!
 *** Click Create or Update Release
 
 For Winget:
+
+After making the MSI installer:
 
 * Update the files in install-winget (versions, dates, etc)
 * `cd ~/git-others/winget-pkgs`
@@ -36,6 +38,7 @@ For Winget:
 ** May take a LONG time
 ** Do a git push
 * `mkdir manifests/r/RejminetGroupInc/PDFShow/$VER`
+* Update the sha hash in install-winget/
 * `cp -r ~/git/pdfshow/install-winget/*.yaml manifests/r/RejminetGroupInc/PDFShow/$VER`
 * git commit
 * git push

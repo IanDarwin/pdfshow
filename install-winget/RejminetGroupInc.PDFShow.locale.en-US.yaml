@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.9.0.schema.json
 
 PackageIdentifier: RejminetGroupInc.PDFShow
-PackageVersion: 1.1.2
+PackageVersion: 1.1.3
 PackageLocale: en-US
 Publisher: Rejminet Group Inc.
 PublisherUrl: https://github.com/IanDarwin
@@ -13,7 +13,7 @@ License: BSD License
 LicenseUrl: https://github.com/IanDarwin/pdfshow/blob/HEAD/LICENSE.txt
 ShortDescription: Present slide shows from a PDF of the slide deck
 ReleaseNotes: |-
-  Minor revision: Adds a few draw tools, several bug fixes
-ReleaseNotesUrl: https://github.com/IanDarwin/pdfshow/releases/tag/v1.1.2
+  Minor revision: Allows load/save of one's drawings/annotations.
+ReleaseNotesUrl: https://github.com/IanDarwin/pdfshow/releases/tag/v1.1.3
 ManifestType: defaultLocale
 ManifestVersion: 1.9.0

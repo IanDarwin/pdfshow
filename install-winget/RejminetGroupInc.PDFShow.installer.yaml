@@ -2,12 +2,12 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.9.0.schema.json
 
 PackageIdentifier: RejminetGroupInc.PDFShow
-PackageVersion: 1.1.2
+PackageVersion: 1.1.3
 InstallerLocale: en-US
 InstallerType: wix
 Scope: machine
 ProductCode: '{4BADBBC9-73F1-3D8C-A247-7777192F2A48}'
-ReleaseDate: 2025-07-07
+ReleaseDate: 2025-08-20
 AppsAndFeaturesEntries:
 - ProductCode: '{4BADBBC9-73F1-3D8C-A247-7777192F2A48}'
   UpgradeCode: '{F9D6E956-6040-3C9B-9D91-B11B4F209151}'
