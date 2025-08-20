@@ -533,8 +533,11 @@ public class SwingGUI {
 	}
 
 	private void saveAnnotations(boolean silent) {
+		if (currentTab == null)
+			return;
 		int count = 0;
-		String fileName = ANNOTATIONS_SAVE_FILE + currentTab.getName() + ANNOTATIONS_SAVE_EXT;
+		String fileName = ANNOTATIONS_SAVE_FILE + 
+			currentTab.getName().replaceAll("[./]","_") + ANNOTATIONS_SAVE_EXT;
 		try (ObjectOutputStream os =
 					 new ObjectOutputStream(
 							 Files.newOutputStream(Path.of(fileName)))) {
@@ -552,8 +555,11 @@ public class SwingGUI {
 	}
 
 	private void loadAnnotations() {
+		if (currentTab == null)
+			return;
 		int count = 0;
-		String fileName = ANNOTATIONS_SAVE_FILE + currentTab.getName() + ANNOTATIONS_SAVE_EXT;
+		String fileName = ANNOTATIONS_SAVE_FILE + 
+			currentTab.getName().replaceAll("[./]","_") + ANNOTATIONS_SAVE_EXT;
 		try (ObjectInputStream ois =
 					 new ObjectInputStream(
 							 Files.newInputStream(Path.of(fileName)))) {
