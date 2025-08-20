@@ -2,10 +2,7 @@ package net.rejmi.pdfshow;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serial;
+import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
@@ -34,9 +31,11 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
  */
 public class SwingGUI {
 
-	public static final int HEIGHT = 800;
+	public static final int CTRL_SIZE = 800;
 	public static final int FULL_WIDTH = 1024;
 	public static final String MENU_SLIDESHOW = "slideshow";
+	public static final String ANNOTATIONS_SAVE_FILE = "annotations-";
+	public static final String ANNOTATIONS_SAVE_EXT = ".ser";
 	static Logger logger;
 	
 	static SwingGUI instance;
@@ -60,6 +59,7 @@ public class SwingGUI {
 	// For Prefs
 	final static String
 			KEY_SAVE_PAGENUMS = "save pagenums",
+			KEY_SAVE_ANNOS = "save annotations",
 			KEY_JUMP_BACK = "jump back",
 			KEY_ONESHOT = "one_shot_draw_tools",
 			KEY_FILECHOOSER_DIR = "file_chooser_dir";
@@ -69,6 +69,7 @@ public class SwingGUI {
 	boolean savePageNumbers = prefs.getBoolean(KEY_SAVE_PAGENUMS, true);
 	boolean jumpBack = prefs.getBoolean(KEY_JUMP_BACK, true);
 	boolean oneShotDrawTools = prefs.getBoolean(KEY_ONESHOT, true);
+	boolean saveAnnos = prefs.getBoolean(KEY_SAVE_ANNOS, true);
 
 	// GUI Controls - defined here since referenced throughout
 	JFrame controlFrame;
@@ -144,7 +145,7 @@ public class SwingGUI {
 		}
 		assert dm != null : "Could not find DM";
 		viewFrame = new JFrame("PDFShow Display");
-		viewFrame.setSize(new Dimension(FULL_WIDTH, HEIGHT));
+		viewFrame.setSize(new Dimension(FULL_WIDTH, CTRL_SIZE));
 		// But start maximized anyway, as it's more impressive.
 		viewFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -163,7 +164,7 @@ public class SwingGUI {
 						controlFrame = new JFrame("PDFShow Control");
 						previewer = new Preview(this);
 						controlFrame.add(previewer, BorderLayout.CENTER);
-						controlFrame.setSize(HEIGHT, HEIGHT);
+						controlFrame.setSize(CTRL_SIZE, CTRL_SIZE);
 						controlFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 						controlFrame.setVisible(true);
 						GraphicsDevice screen2 = gs[1];
@@ -270,7 +271,7 @@ public class SwingGUI {
 
 		JPanel sidePanel = new JPanel();
 		sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
-		sidePanel.setPreferredSize(new Dimension(150, HEIGHT));
+		sidePanel.setPreferredSize(new Dimension(150, CTRL_SIZE));
 
 		JPanel navBox = makeNavBox();
 		sidePanel.add(navBox);
@@ -298,6 +299,7 @@ public class SwingGUI {
 				new SettingHandler("fontButton", SettingType.FONT, "Font", GObject.getFont(), GObject::setFont),
 				new SettingHandler("lineWidthButton", SettingType.INTEGER, "Line Thickness", GObject.getLineThickness(), GObject::setLineThickness),
 				new SettingHandler("slideDelayButton", SettingType.INTEGER, "Slide Show Interval", slideTime, this::setSlideTime),
+				new SettingHandler("saveAnnoBox.label", SettingType.BOOLEAN, "", saveAnnos, this::setSaveAnnos),
 				new SettingHandler("memoryBox.label", SettingType.BOOLEAN, "", savePageNumbers, this::setSavePageNumbers),
 				new SettingHandler("jumpbackBox.label", SettingType.BOOLEAN, "", jumpBack, this::setJumpBack)
 				));
@@ -320,7 +322,6 @@ public class SwingGUI {
 		}
 	}
 
-	/** Create a DnDTabbedPane: the main window for viewing PDFs */
 	/** Create a JMenuBar with all the menus. */
 	private JMenuBar makeMenus() {
 
@@ -368,6 +369,12 @@ public class SwingGUI {
 		JMenuItem miClearRecents = MenuUtils.mkMenuItem(rb, "file", "clear_recents");
 		miClearRecents.addActionListener(e -> recentsClear());
 		fileMenu.add(miClearRecents);
+		JMenuItem miSaveAnnos = MenuUtils.mkMenuItem(rb, "file", "save_annos");
+		miSaveAnnos.addActionListener(e -> saveAnnotations());
+		fileMenu.add(miSaveAnnos);
+		JMenuItem miLoadAnnos = MenuUtils.mkMenuItem(rb, "file", "load_annos");
+		miLoadAnnos.addActionListener(e -> loadAnnotations());
+		fileMenu.add(miLoadAnnos);
 		JMenuItem miClose = MenuUtils.mkMenuItem(rb, "file", "close");
 		miClose.addActionListener(e -> {
 			if (currentTab != null) {
@@ -491,17 +498,7 @@ public class SwingGUI {
 		final JMenuItem helpButton = MenuUtils.mkMenuItem(rb, "help", "help");
 		helpButton.addActionListener(e -> {
 			String url = programProps.getProperty(KEY_HOME_URL);
-			if (desktop == null) {
-				JOptionPane.showMessageDialog(controlFrame,
-						"Java Desktop unsupported, visit %s on your own.".formatted(url));
-			} else {
-				try {
-					desktop.browse(new URI(url));
-				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(controlFrame,
-							"Failed to open browser to " + url);
-				}
-			}
+			showWebPage(url);
 		});
 		helpMenu.add(helpButton);
 		final JMenuItem breakTimerHelpButton = MenuUtils.mkMenuItem(rb, "help", "breaktimer");
@@ -511,17 +508,7 @@ public class SwingGUI {
 		sourceButton.setIcon(getMyImageIcon("octocat"));
 		sourceButton.addActionListener(e -> {
 			String url = programProps.getProperty(KEY_SOURCE_URL);
-			if (desktop == null) {
-				JOptionPane.showMessageDialog(controlFrame,
-                        "Java Desktop unsupported, visit %s on your own.".formatted(url));
-			} else {
-				try {
-					desktop.browse(new URI(url));
-				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(controlFrame, 
-						"Failed to open browser to " + url);
-				}
-			}
+			showWebPage(url);
 		});
 		helpMenu.add(sourceButton);
 		final JMenuItem feedbackMI = MenuUtils.mkMenuItem(rb, "help", "feedback");
@@ -530,6 +517,60 @@ public class SwingGUI {
 
 		return menuBar;
 	}
+
+	private void showWebPage(String url) {
+		if (desktop == null) {
+			JOptionPane.showMessageDialog(controlFrame,
+					"Java Desktop unsupported, visit %s on your own.".formatted(url));
+		} else {
+			try {
+				desktop.browse(new URI(url));
+			} catch (Exception e1) {
+				JOptionPane.showMessageDialog(controlFrame,
+						"Failed to open browser to " + url);
+			}
+		}
+	}
+
+	private void saveAnnotations() {
+		int count = 0;
+		String fileName = ANNOTATIONS_SAVE_FILE + currentTab.getName() + ANNOTATIONS_SAVE_EXT;
+		try (ObjectOutputStream os =
+					 new ObjectOutputStream(
+							 Files.newOutputStream(Path.of(fileName)))) {
+            for (List<GObject> gobjs : currentTab.addIns) {
+                os.writeObject(gobjs);
+				count += gobjs.size();
+            }
+			JOptionPane.showMessageDialog(viewFrame,
+					"Saved " + count + " annotations to " + fileName);
+        } catch (IOException ex){
+			JOptionPane.showMessageDialog(viewFrame, "Write to " + fileName + " failed: " + ex);
+		}
+	}
+
+	private void loadAnnotations() {
+		int count = 0;
+		String fileName = ANNOTATIONS_SAVE_FILE + currentTab.getName() + ANNOTATIONS_SAVE_EXT;
+		try (ObjectInputStream ois =
+					 new ObjectInputStream(
+							 Files.newInputStream(Path.of(fileName)))) {
+			for (List<GObject> gobjs : currentTab.addIns) {
+				Object obj = ois.readObject();
+				var list = (Collection<GObject>) obj;
+				count += list.size();
+				gobjs.addAll(list);
+			}
+			JOptionPane.showMessageDialog(viewFrame,
+					"Loaded " + count + " annotations from " + fileName);
+		} catch (EOFException eof) {
+			JOptionPane.showMessageDialog(viewFrame, "All done.");
+		} catch (IOException ex){
+			JOptionPane.showMessageDialog(viewFrame, "Load from " + fileName + " failed: " + ex);
+		} catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 	//
 	// BREAK TIMER STUFF
@@ -570,7 +611,7 @@ public class SwingGUI {
 		bTimerFrame = new JFrame("Timer");
 		// Set size and location for when non-maximized
 		bTimerFrame.setLocation(100, 100);
-		bTimerFrame.setSize(new Dimension(HEIGHT, HEIGHT));
+		bTimerFrame.setSize(new Dimension(CTRL_SIZE, CTRL_SIZE));
 		// But start maximized anyway, as it's more impressive.
 		bTimerFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		breakTimer = new BreakTimer(bTimerFrame, all);
@@ -742,6 +783,11 @@ public class SwingGUI {
 	void setSavePageNumbers(Object b) {
 		prefs.putBoolean(KEY_SAVE_PAGENUMS, (boolean)b);
 		savePageNumbers = (boolean) b;
+	}
+
+	void setSaveAnnos(Object b) {
+		prefs.putBoolean(KEY_SAVE_ANNOS, (boolean)b);
+		saveAnnos = (boolean) b;
 	}
 
 	/** Controls whether we "jump back" to Select mode after each text or draw op */

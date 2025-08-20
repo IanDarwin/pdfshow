@@ -13,3 +13,4 @@ pdfshow-runtime
 *.iml
 .DS_Store
 *TODO*
+*.ser

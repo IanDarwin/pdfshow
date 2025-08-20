@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.logging.Logger;
 
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
  * This class hierarchy represents additions that we make to the PDF.
  * They are not saved with the PDF (yet).
  */
-abstract class GObject {
+abstract class GObject implements Serializable {
 	/** pdfbox leaves the Graphics object in upside down mode */
 	// Special care needed so we can run on high-res displays like Retina
 	static final AffineTransform UPRIGHT_TRANSLATE_INSTANCE;
