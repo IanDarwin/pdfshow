@@ -706,6 +706,14 @@ public class SwingGUI {
 		selectButton.addActionListener(e -> gotoState(viewState));
 		toolBox.add(selectButton);
 
+		// Placeholder for "select text" icon
+		var selectTextButton = new JButton("I");
+		selectTextButton.setToolTipText("Select Text");
+		selectTextButton.setEnabled(false);
+		selectTextButton.addActionListener(
+			e -> JOptionPane.showMessageDialog(controlFrame, "Not written yet"));
+		toolBox.add(selectTextButton);
+
 		textButton.addActionListener(e -> gotoState(textDrawState));
 		textButton.setToolTipText("Add text object (t)");
 		toolBox.add(textButton);
