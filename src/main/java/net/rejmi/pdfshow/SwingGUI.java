@@ -711,7 +711,7 @@ public class SwingGUI {
 		selectTextButton.setToolTipText("Select Text");
 		selectTextButton.setEnabled(false);
 		selectTextButton.addActionListener(
-			e -> JOptionPane.showMessageDialog(controlFrame, "Not written yet"));
+			e -> JOptionPane.showMessageDialog(controlFrame, "Text Selection: Not written yet"));
 		toolBox.add(selectTextButton);
 
 		textButton.addActionListener(e -> gotoState(textDrawState));
