@@ -70,11 +70,7 @@ if $VERBOSE; then
 	set -x
 fi
 
-# Use jlink to build a smaller JRE-like thing
-rm -rf pdfshow-runtime
-jlink --output pdfshow-runtime --add-modules java.base,java.desktop,java.logging
-
-# Now use jpackage with that runtime image to create the final installer.
+# Use jpackage to create the installer.
 for fmt in ${inst_format}; do
     jpackage \
 	--name PDFShow \
@@ -86,7 +82,7 @@ for fmt in ${inst_format}; do
 	--icon src/main/resources/images/logo.${icon_format} \
 	--input target \
 	--main-jar pdfshow-${RELEASE_VERSION}-jar-with-dependencies.jar \
-	--runtime-image pdfshow-runtime \
+	--add-modules java.base,java.desktop,java.logging \
 	${OS_SPECIFIC} || {
 		echo jpackage did not complete normally!
 		exit 1
