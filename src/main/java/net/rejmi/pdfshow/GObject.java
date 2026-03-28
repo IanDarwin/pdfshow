@@ -13,7 +13,9 @@ import java.util.logging.Logger;
  * This class hierarchy represents additions that we make to the PDF.
  * They are not saved with the PDF (yet).
  */
-abstract class GObject implements Serializable {
+public abstract class GObject implements Serializable {
+	private static long serialVersionUID = 9823980230823L;
+
 	/** pdfbox leaves the Graphics object in upside down mode */
 	// Special care needed so we can run on high-res displays like Retina
 	static final AffineTransform UPRIGHT_TRANSLATE_INSTANCE;
