@@ -1,3 +1,5 @@
+run:
+	mvn clean package exec:java
 install:
 	git pull
 	mvn clean package assembly:single

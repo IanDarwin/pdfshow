@@ -43,6 +43,7 @@
 		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 		<darwinsys-api-version>1.9.1-SNAPSHOT</darwinsys-api-version>
 		<pdfbox-version>2.0.24</pdfbox-version>
+		<junit5.version>5.10.1</junit5.version>
 	</properties>
 
 	<dependencies>
@@ -60,15 +61,41 @@
 			<version>${darwinsys-api-version}</version>
 		</dependency>
 
+		<!-- Jackson for JSON load/save-->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>[2.18.6,)</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.13.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.13.4.2</version>
+		</dependency>
+
+		<!-- Test early and often -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit5.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Testing w/ backward compat: IF you have a mix of JUnit 4 and 5 tests, you should add this: -->
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>${junit5.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
+		<defaultGoal>package</defaultGoal>
 
 		<!-- Put Version Number into About box -->
 		<resources>
@@ -133,6 +160,25 @@
 							<Vendor-URL>http://darwinsys.com/freeware/</Vendor-URL>
 						</manifestEntries>
 					</archive>
+				</configuration>
+			</plugin>
+
+			<!-- Use exec:java plugin to run the thing -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<id>auto-execution</id>
+						<phase>package</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>net.rejmi.pdfshow.Main</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -557,6 +557,12 @@ public class SwingGUI {
 	private void loadAnnotations() {
 		if (currentTab == null)
 			return;
+		int ret = JOptionPane.showConfirmDialog(controlFrame,
+				"This will replace ALL annotations currently in the file", "Replace?", JOptionPane.YES_NO_OPTION);
+		if (ret != JOptionPane.OK_OPTION) {
+			return;
+		}
+		currentTab.addIns.forEach(List::clear);
 		int count = 0;
 		String fileName = ANNOTATIONS_SAVE_FILE + 
 			currentTab.getName().replaceAll("[./]","_") + ANNOTATIONS_SAVE_EXT;
