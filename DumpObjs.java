@@ -6,6 +6,8 @@ import java.io.*;
 
 import net.rejmi.pdfshow.GObject;
 
+final static boolean debug = false;
+
 void main(String[] args) throws Exception {
 	if (args.length == 0) {
 		process("annotations.ser");
@@ -21,6 +23,9 @@ void process(String fileName) throws Exception {
 		Object obj = null;
 		int i = 0;
 		while ((obj = ois.readObject()) != null) {
+			if (debug) {
+				System.out.println(i + "->" + obj);
+			}
 			++i;
 			@SuppressWarnings("unchecked")
 			List<GObject> list = (List<GObject>)obj;
