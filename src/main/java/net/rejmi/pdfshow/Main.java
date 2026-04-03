@@ -15,7 +15,6 @@ public class Main {
         LoggerSetup.init();
 
         isMac = System.getProperty("os.name").toLowerCase().startsWith("mac");
-        System.out.println("isMac = " + isMac);
         // Instantiate main class
         SwingGUI instance = new SwingGUI();
 

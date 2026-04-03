@@ -91,6 +91,7 @@ public class SwingGUI {
 		textButton = new BoxButton(getMyImageIcon("Text")),
 		markerButton = new BoxButton(getMyImageIcon("Marker")),
 		lineButton = new BoxButton(getMyImageIcon("Line")),
+		arrowButton = new BoxButton(getMyImageIcon("Arrow")),
 		polyLineButton = new BoxButton(getMyImageIcon("PolyLine")),
 		ovalButton = new BoxButton(getMyImageIcon("Oval")),
 		rectangleButton = new BoxButton(getMyImageIcon("Rectangle")),
@@ -732,6 +733,10 @@ public class SwingGUI {
 		lineButton.setToolTipText("Add straight line (l)");
 		toolBox.add(lineButton);
 
+		arrowButton.addActionListener(e -> gotoState(arrowDrawState));
+		arrowButton.setToolTipText("Add arrow");
+		toolBox.add(arrowButton);
+
 		polyLineButton.addActionListener(e -> gotoState(polyLineDrawState));
 		polyLineButton.setToolTipText("Add a polyline (w)");
 		toolBox.add(polyLineButton);
@@ -937,6 +942,7 @@ public class SwingGUI {
 	final State textDrawState = new TextDrawState(this, textButton);
 	final State markingState = new MarkingState(this, markerButton);
 	final State lineDrawState = new LineDrawState(this, lineButton);
+	final State arrowDrawState = new ArrowDrawState(this, arrowButton);
 	final State polyLineDrawState = new PolyLineDrawState(this, polyLineButton);
 	final State rectangleState = new RectangleState(this, rectangleButton);
 	final State ovalState = new OvalState(this, ovalButton);

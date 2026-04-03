@@ -306,6 +306,24 @@ class LineDrawState extends State {
 	}
 }
 
+/** Bit fancier: draw the line with an arrowhead. */
+class ArrowDrawState extends LineDrawState {
+	ArrowDrawState(SwingGUI parent, JButton button) {
+		super(parent, button);
+	}
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		if (line == null) {
+			line = new GArrow(startX, startY, e.getX() - startX, e.getY() - startY);
+			ix = parent.currentTab.addIn(line);
+		} else {
+			parent.currentTab.setIn(ix, new GArrow(startX, startY, e.getX() - startX, e.getY() - startY));
+		}
+		parent.currentTab.repaint();
+
+	}
+}
+
 /** A simple multi-straight-line poly-point line. No Bezier &c.
  * Unlike most of the other GObject types, the points in a
  * polyline are RELATIVE and get absolutized in the GPolyLine

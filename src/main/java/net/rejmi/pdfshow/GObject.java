@@ -229,6 +229,16 @@ class GLine extends GObject {
 	}
 }
 
+class GArrow extends GLine {
+	GArrow(int x, int y, int width, int height) {
+		super(x, y,  width, height);
+	}
+	void render(Graphics g) {
+		super.render(g); // Draw the line
+		Gfx.drawArrowhead(x, y, x + width, y + height, g);
+	}
+}
+
 /** Highlighter */
 class GMarker extends GObject {
 	GMarker(int x, int y, int endx, int endy) {
