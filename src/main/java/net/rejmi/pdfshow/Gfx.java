@@ -18,7 +18,6 @@ public class Gfx {
 		int dy = tipY - tailY;
 
 		double theta = Math.atan2(dy, dx);
-		System.out.println("Theta = " + theta);
 
 		double rad = Math.toRadians(arrowHeadAngle);
 		double x = tailX + arrowLength * Math.cos(theta + rad);
