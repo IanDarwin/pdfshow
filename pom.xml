@@ -117,21 +117,6 @@
 
 		<plugins>
 
-			<!-- Allow 'mvn exec:java' to run the program -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>3.3.0</version>
-				<configuration>
-					<mainClass>net.rejmi.pdfshow.Main</mainClass>
-					<arguments>
-						<!-- Twice, so we can test tabbing easily -->
-						<argument>samples/SampleShow.pdf</argument>
-						<argument>samples/SampleShow.pdf</argument>
-					</arguments>
-				</configuration>
-			</plugin>
-
 			<!-- Use 'mvn package assembly:single' for runnable jar-with-depends created in 'target' -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -156,5 +141,29 @@
 
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>run</id>
+			<build>
+				<plugins>
+					<!-- Allow 'mvn exec:java' to run the program -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>3.3.0</version>
+						<configuration>
+							<mainClass>net.rejmi.pdfshow.Main</mainClass>
+							<arguments>
+								<!-- Twice, so we can test tabbing easily -->
+								<argument>samples/SampleShow.pdf</argument>
+								<argument>samples/SampleShow.pdf</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
