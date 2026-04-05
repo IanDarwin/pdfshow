@@ -3,7 +3,7 @@ ifndef::ver[]
 endif::[]
 :sillyName: Memory Lane
 ifndef::current-java-ver[]
-:current-java-ver: Java 21
+:current-java-ver: Java 25
 endif::[]
 :gh-url: https://github.com/IanDarwin/pdfshow
 :releases-link: {gh-url}/releases

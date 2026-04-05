@@ -89,7 +89,7 @@ This may not be optimal, but should work. Newer versions may be available.
 
 	sudo dnf search jdk
 
-Pick and install the latest (probably 23; N.B. 21 did not work as they forgot to
+Pick and install the latest (probably 25; N.B. 21 did not work as they forgot to
 install the jmod files, which are needed to build the installers).
 
 	sudo dnf install rpm-build

@@ -35,7 +35,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<javase.version>21</javase.version>
+		<javase.version>25</javase.version>
 		<maven.compiler.source>${javase.version}</maven.compiler.source>
 		<maven.compiler.target>${javase.version}</maven.compiler.target>
 		<maven.compiler.testSource>${javase.version}</maven.compiler.testSource>
@@ -61,7 +61,7 @@
 			<version>${darwinsys-api-version}</version>
 		</dependency>
 
-		<!-- Jackson for JSON load/save-->
+		<!-- Jackson for JSON load/save... NOT USED YET -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
@@ -117,15 +117,6 @@
 
 		<plugins>
 
-			<!-- Update maven plugin for legacy systems -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-				<configuration>
-				</configuration>
-			</plugin>
-
 			<!-- Allow 'mvn exec:java' to run the program -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -163,24 +154,6 @@
 				</configuration>
 			</plugin>
 
-			<!-- Use exec:java plugin to run the thing -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.6.0</version>
-				<executions>
-					<execution>
-						<id>auto-execution</id>
-						<phase>package</phase>
-						<goals>
-							<goal>java</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<mainClass>net.rejmi.pdfshow.Main</mainClass>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 
